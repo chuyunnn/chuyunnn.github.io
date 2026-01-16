@@ -1,0 +1,260 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>diffusion文章总结 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="radiodiff不基于测量值，仅输入环境信息、发射机位置信息 利用radiomapseer中的车辆数据集模拟动态变化 使用条件生成的解耦扩散模型（DDM），VAE对图像进行编码，unet解码噪声  3D radiodiff关注不同高度和环境影响，分别实验了有采样和无采样的情况 高度条件的RM生成，使用DDPM  WIFI-Diffusion极低采样场景问题：1%到10% 根据环境信息、传播规律信">
+<meta property="og:type" content="article">
+<meta property="og:title" content="diffusion文章总结">
+<meta property="og:url" content="http://example.com/papers/conclusion/%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="radiodiff不基于测量值，仅输入环境信息、发射机位置信息 利用radiomapseer中的车辆数据集模拟动态变化 使用条件生成的解耦扩散模型（DDM），VAE对图像进行编码，unet解码噪声  3D radiodiff关注不同高度和环境影响，分别实验了有采样和无采样的情况 高度条件的RM生成，使用DDPM  WIFI-Diffusion极低采样场景问题：1%到10% 根据环境信息、传播规律信">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-16T09:30:52.000Z">
+<meta property="article:modified_time" content="2026-01-16T09:34:14.235Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="notes">
+<meta property="article:tag" content="conclusion">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "diffusion文章总结",
+  "url": "http://example.com/papers/conclusion/%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-01-16T09:30:52.000Z",
+  "dateModified": "2026-01-16T09:34:14.235Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/papers/conclusion/%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'diffusion文章总结',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">diffusion文章总结</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">diffusion文章总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-16T09:30:52.000Z" title="Created 2026-01-16 17:30:52">2026-01-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-16T09:34:14.235Z" title="Updated 2026-01-16 17:34:14">2026-01-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/papers/">papers</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/papers/conclusion/">conclusion</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="radiodiff"><a href="#radiodiff" class="headerlink" title="radiodiff"></a>radiodiff</h2><p>不基于测量值，仅输入环境信息、发射机位置信息</p>
+<p>利用radiomapseer中的车辆数据集模拟动态变化</p>
+<p>使用条件生成的解耦扩散模型（DDM），VAE对图像进行编码，unet解码噪声</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755660321953-69824bb5-7c89-4ea6-a418-4536de3a0faa.png" alt="img"></p>
+<h2 id="3D-radiodiff"><a href="#3D-radiodiff" class="headerlink" title="3D radiodiff"></a>3D radiodiff</h2><p>关注不同高度和环境影响，分别实验了有采样和无采样的情况</p>
+<p>高度条件的RM生成，使用DDPM</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755660671446-5b16a179-9afe-42e0-8134-8422a51f30f5.png" alt="img"></p>
+<h2 id="WIFI-Diffusion"><a href="#WIFI-Diffusion" class="headerlink" title="WIFI-Diffusion"></a>WIFI-Diffusion</h2><p>极低采样场景问题：<strong>1%到10%</strong></p>
+<p>根据环境信息、传播规律信息、收集的无线电样本生成RM</p>
+<p>boost block：输入 障碍物布局、无线电传播规律、收集得到的无线电样本 到self-attention UNet  &#x3D;&#x3D;&gt; 优化diffusion生成效果（采样点、预测值、临界点）</p>
+<p>generation block：DDPM加噪声，DDIM去噪（输出一组生成图像）</p>
+<p>election block：使用数学无线电传播模型作为指导选择radio map</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755661063949-200d323f-ab82-4019-a425-0af27e6fb497.png" alt="img"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755661427783-b50d3ebb-dfb0-4606-b02e-49b3e8137119.png" alt="img"></p>
+<p>DDPM切换为DDIM无需再训练</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755661493922-3124e98c-b47c-4b92-b24c-8e1dd046f5d2.png" alt="img"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755661725139-64c848c8-41c8-43e7-b642-db36269ff94c.png" alt="img"></p>
+<p>ResNet[16]在过去几年中被广泛应用于特征提取应用。 在WiFi-Diffusion中，我们<strong>使用它来预测res</strong>。我们通过向ResNet提供<strong>xa</strong>、<strong>xzi</strong>、<strong>处理信息（边缘检测）的拉普拉斯高斯算子（LoG）</strong>和<strong>xzi的高功率图（图8所示的示例）</strong>来学习<strong>校正因子res</strong>。</p>
+<h1 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h1><h2 id="MFFGCN"><a href="#MFFGCN" class="headerlink" title="MFFGCN"></a>MFFGCN</h2><p>关注空白区域（观测值分布不均匀）</p>
+<p>实现稀疏观测（10-300）和环境地图的多模态特征融合</p>
+<p>双编码器unet，补丁级图卷积优化网络</p>
+<p>粗估计 &#x3D;&#x3D;&gt;  优化</p>
+<p><strong>从环境信息中获取更多的信号传播特征</strong>，要么必须<strong>基于无约束区域的经验来指导观测约束区域的重建</strong>。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755662039950-fcddca1f-95ad-4bbc-8e98-51359a5635d5.png" alt="img"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755662273120-27b697ed-5cad-4885-9262-d1adabf6bc0b.png" alt="img"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755662297731-b7f26838-bc5a-4c46-83e2-cfb51fe44cb9.png" alt="img"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1755662341066-665f9b8b-951b-400f-881e-b73ccb7a59cd.png" alt="img"></p>
+<h2 id="TiRE-GAN-Task-Incentivized-Generative-Learning-for-Radiomap-Estimation"><a href="#TiRE-GAN-Task-Incentivized-Generative-Learning-for-Radiomap-Estimation" class="headerlink" title="TiRE-GAN: Task-Incentivized Generative Learning for Radiomap Estimation"></a>TiRE-GAN: Task-Incentivized Generative Learning for Radiomap Estimation</h2><p>利用<strong>无线电传播模型的物理原理</strong>和来自<strong>稀疏观测</strong>的数据统计 &#x3D;&#x3D;&gt; 任务激励生成学习模型TiREGAN</p>
+<ul>
+<li>引入<strong>无线电深度图</strong>来捕捉无线电传播和阴影效应的总体模式</li>
+<li>使用<strong>任务激励网络的物理条件cGAN</strong>，根据下游任务为无线电深度图补偿提供反馈</li>
+</ul>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1756271775388-21a5a9ab-b73e-42bd-9902-f1a57e829ab5.png" alt="img"></p>
+<p>图1所示。 TiRE-GAN总体结构由4部分组成：</p>
+<p>1)基于模型的数据预处理模块利用输入的观测信息（即建筑物图和发射机位置）生成无线电深度图，然后<strong>将四层叠加在一起作为输入</strong>； </p>
+<p>2)无线电地图生成模块采用cGAN发生器结构，学习并生成无线电地图预测； </p>
+<p>3)反馈模块由两个部分组成：<strong>cGAN鉴别器和任务激励网络。 两个模块都产生一个损失项作为反馈，以改进生成器</strong>； </p>
+<p>4)为培训指导提供额外损失期的下游任务。</p>
+<h2 id="RadioGAT-A-Joint-Model-Based-and-Data-Driven-Framework-for-Multi-Band-Radiomap-Reconstruction-via-Graph-Attention-Networks"><a href="#RadioGAT-A-Joint-Model-Based-and-Data-Driven-Framework-for-Multi-Band-Radiomap-Reconstruction-via-Graph-Attention-Networks" class="headerlink" title="RadioGAT: A Joint Model-Based and Data-Driven Framework for Multi-Band Radiomap Reconstruction via Graph Attention Networks"></a><strong>RadioGAT: A Joint Model-Based and Data-Driven Framework for Multi-Band Radiomap Reconstruction via Graph Attention Networks</strong></h2><p>OpenStreetMap</p>
+<p>关注 <strong>空间</strong>、<strong>时间</strong>、<strong>频带</strong>稀疏样本，多频段RM重建</p>
+<p><strong>图形注意力网络（GAT）</strong></p>
+<p>不依赖 模拟数据 或 完整的结构化地面事实 &#x3D;&#x3D;&gt; 使用masked GAT，不基于完整的地面数据</p>
+<p>利用无线电传播模型来捕获相关性 &#x3D;&#x3D;&gt; <strong>radio depth map</strong></p>
+<p>：1)<strong>基于模型的空间-谱相关编码</strong>； 2)<strong>数据驱动的跨带泛化</strong></p>
+<p><strong>基于频率的射频深度图</strong> &#x3D;&#x3D;&gt; 不同频率有不同的深度图，用于构造邻接矩阵</p>
+<ul>
+<li>设计编码策略，将<strong>稀疏的多波段数据转换为图形结构</strong>，该编码策略利用<strong>无线电传播模型</strong>来捕获数据中固有的空间-频谱相关性。</li>
+<li>集中在<strong>不同区域的空间相关性</strong>上。 MB-RMR方法不仅可以利用<strong>带内空间相关性</strong>，还可以利用<strong>相同空间坐标下的带间相关性</strong>。</li>
+</ul>
+<p>带内空间相关性：同一“频带”或者“通道”里的数据，<em>不同空间位置</em>之间可能存在规律性</p>
+<p>带间相关性：不同“频带”或者“通道”在<em>同一空间位置</em>上也可能相关</p>
+<p>带 &#x3D;&#x3D;&gt; 频带</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1756272274443-aee18606-dfb2-4d0d-b412-625b9630aa18.png" alt="img"></p>
+<p>使用一个频带去预测别的频带的图像</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1756272348383-b1d3c088-1fea-4867-a3a6-c810d6382c48.png" alt="img"></p>
+<p>请注意，基于图的无线地图估计可以被表述为<strong>半监督学习</strong>[38]，其中RSS可以被视为每个节点的注释（标签 label），而环境和几何信息可以被视为特征。 </p>
+<p>标注节点和未标注节点都要参与图的学习，图的边是根据特征构造的。 以E(k) b的构建为重点，介绍了现有的基于邻接性、环境信息和发射机信息的三种编码方法，并在此基础上提出了基于模型的相关编码方法。</p>
+<ol>
+<li><strong>基于图的无线地图估计</strong></li>
+</ol>
+<ul>
+<li>你可以把“无线地图”理解为一个二维&#x2F;三维空间里信号强度的分布图。</li>
+<li>“基于图”意味着我们把空间中的接收点或者位置抽象成图里的节点，节点之间有边。</li>
+</ul>
+<ol>
+<li><strong>半监督学习</strong></li>
+</ol>
+<ul>
+<li>有些节点有测量值（RSS，Received Signal Strength，信号强度）——这就是“标注节点”。</li>
+<li>有些节点没有测量值，只能用周围信息去推断——这就是“未标注节点”。</li>
+<li>半监督学习就是<strong>同时利用“有标注”和“无标注”数据进行学习</strong>。</li>
+</ul>
+<ol>
+<li><strong>RSS是节点的注释，环境和几何信息是特征</strong></li>
+</ol>
+<ul>
+<li>节点的“标签”（annotation）就是信号强度RSS。</li>
+<li>节点的“特征”是与环境和位置相关的信息，比如建筑物位置、障碍物、发射机位置等等。</li>
+</ul>
+<p>无标注的节点参与学习的方法：</p>
+<ol>
+<li><strong>标签传播（Label Propagation）：</strong>假设节点A有RSS标签，节点B没有。</li>
+</ol>
+<p>节点B通过图上的边“看邻居”，用邻居节点的标签信息来更新自己的估计值。</p>
+<ol>
+<li><strong>半监督图神经网络（GNN）</strong></li>
+</ol>
+<p>GNN会把每个节点的特征（位置、环境信息、发射机信息）和邻居节点的信息混合，生成节点表示。训练时只用<strong>标注节点的损失</strong>（例如RSS预测误差）来反向传播，但因为网络是全图的，<strong>无标注节点的表示也会被更新</strong>。</p>
+<p>换句话说，无标注节点参与“信息传递”，帮助模型学习更平滑、符合图结构的表示。</p>
+<p>&#x3D;&#x3D;&gt; 无标注节点不参与反向传播，最后（测试）是预测无标签节点的值。其余时刻均只关注有标签节点的loss</p>
+<p>GAT VS GNN：</p>
+<ul>
+<li><strong>传统GNN</strong>（比如GCN）在更新节点表示时，会把邻居节点的特征<strong>平均或加权平均</strong>后传递给自己。</li>
+<li><strong>GAT</strong>的创新点：<strong>不是简单平均，而是用注意力机制给不同邻居分配不同权重</strong>。</li>
+</ul>
+<p>换句话说，它会自己学：“哪个邻居的信息对我最重要，我就给它更高的权重。”</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/43477865/1756272672801-7bb08129-7803-45ce-983f-072e818e0e68.png" alt="img"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/papers/conclusion/%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93/">http://example.com/papers/conclusion/%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/notes/">notes</a><a class="post-meta__tags" href="/tags/conclusion/">conclusion</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E5%85%B3%E7%AC%94%E8%AE%B0/" title="深度学习相关笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">深度学习相关笔记</div></div><div class="info-2"><div class="info-item-1">优化器Adam : Adaptive Moment Estimation特点：  自适应学习率：每个参数都有自己的学习率 带偏差修正：初期收敛更稳定  缺点：正则化效果不好，L2 weight decay 实际上是“对梯度加衰减”，不是真正正则化参数 AdamW : Adam + 正确的 Weight DecayAdam 里 L2 weight decay 是和梯度混合的 → 实际上是“修改梯度”，容易影响动量 &#x3D;&#x3D;&gt; AdamW 把 weight decay 独立应用在参数更新上 优点：  正则化更纯粹 → 提高泛化能力 训练更稳定 → 常用于 Transformer 和大模型  💡 总结一句话：AdamW 就是带正确 L2 正则的 Adam LAMB : Layer-wise Adaptive Moments optimizer for Batch training &#x3D;&#x3D;&gt; 为大 batch &#x2F; 大模型训练设计的 AdamW 变体 Layer-wise 自适应缩放: 每一层的参数更新 \Delta \theta ...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E5%85%B3%E7%AC%94%E8%AE%B0/" title="深度学习相关笔记"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-16</div><div class="info-item-2">深度学习相关笔记</div></div><div class="info-2"><div class="info-item-1">优化器Adam : Adaptive Moment Estimation特点：  自适应学习率：每个参数都有自己的学习率 带偏差修正：初期收敛更稳定  缺点：正则化效果不好，L2 weight decay 实际上是“对梯度加衰减”，不是真正正则化参数 AdamW : Adam + 正确的 Weight DecayAdam 里 L2 weight decay 是和梯度混合的 → 实际上是“修改梯度”，容易影响动量 &#x3D;&#x3D;&gt; AdamW 把 weight decay 独立应用在参数更新上 优点：  正则化更纯粹 → 提高泛化能力 训练更稳定 → 常用于 Transformer 和大模型  💡 总结一句话：AdamW 就是带正确 L2 正则的 Adam LAMB : Layer-wise Adaptive Moments optimizer for Batch training &#x3D;&#x3D;&gt; 为大 batch &#x2F; 大模型训练设计的 AdamW 变体 Layer-wise 自适应缩放: 每一层的参数更新 \Delta \theta ...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#radiodiff"><span class="toc-number">1.</span> <span class="toc-text">radiodiff</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3D-radiodiff"><span class="toc-number">2.</span> <span class="toc-text">3D radiodiff</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WIFI-Diffusion"><span class="toc-number">3.</span> <span class="toc-text">WIFI-Diffusion</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95"><span class="toc-number"></span> <span class="toc-text">其他方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MFFGCN"><span class="toc-number">1.</span> <span class="toc-text">MFFGCN</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TiRE-GAN-Task-Incentivized-Generative-Learning-for-Radiomap-Estimation"><span class="toc-number">2.</span> <span class="toc-text">TiRE-GAN: Task-Incentivized Generative Learning for Radiomap Estimation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RadioGAT-A-Joint-Model-Based-and-Data-Driven-Framework-for-Multi-Band-Radiomap-Reconstruction-via-Graph-Attention-Networks"><span class="toc-number">3.</span> <span class="toc-text">RadioGAT: A Joint Model-Based and Data-Driven Framework for Multi-Band Radiomap Reconstruction via Graph Attention Networks</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/papers/conclusion/%E6%96%87%E7%AB%A0%E6%80%BB%E7%BB%93/" title="diffusion文章总结">diffusion文章总结</a><time datetime="2026-01-16T09:30:52.000Z" title="Created 2026-01-16 17:30:52">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9B%B8%E5%85%B3%E7%AC%94%E8%AE%B0/" title="深度学习相关笔记">深度学习相关笔记</a><time datetime="2026-01-16T09:27:55.000Z" title="Created 2026-01-16 17:27:55">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/" title="数据集">数据集</a><time datetime="2026-01-16T09:02:40.000Z" title="Created 2026-01-16 17:02:40">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/papers/work2/papers/work2/postpapers-work2-Frequency-Domain-Based-Diffusion-Model-for-Unpaired-Image-Dehazing/" title="&quot;Frequency Domain-Based Diffusion Model for Unpaired Image&quot; Dehazing">&quot;Frequency Domain-Based Diffusion Model for Unpaired Image&quot; Dehazing</a><time datetime="2026-01-16T08:10:41.000Z" title="Created 2026-01-16 16:10:41">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/hello-world/" title="Hello World">Hello World</a><time datetime="2026-01-16T07:26:26.734Z" title="Created 2026-01-16 15:26:26">2026-01-16</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
