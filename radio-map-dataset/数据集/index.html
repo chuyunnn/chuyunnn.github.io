@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据集 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="实测数据集1. 暂未发布的实测数据集地址：https:&#x2F;&#x2F;www.radiomaps.org&#x2F;rm&#x2F;resources github仓库：https:&#x2F;&#x2F;github.com&#x2F;fachu000&#x2F;deep-autoencoders-cartography&#x2F;tree&#x2F;master 文章：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2310.11036 2. 实测数据集  RSRPSetCell-Lev">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据集">
+<meta property="og:url" content="http://example.com/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实测数据集1. 暂未发布的实测数据集地址：https:&#x2F;&#x2F;www.radiomaps.org&#x2F;rm&#x2F;resources github仓库：https:&#x2F;&#x2F;github.com&#x2F;fachu000&#x2F;deep-autoencoders-cartography&#x2F;tree&#x2F;master 文章：https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;2310.11036 2. 实测数据集  RSRPSetCell-Lev">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-16T09:02:40.000Z">
+<meta property="article:modified_time" content="2026-01-16T09:18:00.449Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="dataset">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "数据集",
+  "url": "http://example.com/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-01-16T09:02:40.000Z",
+  "dateModified": "2026-01-16T09:18:00.449Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据集',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">数据集</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">数据集</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-16T09:02:40.000Z" title="Created 2026-01-16 17:02:40">2026-01-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-16T09:18:00.449Z" title="Updated 2026-01-16 17:18:00">2026-01-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/radio-map-dataset/">radio map dataset</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="实测数据集"><a href="#实测数据集" class="headerlink" title="实测数据集"></a>实测数据集</h2><h4 id="1-暂未发布的实测数据集"><a href="#1-暂未发布的实测数据集" class="headerlink" title="1. 暂未发布的实测数据集"></a>1. 暂未发布的实测数据集</h4><p>地址：<a target="_blank" rel="noopener" href="https://www.radiomaps.org/rm/resources">https://www.radiomaps.org/rm/resources</a></p>
+<p>github仓库：<a target="_blank" rel="noopener" href="https://github.com/fachu000/deep-autoencoders-cartography/tree/master">https://github.com/fachu000/deep-autoencoders-cartography/tree/master</a></p>
+<p>文章：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2310.11036">https://arxiv.org/abs/2310.11036</a></p>
+<h4 id="2-实测数据集-RSRPSet"><a href="#2-实测数据集-RSRPSet" class="headerlink" title="2. 实测数据集  RSRPSet"></a>2. 实测数据集  RSRPSet</h4><p>Cell-Level RSRP Estimation With the Image-to-Image Wireless Propagation Model Based on Measured Data</p>
+<p>github仓库（代码）：<a target="_blank" rel="noopener" href="https://github.com/ZhengSaber/Cell-Level-RSRP-Estimation">https://github.com/ZhengSaber/Cell-Level-RSRP-Estimation</a></p>
+<p>数据集地址：<a target="_blank" rel="noopener" href="https://ieee-dataport.org/documents/rsrpseturban-radio-map-dense-urban">https://ieee-dataport.org/documents/rsrpseturban-radio-map-dense-urban</a></p>
+<ul>
+<li>[real-world dataset] Yi Zheng, March 9, 2022, “RSRPSet_urban: Radio map in dense urban “, IEEE Dataport, doi:</li>
+</ul>
+<p>使用（论文）：</p>
+<ul>
+<li><strong>Physics-Informed Neural Networks for Path Loss Estimation by Solving Electromagnetic Integral Equations</strong></li>
+<li><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11114848">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=11114848</a></li>
+<li><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/11143592">https://ieeexplore.ieee.org/document/11143592</a></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GAN_train.py <span class="comment"># Running this code to training the Pix2Pix model on RSRPSet_urban for real-world RSRP estimation.</span></span><br><span class="line">GAN_inference.py <span class="comment"># inferencing the Pix2Pix model in RSRPSet_urban.</span></span><br><span class="line"></span><br><span class="line">UNet_train.py <span class="comment"># training the UNet model on RSRPSet_urban.</span></span><br><span class="line">UNet_inference.py <span class="comment"># inferencing the UNet model on RSRPSet_urban.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## simulation dataset ==&gt; radiomapseer</span></span><br><span class="line">sim_RadioGAN_train.py <span class="comment"># training the Pix2Pix model on simulation dataset.</span></span><br><span class="line">sim_RadioGAN_inference.py <span class="comment"># inferencing the Pix2Pix model on simulation dataset.</span></span><br><span class="line">Note: before training the model, you may need to revise the dataset path <span class="keyword">and</span> model save path <span class="keyword">in</span> train code.</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="模拟数据集"><a href="#模拟数据集" class="headerlink" title="模拟数据集"></a>模拟数据集</h2><h4 id="1-3D地图数据集"><a href="#1-3D地图数据集" class="headerlink" title="1. 3D地图数据集"></a>1. 3D地图数据集</h4><p>UAV-Aided Radio Map Construction Exploiting Environment Semantics</p>
+<p>数据集链接：<a target="_blank" rel="noopener" href="https://github.com/6wj/radiomap-uav/tree/main">https://github.com/6wj/radiomap-uav/tree/main</a></p>
+<p>使用：运行matlab文件</p>
+<h4 id="2-多地形场景、多高度、多频段、多气候数据集"><a href="#2-多地形场景、多高度、多频段、多气候数据集" class="headerlink" title="2. 多地形场景、多高度、多频段、多气候数据集"></a>2. 多地形场景、多高度、多频段、多气候数据集</h4><p>Generative AI on SpectrumNet: An Open Benchmark of Multiband 3D Radio Maps</p>
+<p>数据集说明：</p>
+<ul>
+<li>3 个空间维度、5 个频段、11 个地形情景和 3 个气候情景的无线电地图</li>
+<li>使用生成式AI的方法</li>
+<li>包含了11种不同地理特征的地形场景：密集城市、普通城市、乡村、郊区、山区、森林、沙漠、草原、岛屿、海洋、湖泊 </li>
+<li>每个区域提供三个不同高度的无线电地图：距地面1.5m、30m和200m，分别反映地面节点、建筑高度节点和空中节点的无线电地图。 为了说明全频段无线电传播，包括从150 MHz到22GHz的五个不同频率的无线电图，覆盖了无线网络的大部分工作频率。 此外，场景的变化对应于不同的气候、建筑材料和地形材料，这也会影响现实世界中的无线电传播。 因此，这些参数也被注释以用于生成每个无线电地图。</li>
+</ul>
+<p>文件命名格式：</p>
+<ol>
+<li><p>npz：npz格式的文件包含特定区域的地形与建筑信息。npz文件的命名规则为“T[xx]C[x]D[xxxx] n[xx] bdtr”</p>
+</li>
+<li><p>jpg：jpg格式文件为单一频率下某区域的无线电图与地形信息的可视化图像。jpg文件命名规则为“T[xx]C[x]D[xxxx] n[xx] f[xx] visual”</p>
+</li>
+</ol>
+<h4 id="3-songyang数据集-BARTLab-UCD"><a href="#3-songyang数据集-BARTLab-UCD" class="headerlink" title="3. songyang数据集  BARTLab-UCD"></a>3. songyang数据集  BARTLab-UCD</h4><p>论文链接：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10424680#page=6.48">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=10424680#page=6.48</a></p>
+<p>数据集链接：<a target="_blank" rel="noopener" href="https://github.com/BRATLab-UCD/Radiomap-Data">https://github.com/BRATLab-UCD/Radiomap-Data</a></p>
+<p>dropbox：<a target="_blank" rel="noopener" href="https://www.dropbox.com/scl/fo/kua86qnk1aukt8i4f2rma/h?rlkey=j82kiq4dgaw3l0bzbeyfvv4oi&e=1&dl=0">https://www.dropbox.com/scl/fo/kua86qnk1aukt8i4f2rma/h?rlkey=j82kiq4dgaw3l0bzbeyfvv4oi&amp;e=1&amp;dl=0</a></p>
+<p>裁剪版本：</p>
+<p>​	<strong>18</strong>:</p>
+<p>​		&#x2F;data&#x2F;home&#x2F;dcy&#x2F;SR&#x2F;change&#x2F;Supreme-master&#x2F;dataset&#x2F;train.npy</p>
+<p>​	17:</p>
+<p>​		&#x2F;data&#x2F;home&#x2F;dcy&#x2F;diffusion&#x2F;spilt_scene</p>
+<p>​		&#x2F;data&#x2F;home&#x2F;dcy&#x2F;diffusion&#x2F;stations_v1</p>
+<p>​		&#x2F;data&#x2F;home&#x2F;dcy&#x2F;diffusion&#x2F;buildings_v1</p>
+<h4 id="4-小规模高保真数据集-JHU-Lab"><a href="#4-小规模高保真数据集-JHU-Lab" class="headerlink" title="4. 小规模高保真数据集  JHU-Lab"></a>4. 小规模高保真数据集  JHU-Lab</h4><p>论文链接：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/10424680">https://ieeexplore.ieee.org/abstract/document/10424680</a></p>
+<h4 id="5-radiomapseer"><a href="#5-radiomapseer" class="headerlink" title="5. radiomapseer"></a>5. radiomapseer</h4><p>RadioUNet: Fast Radio Map Estimation With Convolutional Neural Networks</p>
+<p>数据集说明：</p>
+<p>​	RadioMapSeer数据集由700张地图组成，每张地图80个发射机位置，以及相应的粗略模拟无线电地图。 粗略的模拟是使用<strong>主导路径模型（DPM）方法[26]和智能光线追踪（IRT）</strong>[53]生成的，该方法基于光线与几何形状的2种相互作用，这里称为IRT2。 此外，我们还对每个地图的前两个发射器使用<strong>具有4个相互作用的IRT （IRT4）生成了精细模拟</strong>。 这些城市地图取自OpenStreetMap[54]，分别位于<strong>安卡拉、柏林、格拉斯哥、卢布尔雅那、伦敦和特拉维夫</strong>。 我们将发射机、接收机和建筑物的高度分别设置为1.5m、1.5m和25m，这与设备对设备的场景有关（详见III-B节）。 所有模拟均使用WinProp[38]软件进行计算。 对于不同的情况（例如，校园网，蜂窝网络），应该相应地生成新的数据集。 来自数据集的一些示例无线电地图如图1所示。 所有模拟都保存为256 × 256 m2二维网格中无线电地图的密集采样。</p>
+<ol>
+<li><p>粗略模拟无线电图：利用无线网络规划软件WinProp[38]，采用DPM和IRT2生成无线电图。 每个模拟无线电图在每个像素上存储像素位置和发射机位置之间的路径损耗（以dB为单位）。为了表示数据集中的不确定性，我们考虑两种情况。 首先，使用DPM和IRT2对包括汽车在内的所有城市地图进行一组模拟。 这些模拟是对仅基于城市地图的模拟的扰动，没有汽车。 此外，我们还提供了单独的扰动城市地图数据集，其中原始数据集的每张地图中都缺少m个建筑物。 我们提供了四个这样的数据集，m &#x3D;1，… 4。</p>
+</li>
+<li><p>更高精度的模拟：使用IRT4与相同的WinProp无线网络规划软件提供了额外的更小的更高精度模拟数据集。 在这里，我们为700张地图中的每张地图考虑了两个发射机位置。 更高精度模拟的目标是提供一种方法来测试经过模拟训练的网络是否在路径损失函数的精细表示中表现良好。 如前所述，我们在这里重申，高精度模拟可以替代现实生活中的物理现象，它有助于证明我们方案的可转移性。</p>
+<ol start="3">
+<li>路径损耗尺度：将路径损耗值PL转换为0 ~ 1之间的灰度像素值（见第III-C节）。 因此，每个无线电地图都是一个大小为256 × 256的灰度级图像。</li>
+</ol>
+</li>
+</ol>
+<p>参数说明：</p>
+<p>​	本研究最初是由智能交通系统（ITS）背景下的设备对设备安全通信驱动的，目前基于<strong>IEEE 802.11p</strong>标准。 因此，我们认为5.9GHz频段的信号带宽W为10MHz。 我们选择发射机功率和热噪声功率谱密度分别为（PTx）dB &#x3D; 23dBm和（N0）dB &#x3D; - 174dBm&#x2F;Hz，符合IEEE 802.11p标准，并假设接收机的理想噪声系数为0dB（参见图1(e)给出了系统参数的总结）。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/">http://example.com/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/dataset/">dataset</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/work1/experiment/settings/%E6%8C%87%E4%BB%A4/" title="experiment/work1/指令"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">experiment/work1/指令</div></div><div class="info-2"><div class="info-item-1">指令数据集跨场景： 12345674x:    hr: datasets/expand/250_80/hr/train_hr    lr: datasets/expand/250_80/lr/train_lr8x:    lr: datasets/expand/250_80/8x/lr/train_lr16x:    lr: datasets/expand/250_80/16x/lr/train_lr  baselineRMDM： 1234## trainnohup python train.py --config /data/home/dcy/SR/rmdm/RMDM-main/configs/train.yaml &gt; /data/home/dcy/SR/rmdm/RMDM-main/logs/train_baseline_no_pinn_v1.log 2&gt;&amp;1 &amp;## testnohup python sample_test.py --scheduler_type ddpm --data_dir /data/home/dcy/SR/ESRT-mai...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%B5%8B%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">实测数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%9A%82%E6%9C%AA%E5%8F%91%E5%B8%83%E7%9A%84%E5%AE%9E%E6%B5%8B%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.0.1.</span> <span class="toc-text">1. 暂未发布的实测数据集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%AE%9E%E6%B5%8B%E6%95%B0%E6%8D%AE%E9%9B%86-RSRPSet"><span class="toc-number">1.0.2.</span> <span class="toc-text">2. 实测数据集  RSRPSet</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">2.</span> <span class="toc-text">模拟数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3D%E5%9C%B0%E5%9B%BE%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">2.0.1.</span> <span class="toc-text">1. 3D地图数据集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%A4%9A%E5%9C%B0%E5%BD%A2%E5%9C%BA%E6%99%AF%E3%80%81%E5%A4%9A%E9%AB%98%E5%BA%A6%E3%80%81%E5%A4%9A%E9%A2%91%E6%AE%B5%E3%80%81%E5%A4%9A%E6%B0%94%E5%80%99%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">2.0.2.</span> <span class="toc-text">2. 多地形场景、多高度、多频段、多气候数据集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-songyang%E6%95%B0%E6%8D%AE%E9%9B%86-BARTLab-UCD"><span class="toc-number">2.0.3.</span> <span class="toc-text">3. songyang数据集  BARTLab-UCD</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%B0%8F%E8%A7%84%E6%A8%A1%E9%AB%98%E4%BF%9D%E7%9C%9F%E6%95%B0%E6%8D%AE%E9%9B%86-JHU-Lab"><span class="toc-number">2.0.4.</span> <span class="toc-text">4. 小规模高保真数据集  JHU-Lab</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-radiomapseer"><span class="toc-number">2.0.5.</span> <span class="toc-text">5. radiomapseer</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/" title="数据集">数据集</a><time datetime="2026-01-16T09:02:40.000Z" title="Created 2026-01-16 17:02:40">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/work1/experiment/settings/%E6%8C%87%E4%BB%A4/" title="experiment/work1/指令">experiment/work1/指令</a><time datetime="2026-01-16T08:58:56.000Z" title="Created 2026-01-16 16:58:56">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/papers/work2/papers/work2/postpapers-work2-Frequency-Domain-Based-Diffusion-Model-for-Unpaired-Image-Dehazing/" title="&quot;Frequency Domain-Based Diffusion Model for Unpaired Image&quot; Dehazing">&quot;Frequency Domain-Based Diffusion Model for Unpaired Image&quot; Dehazing</a><time datetime="2026-01-16T08:10:41.000Z" title="Created 2026-01-16 16:10:41">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/hello-world/" title="Hello World">Hello World</a><time datetime="2026-01-16T07:26:26.734Z" title="Created 2026-01-16 15:26:26">2026-01-16</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

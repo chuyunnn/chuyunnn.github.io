@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>experiment/work1/指令 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="指令数据集跨场景： 12345674x:    hr: datasets&#x2F;expand&#x2F;250_80&#x2F;hr&#x2F;train_hr    lr: datasets&#x2F;expand&#x2F;250_80&#x2F;lr&#x2F;train_lr8x:    lr: datasets&#x2F;expand&#x2F;250_80&#x2F;8x&#x2F;lr&#x2F;train_lr16x:    lr: datasets&#x2F;expand&#x2F;250_80&#x2F;16x&#x2F;lr&#x2F;train_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="experiment&#x2F;work1&#x2F;指令">
+<meta property="og:url" content="http://example.com/work1/experiment/settings/%E6%8C%87%E4%BB%A4/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="指令数据集跨场景： 12345674x:    hr: datasets&#x2F;expand&#x2F;250_80&#x2F;hr&#x2F;train_hr    lr: datasets&#x2F;expand&#x2F;250_80&#x2F;lr&#x2F;train_lr8x:    lr: datasets&#x2F;expand&#x2F;250_80&#x2F;8x&#x2F;lr&#x2F;train_lr16x:    lr: datasets&#x2F;expand&#x2F;250_80&#x2F;16x&#x2F;lr&#x2F;train_">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-16T08:58:56.000Z">
+<meta property="article:modified_time" content="2026-01-16T09:01:46.073Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="experiment">
+<meta property="article:tag" content="run">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "experiment/work1/指令",
+  "url": "http://example.com/work1/experiment/settings/%E6%8C%87%E4%BB%A4/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-01-16T08:58:56.000Z",
+  "dateModified": "2026-01-16T09:01:46.073Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/work1/experiment/settings/%E6%8C%87%E4%BB%A4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'experiment/work1/指令',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">experiment/work1/指令</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">experiment/work1/指令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-16T08:58:56.000Z" title="Created 2026-01-16 16:58:56">2026-01-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-16T09:01:46.073Z" title="Updated 2026-01-16 17:01:46">2026-01-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/work1/">work1</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/work1/experiment/">experiment</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/work1/experiment/settings/">settings</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="指令"><a href="#指令" class="headerlink" title="指令"></a>指令</h1><h2 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h2><p>跨场景：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">4x:</span><br><span class="line">    hr: datasets/expand/<span class="number">250_80</span>/hr/train_hr</span><br><span class="line">    lr: datasets/expand/<span class="number">250_80</span>/lr/train_lr</span><br><span class="line">8x:</span><br><span class="line">    lr: datasets/expand/<span class="number">250_80</span>/8x/lr/train_lr</span><br><span class="line">16x:</span><br><span class="line">    lr: datasets/expand/<span class="number">250_80</span>/16x/lr/train_lr</span><br></pre></td></tr></table></figure>
+
+<h2 id="baseline"><a href="#baseline" class="headerlink" title="baseline"></a>baseline</h2><p>RMDM：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## train</span></span><br><span class="line">nohup python train.py --config /data/home/dcy/SR/rmdm/RMDM-main/configs/train.yaml &gt; /data/home/dcy/SR/rmdm/RMDM-main/logs/train_baseline_no_pinn_v1.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br><span class="line"><span class="comment">## test</span></span><br><span class="line">nohup python sample_test.py --scheduler_type ddpm --data_dir /data/home/dcy/SR/ESRT-main/datasets/RadioMapSeer --checkpoint_path /data/home/dcy/SR/rmdm/RMDM-main/model/train_baseline_no_pinn_4x_v1/model_phy.pth --output_dir /data/home/dcy/SR/rmdm/results/baseline_no_pinn_4x_v1 --ddpm_steps <span class="number">1000</span> --batch_size <span class="number">4</span> --num_samples -<span class="number">1</span> --save_images &gt; /data/home/dcy/SR/rmdm/RMDM-main/logs/test_baseline_no_pinn_4x_v1.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+
+<p>Radiodiff：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## train</span></span><br><span class="line">nohup accelerate launch train_cond_ldm.py --cfg ./configs/radio_train.yaml &gt; /data/home/dcy/Num2/RadioDiff-main/logs/train_radiodiff_cross_scene_4x_v1.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br><span class="line"><span class="comment">## test</span></span><br><span class="line">nohup python sample_cond_ldm.py --cfg /data/home/dcy/Num2/RadioDiff-main/configs/radio_sample.yaml &gt; /data/home/dcy/Num2/RadioDiff-main/logs/test_baseline_cross_scene_4x_v1.log <span class="number">2</span>&gt;&amp;<span class="number">1</span> &amp;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/work1/experiment/settings/%E6%8C%87%E4%BB%A4/">http://example.com/work1/experiment/settings/%E6%8C%87%E4%BB%A4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/experiment/">experiment</a><a class="post-meta__tags" href="/tags/run/">run</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/" title="数据集"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">数据集</div></div><div class="info-2"><div class="info-item-1">实测数据集1. 暂未发布的实测数据集地址：https://www.radiomaps.org/rm/resources github仓库：https://github.com/fachu000/deep-autoencoders-cartography/tree/master 文章：https://arxiv.org/abs/2310.11036 2. 实测数据集  RSRPSetCell-Level RSRP Estimation With the Image-to-Image Wireless Propagation Model Based on Measured Data github仓库（代码）：https://github.com/ZhengSaber/Cell-Level-RSRP-Estimation 数据集地址：https://ieee-dataport.org/documents/rsrpseturban-radio-map-dense-urban  [real-world dataset] Yi Zheng, March 9, 2022, “RSRPSet_u...</div></div></div></a><a class="pagination-related" href="/papers/work2/papers/work2/postpapers-work2-Frequency-Domain-Based-Diffusion-Model-for-Unpaired-Image-Dehazing/" title="&quot;Frequency Domain-Based Diffusion Model for Unpaired Image&quot; Dehazing"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">"Frequency Domain-Based Diffusion Model for Unpaired Image" Dehazing</div></div><div class="info-2"><div class="info-item-1">基于频域的非配对图像去雾扩散模型 图像去雾：从被雾霾遮挡的图像中恢复清晰图像。传统方法多依赖物理模型（如大气散射模型）或配对训练数据（清晰图像 + 对应雾图像）。  输入：雾图像（Hazy Image） 输出：去雾图像（Dehazed&#x2F;Clear Image） 目标：恢复清晰图像的颜色、纹理和结构，同时去除雾霾造成的衰减和颜色偏移。在非配对设置下，你 不需要每个雾图像都对应一个清晰图像，训练数据更灵活： 数据集只提供一组雾图像和一组清晰图像，但没有逐一对应关系。 通常使用 生成对抗网络（GAN） 或 对比学习（Contrastive Learning） 来学习域间映射： 雾域 → 清晰域 保持图像内容不变，但去除雾霾特征“忽略了频域的雾霾特性（雾霾相关的退化主要表现在幅度谱上）”，这就涉及 图像频域分析：   雾霾对图像主要表现为 低频衰减、高频模糊： 幅度谱的低频部分（整体亮度和大结构）会被衰减或偏移 高频部分（纹理、边缘）会模糊基于对比学习的主流方法如果只在 空间域（RGB像素或特征图） 对比，可能会 保留雾霾残余 或破坏纹理。     abstruct非配对图像去...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">指令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">1.1.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#baseline"><span class="toc-number">1.2.</span> <span class="toc-text">baseline</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/radio-map-dataset/%E6%95%B0%E6%8D%AE%E9%9B%86/" title="数据集">数据集</a><time datetime="2026-01-16T09:02:40.000Z" title="Created 2026-01-16 17:02:40">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/work1/experiment/settings/%E6%8C%87%E4%BB%A4/" title="experiment/work1/指令">experiment/work1/指令</a><time datetime="2026-01-16T08:58:56.000Z" title="Created 2026-01-16 16:58:56">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/papers/work2/papers/work2/postpapers-work2-Frequency-Domain-Based-Diffusion-Model-for-Unpaired-Image-Dehazing/" title="&quot;Frequency Domain-Based Diffusion Model for Unpaired Image&quot; Dehazing">&quot;Frequency Domain-Based Diffusion Model for Unpaired Image&quot; Dehazing</a><time datetime="2026-01-16T08:10:41.000Z" title="Created 2026-01-16 16:10:41">2026-01-16</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/hello-world/" title="Hello World">Hello World</a><time datetime="2026-01-16T07:26:26.734Z" title="Created 2026-01-16 15:26:26">2026-01-16</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
