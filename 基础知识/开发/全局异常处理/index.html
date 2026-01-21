@@ -1,0 +1,226 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>全局异常处理 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用HandlerExceptionResolver&#x2F;ControllerAdvice方案进行全局异常处理实例 控制台输出： 1ERROR ...ForumExceptionHandler.buildTastMsg(ForumExceptionHandler.java:xx)  这里ForumExceptionHandler就是用来做全局异常处理的，是HandlerExceptionRe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="全局异常处理">
+<meta property="og:url" content="http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="使用HandlerExceptionResolver&#x2F;ControllerAdvice方案进行全局异常处理实例 控制台输出： 1ERROR ...ForumExceptionHandler.buildTastMsg(ForumExceptionHandler.java:xx)  这里ForumExceptionHandler就是用来做全局异常处理的，是HandlerExceptionRe">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-21T05:57:10.000Z">
+<meta property="article:modified_time" content="2026-01-21T06:52:04.748Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="异常处理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "全局异常处理",
+  "url": "http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-01-21T05:57:10.000Z",
+  "dateModified": "2026-01-21T06:52:04.748Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '全局异常处理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">全局异常处理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">全局异常处理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-21T05:57:10.000Z" title="Created 2026-01-21 13:57:10">2026-01-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-21T06:52:04.748Z" title="Updated 2026-01-21 14:52:04">2026-01-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>使用HandlerExceptionResolver&#x2F;ControllerAdvice方案进行全局异常处理实例</p>
+<p>控制台输出：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR ...ForumExceptionHandler.buildTastMsg(ForumExceptionHandler.java:xx)</span><br></pre></td></tr></table></figure>
+
+<p>这里ForumExceptionHandler就是用来做全局异常处理的，是HandlerExceptionResolver接口的实现类</p>
+<h2 id="HandlerExceptionResolver"><a href="#HandlerExceptionResolver" class="headerlink" title="HandlerExceptionResolver"></a>HandlerExceptionResolver</h2><p>spring提供的一种异常处理机制，可以在应用程序中以统一的方式处理控制器引发的异常</p>
+<p>使用：创建一个实现接口的类，在类中定义如何处理异常（ForumExceptionHandler）</p>
+<p>实践中，遇到异常时会根据请求的类型（接口还是页面）返回不同的结果</p>
+<p>这里分为两种异常处理场景：REST接口请求异常、普通页面请求异常</p>
+<h3 id="1-REST接口请求异常（前后端分离接口）"><a href="#1-REST接口请求异常（前后端分离接口）" class="headerlink" title="1. REST接口请求异常（前后端分离接口）"></a>1. REST接口请求异常（前后端分离接口）</h3><p>就是用户调用一个接口（发出一个请求），后端返回的是JSON格式的错误信息，不是网页，用于前端处理</p>
+<hr>
+<p>响应：后端给前端的回信，包含</p>
+<ul>
+<li>状态码：比如200 - 成功，404 - 找不到，500 - 服务器出错</li>
+<li>响应头：格式（JSON还是HTML）、编码方式</li>
+<li>响应体：实际内容（JSON数据、HTML页面代码）</li>
+</ul>
+<p>视图对象ModelAndView：用来<strong>告诉 Spring MVC 要渲染哪个页面（视图），以及往页面里塞什么数据（模型）</strong></p>
+<ul>
+<li><strong>Model</strong>：就是要传给页面的数据（比如错误码、错误提示）</li>
+<li><strong>View</strong>：就是要显示的页面模板（比如 <code>error/404.html</code>）</li>
+</ul>
+<p>在普通页面异常中需要渲染一个错误页面</p>
+<hr>
+<p>流程：</p>
+<ol>
+<li>判断响应是否已经提交：如果是就返回一个空的ModelAndView，不再处理</li>
+<li>如果响应没有提交，就清空之前的响应内容，设置响应类型为application&#x2F;json</li>
+<li>把错误信息写成JSON输出：用 <code>response.getWriter()</code> 把错误状态对象（比如 <code>errStatus</code> 里的错误码、错误提示）转成 JSON 字符串，写给前端</li>
+<li>返回空的ModelAndView：因为已经手动把JSON写回响应了，所以返回空的视图对象，告诉Spring MVC不需要再渲染页面</li>
+</ol>
+<h3 id="2-普通页面请求异常（直接访问网页）"><a href="#2-普通页面请求异常（直接访问网页）" class="headerlink" title="2. 普通页面请求异常（直接访问网页）"></a>2. 普通页面请求异常（直接访问网页）</h3><p>提供友好错误页面而不是JSON代码</p>
+<p>流程：</p>
+<ol>
+<li>获取错误页面的视图名称：根据错误状态（404&#x2F;500）找到对应的错误页面模板（error&#x2F;404.html)</li>
+<li>创建ModelAndView对象：视图名称为刚找到的错误页面模板</li>
+<li>设置响应类型为HTML</li>
+<li><strong>往 ModelAndView 里塞错误信息</strong>：把**<u>错误码、错误提示</u>**等信息放到 <code>ModelAndView</code> 里，这样错误页面模板就能拿到这些数据并显示出来</li>
+<li><strong>返回 ModelAndView</strong>：Spring MVC 会根据这个对象渲染出错误页面，返回给浏览器。</li>
+</ol>
+<h2 id="ControllerAdvice"><a href="#ControllerAdvice" class="headerlink" title="@ControllerAdvice"></a>@ControllerAdvice</h2><p>是springMVC提供的全局异常处理注解，可以拦截所有**<code>@Controller</code> 和 <code>@RestController</code> 抛出的异常**，并统一处理，避免在每个接口里重复写 <code>try-catch</code></p>
+<p>注意：</p>
+<ul>
+<li>**<code>@ControllerAdvice</code>**：标记这是一个全局异常处理器，会拦截所有控制器的异常</li>
+<li>**<code>@ExceptionHandler</code>**：指定要处理的异常类型（比如 <code>ForumException.class</code>、<code>RuntimeException.class</code>）</li>
+</ul>
+<ol>
+<li>先定义基础类：异常美剧、自定义业务异常、统一响应对象</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 异常枚举 ==&gt; 可以定义一些业务异常代码</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">StatusEnum</span> &#123;</span><br><span class="line">    SUCCESS(<span class="number">200</span>, <span class="string">&quot;操作成功&quot;</span>),</span><br><span class="line">    RECORDS_NOT_EXISTS(<span class="number">404</span>, <span class="string">&quot;记录不存在&quot;</span>),</span><br><span class="line">    UNEXPECT_ERROR(<span class="number">500</span>, <span class="string">&quot;系统异常，请稍后再试&quot;</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> code;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String msg;</span><br><span class="line">    StatusEnum(<span class="type">int</span> code, String msg) &#123;</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">        <span class="built_in">this</span>.msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getCode</span><span class="params">()</span> &#123; <span class="keyword">return</span> code; &#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMsg</span><span class="params">()</span> &#123; <span class="keyword">return</span> msg; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 自定义业务异常</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ForumException</span> <span class="keyword">extends</span> <span class="title class_">RuntimeException</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Status status;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ForumException</span><span class="params">(StatusEnum statusEnum)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.status = Status.newStatus(statusEnum, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ForumException</span><span class="params">(StatusEnum statusEnum, String detail)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.status = Status.newStatus(statusEnum, detail);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Status <span class="title function_">getStatus</span><span class="params">()</span> &#123; <span class="keyword">return</span> status; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 统一响应对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Status</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> code;</span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Status <span class="title function_">newStatus</span><span class="params">(StatusEnum enumType, String detail)</span> &#123;</span><br><span class="line">        <span class="type">Status</span> <span class="variable">status</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Status</span>();</span><br><span class="line">        status.code = enumType.getCode();</span><br><span class="line">        status.msg = detail == <span class="literal">null</span> ? enumType.getMsg() : enumType.getMsg() + <span class="string">&quot;：&quot;</span> + detail;</span><br><span class="line">        <span class="keyword">return</span> status;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// getter/setter</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getCode</span><span class="params">()</span> &#123; <span class="keyword">return</span> code; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setCode</span><span class="params">(<span class="type">int</span> code)</span> &#123; <span class="built_in">this</span>.code = code; &#125;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMsg</span><span class="params">()</span> &#123; <span class="keyword">return</span> msg; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMsg</span><span class="params">(String msg)</span> &#123; <span class="built_in">this</span>.msg = msg; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>全局异常处理器：可以用<code>@ControllerAdvice</code>注解标记，配合<code>@ExceptionHandler</code>处理不同类型的异常</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ControllerAdvice;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.ExceptionHandler;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.ModelAndView;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 只要在全局异常处理器类上加上这个注解，Spring就会自动扫描并把它注册为全局异常处理的Bean</span></span><br><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionHandler</span> &#123;</span><br><span class="line">    <span class="comment">// 处理 REST 接口异常（返回 JSON）</span></span><br><span class="line">    <span class="meta">@ExceptionHandler(value = &#123;ForumException.class, RuntimeException.class&#125;)</span></span><br><span class="line">    <span class="keyword">public</span> ModelAndView <span class="title function_">handleApiException</span><span class="params">(Exception ex, HttpServletResponse response)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">Status</span> <span class="variable">status</span> <span class="operator">=</span> buildToastMsg(ex);</span><br><span class="line">        <span class="comment">// 判断是否是 AJAX/REST 请求（可以根据请求头或 URL 前缀判断）</span></span><br><span class="line">        <span class="keyword">if</span> (isRestRequest(response)) &#123;</span><br><span class="line">            <span class="comment">// 重置响应，返回 JSON</span></span><br><span class="line">            response.reset();</span><br><span class="line">            response.setContentType(<span class="string">&quot;application/json;charset=UTF-8&quot;</span>);</span><br><span class="line">            response.getWriter().write(<span class="string">&quot;&#123;\&quot;code\&quot;:&quot;</span> + status.getCode() + <span class="string">&quot;,\&quot;msg\&quot;:\&quot;&quot;</span> + status.getMsg() + <span class="string">&quot;\&quot;&#125;&quot;</span>);</span><br><span class="line">            <span class="comment">// 返回空的 ModelAndView，告诉 Spring MVC 不需要渲染页面</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 普通页面请求，返回错误页面</span></span><br><span class="line">            <span class="type">ModelAndView</span> <span class="variable">mv</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>(<span class="string">&quot;error/error&quot;</span>);</span><br><span class="line">            mv.addObject(<span class="string">&quot;status&quot;</span>, status);</span><br><span class="line">            <span class="keyword">return</span> mv;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 异常分类处理：使用istanceof判断属于什么异常</span></span><br><span class="line">    <span class="keyword">private</span> Status <span class="title function_">buildToastMsg</span><span class="params">(Exception ex)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (ex <span class="keyword">instanceof</span> ForumException) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((ForumException) ex).getStatus();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> Status.newStatus(StatusEnum.UNEXPECT_ERROR, ex.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 判断是否是 REST 接口请求（这里简化为判断请求头里是否有 Accept: application/json）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isRestRequest</span><span class="params">(HttpServletResponse response)</span> &#123;</span><br><span class="line">        <span class="comment">// 实际项目中可以根据请求头、URL 前缀（如 /api/）等判断</span></span><br><span class="line">        <span class="keyword">return</span> response.getContentType() != <span class="literal">null</span> &amp;&amp; response.getContentType().contains(<span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestController</span> &#123;</span><br><span class="line">    <span class="comment">// 测试 REST 接口异常</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/api/article/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getArticle</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (id == <span class="number">999</span>) &#123;</span><br><span class="line">            <span class="comment">// 正常抛出业务异常即可，@ControllerAdvice会自动拦截处理</span></span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ForumException</span>(StatusEnum.RECORDS_NOT_EXISTS, <span class="string">&quot;文章ID=999不存在&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;文章内容&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 测试普通页面请求异常</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/article/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getArticlePage</span><span class="params">(Long id)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (id == <span class="number">999</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ForumException</span>(StatusEnum.RECORDS_NOT_EXISTS, <span class="string">&quot;文章ID=999不存在&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;article&quot;</span>; <span class="comment">// 返回页面视图</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ol>
+<li>HandlerExceptionResolver：用接口处理异常，可以编写任何处理逻辑，但是和Spring MVC组件集成不够紧密，需要手动添加配置</li>
+<li>@ControllerAdvice：定义全局异常处理类的注解，可以使用@ExceptionHandler注解来处理不同类型的异常（需要配合使用）。这种方法更容易即成，但是逻辑可能没那么灵活</li>
+</ol>
+<p>可以共存，@ControllerAdvice优先级更高，也可以指定</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">异常处理</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/AOP%E5%AE%9A%E4%B9%89%E5%92%8C%E9%85%8D%E7%BD%AE/" title="AOP定义和配置"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">AOP定义和配置</div></div><div class="info-2"><div class="info-item-1">概念定义AOP（Aspect Orient Programming）面向切面编程，是一种编程思想，利用AOP可以对业务逻辑的各个部分进行隔离。这种横向切面的方式可以注入**和主业务无关的功能，比如事务管理和日志管理** ​	&#x3D;&#x3D;&gt; 可以让开发者在不修改源码的同时，为业务组件添加通用功能（让AOP去修改源码） 本质：对方法前后进行拦截，在目标方法开始之前创建或者加入一个事务，执行完目标方法之后根据执行的情况提交或者回滚 是面向对象编程（Object-oriented Programming，OOP）的补充。OOP的核心单元是类，AOP的核心单元是切面。  spring支持的两种事务：  编程式事务：把事务管理代码嵌入业务代码中，一般用TransactionTemplete比较多 声明式事务：用AOP管理事务   实现方式两种实现方式：  AspectJ 静态 AOP 实现， AOP 框架在**编译阶段**对程序源代码进行修改，生成了静态的 AOP代理类(生成的 *.class 文件已经被改掉了，需要使用特定的编译器) 动态 AOP 实现， AOP 框架在*...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HandlerExceptionResolver"><span class="toc-number">1.</span> <span class="toc-text">HandlerExceptionResolver</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-REST%E6%8E%A5%E5%8F%A3%E8%AF%B7%E6%B1%82%E5%BC%82%E5%B8%B8%EF%BC%88%E5%89%8D%E5%90%8E%E7%AB%AF%E5%88%86%E7%A6%BB%E6%8E%A5%E5%8F%A3%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">1. REST接口请求异常（前后端分离接口）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%99%AE%E9%80%9A%E9%A1%B5%E9%9D%A2%E8%AF%B7%E6%B1%82%E5%BC%82%E5%B8%B8%EF%BC%88%E7%9B%B4%E6%8E%A5%E8%AE%BF%E9%97%AE%E7%BD%91%E9%A1%B5%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">2. 普通页面请求异常（直接访问网页）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ControllerAdvice"><span class="toc-number">2.</span> <span class="toc-text">@ControllerAdvice</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BA%E5%88%AB"><span class="toc-number">3.</span> <span class="toc-text">区别</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%A8%E5%B1%80%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" title="全局异常处理">全局异常处理</a><time datetime="2026-01-21T05:57:10.000Z" title="Created 2026-01-21 13:57:10">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/AOP%E5%AE%9A%E4%B9%89%E5%92%8C%E9%85%8D%E7%BD%AE/" title="AOP定义和配置">AOP定义和配置</a><time datetime="2026-01-20T08:44:48.000Z" title="Created 2026-01-20 16:44:48">2026-01-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%BC%80%E5%8F%91/%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%91%BD%E5%90%8D-VO%E3%80%81DTO%E3%80%81DO%E3%80%81PO/" title="实体类命名 VO、DTO、DO、PO">实体类命名 VO、DTO、DO、PO</a><time datetime="2026-01-20T08:18:36.000Z" title="Created 2026-01-20 16:18:36">2026-01-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/API%E9%85%8D%E7%BD%AE/" title="API配置">API配置</a><time datetime="2026-01-20T07:16:56.000Z" title="Created 2026-01-20 15:16:56">2026-01-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E4%BB%93%E5%BA%93/%E9%A1%B9%E7%9B%AE/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" title="个人博客搭建">个人博客搭建</a><time datetime="2026-01-20T06:49:35.000Z" title="Created 2026-01-20 14:49:35">2026-01-20</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
