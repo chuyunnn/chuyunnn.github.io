@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>事务及使用实例 | Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ACID特性 原子性 Atomicity：事务包含的所有操作要么全部成功，要么全部失败回滚 一致性 Consistency：事务执行前后数据库的状态保持一致，比如库存、金额总额一致 隔离型 Isolation：多个用户并发访问数据库时，事务直接不会互相干扰 持久性 Durability：事务一旦提交，数据库中数据改变是持久的，即使数据库故障也不会丢失事务操作  数据库事务的实现原理MySQL的In">
+<meta property="og:type" content="article">
+<meta property="og:title" content="事务及使用实例">
+<meta property="og:url" content="http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ACID特性 原子性 Atomicity：事务包含的所有操作要么全部成功，要么全部失败回滚 一致性 Consistency：事务执行前后数据库的状态保持一致，比如库存、金额总额一致 隔离型 Isolation：多个用户并发访问数据库时，事务直接不会互相干扰 持久性 Durability：事务一旦提交，数据库中数据改变是持久的，即使数据库故障也不会丢失事务操作  数据库事务的实现原理MySQL的In">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-22T06:47:40.000Z">
+<meta property="article:modified_time" content="2026-01-22T07:33:02.983Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="实例">
+<meta property="article:tag" content="事务">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "事务及使用实例",
+  "url": "http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/",
+  "image": "http://example.com/img/butterfly-icon.png",
+  "datePublished": "2026-01-22T06:47:40.000Z",
+  "dateModified": "2026-01-22T07:33:02.983Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "John Doe",
+      "url": "http://example.com"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '事务及使用实例',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a><a class="nav-page-title" href="/"><span class="site-name">事务及使用实例</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">事务及使用实例</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-22T06:47:40.000Z" title="Created 2026-01-22 14:47:40">2026-01-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-22T07:33:02.983Z" title="Updated 2026-01-22 15:33:02">2026-01-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="ACID特性"><a href="#ACID特性" class="headerlink" title="ACID特性"></a>ACID特性</h2><ul>
+<li><strong>原子性 Atomicity：</strong>事务包含的所有操作<strong>要么全部成功，要么全部失败回滚</strong></li>
+<li><strong>一致性 Consistency：</strong>事务执行前后数据库的状态保持一致，比如库存、金额总额一致</li>
+<li><strong>隔离型 Isolation：</strong>多个用户并发访问数据库时，事务直接不会互相干扰</li>
+<li><strong>持久性 Durability：</strong>事务一旦提交，数据库中数据改变是持久的，即使数据库故障也不会丢失事务操作</li>
+</ul>
+<h2 id="数据库事务的实现原理"><a href="#数据库事务的实现原理" class="headerlink" title="数据库事务的实现原理"></a>数据库事务的实现原理</h2><p>MySQL的InnoDB引擎：</p>
+<ul>
+<li>使用redo log（重做日志）保证持久性</li>
+<li>使用undo log（回滚日志）保证原子性</li>
+<li>使用锁机制、MVCC保证隔离性</li>
+</ul>
+<p>&#x3D;&#x3D;&gt; 隔离级别：repeatable read 可重复读</p>
+<h3 id="数据库事务的隔离级别"><a href="#数据库事务的隔离级别" class="headerlink" title="数据库事务的隔离级别"></a>数据库事务的隔离级别</h3><ul>
+<li>读未提交 read uncommitted：别人改了一半也能看到 &#x3D;&#x3D;&gt; 脏读</li>
+<li>读已提交 read committed：读已经发布的内容 &#x3D;&#x3D;&gt; 不可重复读（不可用于要求数据一致性场景 行锁）</li>
+<li>可重复读 repeatable read（SQL默认）：读到任务开始时读快照 &#x3D;&#x3D;&gt; 幻读（间隙锁）</li>
+<li>串行化 serializable：独占锁，其余事务不可读不可写，排队等待当前食物结束（表锁，避免所有并发问题，性能差）</li>
+</ul>
+<h2 id="redis事务"><a href="#redis事务" class="headerlink" title="redis事务"></a>redis事务</h2><p>将多个命令请求打包，顺序执行打包的命令，并且不被打断</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MULTI --&gt; (放指令) ... --&gt; EXEC(开始执行)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>不支持原子性</strong>：redis事务不支持回滚，也就是事务中的指令如果没有出错的话是会正常执行掉的</p>
+</li>
+<li><p><strong>不支持持久性</strong>：redis的持久化方式为：快照RDB+AOF。其中AOF比RDB的实时性更好，有三种模式</p>
+<ul>
+<li><p>always：每次有数据修改都同步AOF</p>
+</li>
+<li><p>everysec：每秒同步一次</p>
+</li>
+<li><p>no：让操作系统决定多长时间同步一次（一般为30秒）</p>
+<p>这里everysec、no都<u>存在数据丢失的情况</u>，所以不支持持久性</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>解决redis事务的缺陷方法：使用Lua脚本 &#x3D;&#x3D;&gt; 它是<strong>原子操作</strong>，也就是批量执行多条redis命令，一段Lua脚本执行时不会有其余脚本&#x2F;redis命令同时执行。但是Lua脚本也不能回滚（原子操作 !&#x3D; 原子性）</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="声明式事务：使用-Transactional"><a href="#声明式事务：使用-Transactional" class="headerlink" title="声明式事务：使用@Transactional"></a>声明式事务：使用<code>@Transactional</code></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 保存文章，当articleId存在时，表示更新记录；不存在时，表示插入</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="comment">// 指定所有异常（包括运行时异常和检查型异常）都会触发回滚</span></span><br><span class="line"><span class="meta">@Transactional(rollbackFor = Exception.class)</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Long <span class="title function_">saveArticle</span><span class="params">(ArticlePostReq req, Long author)</span> &#123;</span><br><span class="line">    <span class="type">ArticleDO</span> <span class="variable">article</span> <span class="operator">=</span> ArticleConverter.toArticleDo(req, author);</span><br><span class="line">    <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> imageService.mdImgReplace(req.getContent());</span><br><span class="line">    <span class="keyword">if</span> (NumUtil.nullOrZero(req.getArticleId())) &#123;</span><br><span class="line">        <span class="keyword">return</span> insertArticle(article, content, req.getTagIds());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> updateArticle(article, content, req.getTagIds());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-修饰位置"><a href="#1-修饰位置" class="headerlink" title="1. 修饰位置"></a>1. 修饰位置</h4><ul>
+<li>方法上添加注解</li>
+<li>类上添加注解：类中所有**<u>公共方法</u>**都支持事务</li>
+</ul>
+<h4 id="2-参数"><a href="#2-参数" class="headerlink" title="2. 参数"></a>2. 参数</h4><table>
+<thead>
+<tr>
+<th align="center">属性名</th>
+<th align="center">类型</th>
+<th align="center">核心作用</th>
+<th align="center">默认值</th>
+<th align="center">常用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>value</code>&#x2F;<code>transactionManager</code></td>
+<td align="center">String</td>
+<td align="center">指定事务管理器</td>
+<td align="center">容器默认的事务管理器</td>
+<td align="center">多数据源 &#x2F; 多事务管理器场景</td>
+</tr>
+<tr>
+<td align="center"><code>propagation</code></td>
+<td align="center">Propagation</td>
+<td align="center">事务传播行为 &#x3D;&#x3D;&gt;  当一个有事务的方法调用另一个方法时，事务该如何传递</td>
+<td align="center">REQUIRED</td>
+<td align="center">嵌套调用时控制事务创建规则</td>
+</tr>
+<tr>
+<td align="center"><code>isolation</code></td>
+<td align="center">Isolation</td>
+<td align="center"><strong>事务隔离级别</strong></td>
+<td align="center">DEFAULT（数据库默认）</td>
+<td align="center">解决脏读 &#x2F; 不可重复读 &#x2F; 幻读</td>
+</tr>
+<tr>
+<td align="center"><code>timeout</code></td>
+<td align="center">int</td>
+<td align="center">事务超时时间（秒）</td>
+<td align="center">-1（永不超时）</td>
+<td align="center">防止长事务占用资源</td>
+</tr>
+<tr>
+<td align="center"><code>readOnly</code></td>
+<td align="center">boolean</td>
+<td align="center">是否只读事务</td>
+<td align="center">false</td>
+<td align="center">纯查询操作，优化性能</td>
+</tr>
+<tr>
+<td align="center"><code>rollbackFor</code></td>
+<td align="center">Class&lt;? extends Throwable&gt;[]</td>
+<td align="center"><strong>指定触发回滚的异常类型</strong></td>
+<td align="center">仅运行时异常（RuntimeException）</td>
+<td align="center">需要捕获检查型异常并回滚</td>
+</tr>
+<tr>
+<td align="center"><code>rollbackForClassName</code></td>
+<td align="center">String[]</td>
+<td align="center">同上（异常类名）</td>
+<td align="center">-</td>
+<td align="center">不想引入异常类时使用</td>
+</tr>
+<tr>
+<td align="center"><code>noRollbackFor</code></td>
+<td align="center">Class&lt;? extends Throwable&gt;[]</td>
+<td align="center"><strong>指定不回滚的异常类型</strong></td>
+<td align="center">-</td>
+<td align="center">特定异常不希望回滚</td>
+</tr>
+<tr>
+<td align="center"><code>noRollbackForClassName</code></td>
+<td align="center">String[]</td>
+<td align="center">同上（异常类名）</td>
+<td align="center">-</td>
+<td align="center">-</td>
+</tr>
+</tbody></table>
+<p>🌟注意<code>rollbackFor</code>：不指定具体异常时，默认只有**<u>运行时</u>异常**才会触发事务回滚</p>
+<hr>
+<ul>
+<li><p>运行时异常：代码逻辑问题，不需要<code>try-catch</code>显示捕获</p>
+</li>
+<li><p>检查型异常：外部资源异常（IO、网络、数据库连接），需要<code>try-catch</code>显示捕获或声明抛出<code>throws</code></p>
+</li>
+</ul>
+<hr>
+<h3 id="编程式事务"><a href="#编程式事务" class="headerlink" title="编程式事务"></a>编程式事务</h3><p>声明式事务的约束：最小粒度为方法级别，如果想在**<u>方法内部分代码块</u>**进行事务约束，可用编程式事务</p>
+<p>&#x3D;&#x3D;&gt; 比如要下载图片并上传这种耗时操作不需要加入事务</p>
+<p>🌟 使用事务时牢记：<em><strong>最小范围使用原则</strong></em></p>
+<h4 id="1-注入-TransactionTemplate"><a href="#1-注入-TransactionTemplate" class="headerlink" title="1. 注入 TransactionTemplate"></a>1. 注入 <code>TransactionTemplate</code></h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> TransactionTemplate transactionTemplate;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>TransactionTemplate</code> 是Spring提供的编程式事务工具类，封装了事务的开启、提交、回滚等操作</p>
+</li>
+<li><p>它会自动使用 Spring 容器中的事务管理器，无需手动配置</p>
+</li>
+</ul>
+<h4 id="2-用-transactionTemplate-execute-包裹业务逻辑"><a href="#2-用-transactionTemplate-execute-包裹业务逻辑" class="headerlink" title="2. 用 transactionTemplate.execute() 包裹业务逻辑"></a>2. 用 <code>transactionTemplate.execute()</code> 包裹业务逻辑</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2. 将逻辑改造为编程式事务</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> Long <span class="title function_">saveArticle</span><span class="params">(ArticlePostReq req, Long author)</span> &#123;</span><br><span class="line">    <span class="type">ArticleDO</span> <span class="variable">article</span> <span class="operator">=</span> ArticleConverter.toArticleDo(req, author);</span><br><span class="line">    <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> imageService.mdImgReplace(req.getContent());</span><br><span class="line">    <span class="keyword">return</span> transactionTemplate.execute(<span class="keyword">new</span> <span class="title class_">TransactionCallback</span>&lt;Long&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Long <span class="title function_">doInTransaction</span><span class="params">(TransactionStatus status)</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (NumUtil.nullOrZero(req.getArticleId())) &#123;</span><br><span class="line">                <span class="keyword">return</span> insertArticle(article, content, req.getTagIds());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> updateArticle(article, content, req.getTagIds());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>execute()</code> 方法接收一个 <code>TransactionCallback</code> 回调，回调中的 <code>doInTransaction()</code> 方法会在事务内执行</p>
+</li>
+<li><p>如果 <code>doInTransaction()</code> 正常返回，Spring 会自动提交事务；如果抛出异常，会自动回滚事务</p>
+</li>
+<li><p><code>TransactionStatus</code> 对象可以用来手动控制事务（比如 <code>status.setRollbackOnly()</code> 强制回滚）</p>
+</li>
+</ul>
+<h3 id="📋-使用注意事项"><a href="#📋-使用注意事项" class="headerlink" title="📋 使用注意事项"></a>📋 使用注意事项</h3><ol>
+<li>使用场景</li>
+</ol>
+<p>首先确定事务的使用场景，什么时候要用事务，不要瞎用，就比如非常简单的只读场景，那么什么场景需要用呢？</p>
+<ul>
+<li>当一个基础的业务单元 (如对外提供的 http 接口，service 方法)，存在 &gt;&#x3D;2 的数据变更时，就需要考虑，部分更新成功，部分更新失败是否会出现脏数据，是否会有影响。<ul>
+<li>若是：则可以考虑引入事务</li>
+<li>若否：不建议加入事务</li>
+</ul>
+</li>
+<li>只有一个数据变更，但是后续有强依赖这个数据的逻辑，也需要加入事务<ul>
+<li>比如接到支付成功消息，我要做一个校对的后台任务</li>
+<li>我的业务逻辑是：先调用第三方校验是否属实，然后更新本地状态为成功，最后 MQ 方式通知订单状态变更</li>
+<li>此时我们需要将第二步数据变更与第三步消息通知放在事务中，只要通知失败，我们还是不更新本地状态，避免出现我们校验成功了，但是订单还是未支付</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>使用建议</li>
+</ol>
+<ul>
+<li>避免大事务，只在需要的地方加事务</li>
+<li>注意分布式事务场景</li>
+<li>所有的操作，走索引，避免出现锁表</li>
+<li>减少范围、大批量的数据处理场景</li>
+<li>如果业务支撑，可以降低隔离级别，一是减少隔离级别带来的附加成本，二则是可以避免某些场景下的死锁</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/liuyueyi/spring-boot-demo/tree/master/spring-boot/101-jdbctemplate-transaction">https://github.com/liuyueyi/spring-boot-demo/tree/master/spring-boot/101-jdbctemplate-transaction</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">John Doe</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/">http://example.com/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AE%9E%E4%BE%8B/">实例</a><a class="post-meta__tags" href="/tags/%E4%BA%8B%E5%8A%A1/">事务</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/MapStruct/" title="MapStruct"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">MapStruct</div></div><div class="info-2"><div class="info-item-1">基本定义在xxxStructMapper接口中定义好方法后，MapStruct【映射器】可以在**编译**的时候生成相应的实现类 &#x3D;&#x3D;&gt; 主要针对DO对象转换成DTO对象 如果没有MapStruct： 12345678910111213public static ArticleDTO toDto(ArticleDO articleDO) &#123;    if (articleDO == null) &#123;        return null;    &#125;    ArticleDTO articleDTO = new ArticleDTO();    articleDTO.setAuthor(articleDO.getUserId());    articleDTO.setArticleId(articleDO.getId());    articleDTO.setArticleType(articleDO.getArticleType());		...    // 设置类目id    articleDTO.setCategory(ne...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%9C%BA%E6%99%AF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E7%BB%86%E7%B2%92%E5%BA%A6%E5%AE%9E%E4%BE%8B/" title="高并发场景解决方案细粒度实例"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-19</div><div class="info-item-2">高并发场景解决方案细粒度实例</div></div><div class="info-2"><div class="info-item-1">数据库表中有一个字段会频繁更新（比如递增）这时你可以：  先查询，如果存在就更新，如果不存在就初始化 用一条SQL完成插入和更新，无需先查询（利用id和type的唯一索引）  1234-- 核心SQL：如果记录存在则 cnt+1，不存在则初始化 cnt=1INSERT INTO read_count (document_id, document_type, cnt)VALUES (101, 1, 1)ON DUPLICATE KEY UPDATE cnt = cnt + 1;  原理：因为 idx_document_id_type 是唯一索引，当插入的 (document_id, document_type) 已存在时，会触发 **ON DUPLICATE KEY UPDATE**，执行 cnt = cnt + 1； 优势：原子性操作，避免并发下的 “查询 - 更新” 不一致问题，性能更高。 注意：用递增的方式而不是赋值的方式 &#x3D;&#x3D;&gt; 并发请求下保证计数准确（如果赋值可能会出现覆盖更新的问题） 其他优化思路： 缓冲层缓冲：用**redis做计数缓冲（还可...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">23</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ACID%E7%89%B9%E6%80%A7"><span class="toc-number">1.</span> <span class="toc-text">ACID特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">数据库事务的实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-number">2.1.</span> <span class="toc-text">数据库事务的隔离级别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E4%BA%8B%E5%8A%A1"><span class="toc-number">3.</span> <span class="toc-text">redis事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1%EF%BC%9A%E4%BD%BF%E7%94%A8-Transactional"><span class="toc-number">4.1.</span> <span class="toc-text">声明式事务：使用@Transactional</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BF%AE%E9%A5%B0%E4%BD%8D%E7%BD%AE"><span class="toc-number">4.1.1.</span> <span class="toc-text">1. 修饰位置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%8F%82%E6%95%B0"><span class="toc-number">4.1.2.</span> <span class="toc-text">2. 参数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E5%BC%8F%E4%BA%8B%E5%8A%A1"><span class="toc-number">4.2.</span> <span class="toc-text">编程式事务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%B3%A8%E5%85%A5-TransactionTemplate"><span class="toc-number">4.2.1.</span> <span class="toc-text">1. 注入 TransactionTemplate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E7%94%A8-transactionTemplate-execute-%E5%8C%85%E8%A3%B9%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91"><span class="toc-number">4.2.2.</span> <span class="toc-text">2. 用 transactionTemplate.execute() 包裹业务逻辑</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%93%8B-%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">4.3.</span> <span class="toc-text">📋 使用注意事项</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/" title="事务及使用实例">事务及使用实例</a><time datetime="2026-01-22T06:47:40.000Z" title="Created 2026-01-22 14:47:40">2026-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/MapStruct/" title="MapStruct">MapStruct</a><time datetime="2026-01-22T06:14:37.000Z" title="Created 2026-01-22 14:14:37">2026-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/WEB%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B9%8BListener/" title="WEB三大组件之Listener">WEB三大组件之Listener</a><time datetime="2026-01-21T09:22:48.000Z" title="Created 2026-01-21 17:22:48">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/WEB%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B9%8Bservlet/" title="WEB三大组件之servlet">WEB三大组件之servlet</a><time datetime="2026-01-21T09:10:38.000Z" title="Created 2026-01-21 17:10:38">2026-01-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/WEB%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B9%8BFilter/" title="WEB三大组件之Filter">WEB三大组件之Filter</a><time datetime="2026-01-21T08:30:39.000Z" title="Created 2026-01-21 16:30:39">2026-01-21</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
