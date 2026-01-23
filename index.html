@@ -1,177 +1,328 @@
-<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hexo</title><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta property="og:type" content="website">
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
 <meta property="og:url" content="http://example.com/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/img/butterfly-icon.png">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/img/butterfly-icon.png"><script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Hexo",
-  "alternateName": [
-    "example.com"
-  ],
-  "url": "http://example.com/"
-}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
     
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
         
       
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Hexo</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+    <div class="content index py4 h-card">
+        
+          <header id="header">
+  <a class="u-url u-uid" href="/">
+  
+    
+      <img id="logo" alt class="u-logo" src="/images/logo.png" />
+    
+  
+    <div id="title">
+      <h1 class="p-name">Hexo</h1>
+    </div>
+  </a>
+  <div id="nav">
+    <ul>
+      <li class="icon">
+        <a href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-2x"></i></a>
+      </li>
+      <!--
+     --><li><a href="/">Home</a></li><!--
+   --><!--
+     --><li><a href="/about/">About</a></li><!--
+   --><!--
+     --><li><a href="/archives/">Writing</a></li><!--
+   --><!--
+     --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+   -->
+    </ul>
+  </div>
+</header>
+
+        
+        <section id="about" class="p-note">
+  
+  
+    <p>
+      Find me on
+      
+      
+      
+        
+        
+          <a class="icon u-url" target="_blank" rel="noopener me" href="http://github.com/probberechts/cactus-dark" aria-label="github" title="github">
+            <i class="fa-brands fa-github"></i><!--
+      ---></a><!--
+    ---><!--
+    --->, 
+        
+      
+        
+        
+          <a class="icon u-url" target="_blank" rel="noopener me" href="/" aria-label="twitter" title="twitter">
+            <i class="fa-brands fa-twitter"></i><!--
+      ---></a><!--
+    ---><!--
+    --->, 
+        
+      
+        
+        
+          <a class="icon u-url" target="_blank" rel="noopener me" href="/" aria-label="facebook" title="facebook">
+            <i class="fa-brands fa-facebook"></i><!--
+      ---></a><!--
+    ---><!--
+    --->, 
+        
+      
+        
+        
+          <a class="icon u-email" target="_blank" rel="noopener" href="mailto:name@email.com" aria-label="mail" title="mail">
+            <i class="fa-solid fa-envelope"></i><!--
+      ---></a>
+        <!--
+    --->, 
+        
+      
+        
+        
+          <a class="icon u-url" target="_blank" rel="noopener me" href="https://mastodon.social/@alice" aria-label="mastodon.social" title="mastodon.social">
+            <i class="fa-brands fa-mastodon"></i><!--
+      ---></a><!--
+    ---><!--
+    ---> and 
+        
+      
+        
+        
+          <a class="icon u-url" target="_blank" rel="noopener me" href="https://fosstodon.org/@alice" aria-label="fosstodon.org" title="fosstodon.org">
+            <i class="fa-brands fa-mastodon"></i><!--
+      ---></a><!--
+    ---><!--
+    --->.
+        
+      
+    </p>
+  
+</section>
+
+<section id="writing">
+  <span class="h1"><a href="/archives/">Writing</a></span>
+  
+  <ul class="post-list">
+    
     
       
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
-  copy: {
-    success: 'Copy Successful',
-    error: 'Copy Failed',
-    noSupport: 'Browser Not Supported'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  dateSuffix: {
-    just: 'Just now',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: undefined,
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
-    buttonText: 'Load More'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: false,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'Hexo',
-  isHighlightShrink: false,
-  isToc: false,
-  pageType: 'home'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="page" id="body-wrap"><header class="full_page" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Hexo</span></a></span><div id="menus"></div></nav><div id="site-info"><h1 id="site-title">Hexo</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" title="定时任务">定时任务</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-23T05:36:10.000Z" title="Created 2026-01-23 13:36:10">2026-01-23</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">定时任务就是让系统在指定的时间或按照一定的周期自动执行某个任务，不需要人工触发  比如每天凌晨自动备份数据、每隔 10 分钟检查一次订单状态等  因为有这些任务：  自动执行，不需要人一直盯着。 在特定时间执行，比如凌晨访问量低时做统计 周期性执行，比如每小时同步一次数据 保证任务执行的准确性和及时性，避免人工操作的遗漏或延迟  所以需要引入定时任务。也就是说，它可以用于：  数据备份、日志清理、数据同步、定时发送、超时关闭、缓存刷新、系统状态监控  实例：使用@Scheduled注解实现定时任务123456789/** * 采用定时器方案，每天5:15分刷新站点地图，确保数据的一致性 */@Scheduled(cron = &quot;0 15 5 * * ?&quot;)public void autoRefreshCache() &#123;    log.info(&quot;开始刷新sitemap.xml的url地址，避免出现数据不一致问题!&quot;);    refreshSitemap();    log.info(&quot;刷新完成！&quot;);&#12...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/Cacheable%E6%B3%A8%E8%A7%A3/" title="Cacheable注解">Cacheable注解</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-23T03:42:23.000Z" title="Created 2026-01-23 11:42:23">2026-01-23</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">使用redis &#x3D;&#x3D;&gt; 负责业务逻辑型缓存，可以精确控制一些业务逻辑，可以用于和业务逻辑强绑定的场景 使用@Cacheable &#x3D;&#x3D;&gt; 负责接口结果型缓存，比如查询接口的返回值并缓存，无侵入、易维护 @Cacheable 是方法级别缓存的一种实现方式  spring注解 底层缓存实现可以是redis、caffenie、memcache、guava  配置1. pom.xml中添加依赖： 核心依赖  1234&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;    &lt;artifactId&gt;spring-boot-starter-cache&lt;/artifactId&gt;&lt;/dependency&gt;   本地缓存实现依赖 – 这里用的是caffenie  1234&lt;dependency&gt;    &lt;groupId&gt;com.github.ben-manes.caffeine&lt;/...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/redis-%E5%AE%9E%E4%BE%8B/" title="redis 实例">redis 实例</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-22T11:25:36.000Z" title="Created 2026-01-22 19:25:36">2026-01-22</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">整合redis 在pom.xml中添加redis依赖  默认情况下，springboot使用lettuce作为redis连接池，可以避免频繁创建or销毁连接  Redis 连接的建立和销毁是比较耗时的操作。连接池的作用是预先创建并管理一批 Redis 连接，需要时直接从池里拿，用完放回，避免频繁创建销毁连接，从而大幅提升性能  1234&lt;dependency&gt;    &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;    &lt;artifactId&gt;commons-pool2&lt;/artifactId&gt;&lt;/dependency&gt;  🌟 添加依赖：Lettuce 的连接池功能依赖于 Apache Commons Pool2 这个工具库如果不添加这个依赖，即使在配置文件里写了 lettuce.pool.enabled: true，连接池也不会生效，Spring Boot 会直接忽略你的连接池配置  在application.yaml中添加redis配置  1234567891011redis...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/" title="事务及使用实例">事务及使用实例</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-22T06:47:40.000Z" title="Created 2026-01-22 14:47:40">2026-01-22</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">ACID特性 原子性 Atomicity：事务包含的所有操作要么全部成功，要么全部失败回滚 一致性 Consistency：事务执行前后数据库的状态保持一致，比如库存、金额总额一致 隔离型 Isolation：多个用户并发访问数据库时，事务直接不会互相干扰 持久性 Durability：事务一旦提交，数据库中数据改变是持久的，即使数据库故障也不会丢失事务操作  数据库事务的实现原理MySQL的InnoDB引擎：  使用redo log（重做日志）保证持久性 使用undo log（回滚日志）保证原子性 使用锁机制、MVCC保证隔离性  &#x3D;&#x3D;&gt; 隔离级别：repeatable read 可重复读 数据库事务的隔离级别 读未提交 read uncommitted：别人改了一半也能看到 &#x3D;&#x3D;&gt; 脏读 读已提交 read committed：读已经发布的内容 &#x3D;&#x3D;&gt; 不可重复读（不可用于要求数据一致性场景 行锁） 可重复读 repeatable read（SQL默认）：读到任务开始时读快照 &#x3D;&#x3D...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/MapStruct/" title="MapStruct">MapStruct</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-22T06:14:37.000Z" title="Created 2026-01-22 14:14:37">2026-01-22</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">基本定义在xxxStructMapper接口中定义好方法后，MapStruct【映射器】可以在**编译**的时候生成相应的实现类 &#x3D;&#x3D;&gt; 主要针对DO对象转换成DTO对象 如果没有MapStruct： 12345678910111213public static ArticleDTO toDto(ArticleDO articleDO) &#123;    if (articleDO == null) &#123;        return null;    &#125;    ArticleDTO articleDTO = new ArticleDTO();    articleDTO.setAuthor(articleDO.getUserId());    articleDTO.setArticleId(articleDO.getId());    articleDTO.setArticleType(articleDO.getArticleType());		...    // 设置类目id    articleDTO.setCategory(ne...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/WEB%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B9%8BListener/" title="WEB三大组件之Listener">WEB三大组件之Listener</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-21T09:22:48.000Z" title="Created 2026-01-21 17:22:48">2026-01-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">基本定义Listener是web中的事件监听器，能监听web应用中特定事件的发生，并在事件触发时自动执行预设的逻辑，并且不侵入业务代码 比如：  应用启动的的时候加载全局配置、初始化缓存 用户第一次访问的时候初始化session 请求结束的时候记录访问日志  特点：  不会主动执行，只有当对应事件发生时才会被容器调用 可以监听整个应用、用户会话或单个请求的生命周期，适合做全局监控和初始化  常见的Listener类型Java Web 规范定义了多种标准监听器，按监听对象可分为四类：    类型 作用 典型场景    ServletContextListener 监听 ServletContext（应用全局上下文）的创建与销毁 应用启动时加载配置、初始化连接池；应用关闭时释放资源   HttpSessionListener 监听 HttpSession（用户会话）的创建与销毁 **统计在线用户数**；用户登录 &#x2F; 退出时更新状态   ServletRequestListener 监听 ServletRequest（请求）的创建与销毁 **记录请求耗时**；统一处理请求日志...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/WEB%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B9%8Bservlet/" title="WEB三大组件之servlet">WEB三大组件之servlet</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-21T09:10:38.000Z" title="Created 2026-01-21 17:10:38">2026-01-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">基本定义Servlet 是Java EE规范中定义的请求处理基础组件，核心作用只有一个： 接收前端 HTTP 请求（如 GET&#x2F;POST），调用后端业务逻辑，再把处理结果返回给前端。 它是前端和后端业务逻辑之间的 “中转站”，是 Web 项目的 “入口层”。   Servlet（LoginServlet）：只做 “请求接收” 和 “响应返回”，不关心 “怎么校验密码”；  业务逻辑（UserService）：只做 “密码加密校验、用户状态判断”，不关心 “请求从哪来、响应怎么回”；   两者分工明确：Servlet 管 “和前端交互”，业务逻辑管 “实现具体功能”。  使用一般是继承HttpServlet，然后覆盖doGet、doPost等方法 识别1. @WebServlet在自定义的servlet类上添加@WebServlet 123456789101112// 注解指定这个 Servlet 处理的 URL 路径@WebServlet(urlPatterns = &quot;/annotation&quot;)public class AnnotationServl...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/WEB%E4%B8%89%E5%A4%A7%E7%BB%84%E4%BB%B6%E4%B9%8BFilter/" title="WEB三大组件之Filter">WEB三大组件之Filter</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-21T08:30:39.000Z" title="Created 2026-01-21 16:30:39">2026-01-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">基本定义Filter，过滤器，属于Servlet规范，并不是Spring独有的 作用：拦截http请求，做一些业务逻辑操作 一个http请求过来之后，一个Filter的工作流程：  首先**进入filter，执行相关业务逻辑** **若判定通行，则进入Servlet逻辑，Servlet执行完毕之后，又返回Filter**，最后在返回给请求方 判定失败，直接返回，不需要将请求发给Servlet  所以可以用filter来实现用户身份识别（获取、校验），然后将识别的用户信息保存到TreadLocal对应的上下文中，这样在后续的请求链路中任何地方都可以直接获取当前登录用户 使用实现Filter接口即可 eg：输出请求日志的拦截器 1234567891011121314151617181920@Slf4j@WebFilterpublic class ReqFilter implements Filter &#123;    public ReqFilter() &#123;        System.out.println(&quot;init reqFilter&quot;);   ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BC%98%E9%9B%85%E7%BC%96%E7%A8%8B%E4%B9%8BLombok/" title="优雅编程之Lombok">优雅编程之Lombok</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-21T07:27:23.000Z" title="Created 2026-01-21 15:27:23">2026-01-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">Lombok可以通过注解的形式简化java代码 比如：通过@Getter、@Setter注解，在**编译**（不在源码中）时自动为javabean属性生成getter、setter方法，还可以生成构造方法、equals方法、hashCode方法、toString方法 集成Springboot2.1x版本后不需要显示添加lombok依赖了，新版的intellijIDEA也内置了lombok插件，不用安装 常用注解@Getter &#x2F; @Setter12345678910111213class CmowerLombok &#123;  @Getter @Setter private int age;  @Getter private String name;  @Setter private BigDecimal money;&#125;@Getter @Setterclass CmowerLombok &#123;  private int age;  private String name;  private BigDecimal money;&#125;  @ToStr...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%90%8E%E7%AB%AF%E6%98%AF%E5%A6%82%E4%BD%95%E8%BF%94%E5%9B%9EJSON-XML%E7%9A%84/" title="后端是如何返回JSON/XML的">后端是如何返回JSON/XML的</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2026-01-21T06:56:43.000Z" title="Created 2026-01-21 14:56:43">2026-01-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="content">返回文本数据 controller上添加@RestController注解：直接返回json 如果controller注解是@Controller，可以添加@ResponseBody注解实现返回json 通过HttpServletResponse方法将返回数据手动写入到输出流中。比如前面全局异常处理同时支持返回页面+json数据两种方式，在全局异常处理中可以进行分条件输出  返回网页网页实际上也是一种文本，返回网页更准确的说法是返回渲染视图。 接口实现：Controlleer上的注解是@Controller，没有@RestController，返回一个网页模板的相对路径（string） 12345678910111213141516171819@Controller // 表示处理页面请求public class IndexController extends BaseViewController &#123;    @Autowired    private IndexRecommendHelper indexRecommendHelper;    @GetMapping(pa...</div></div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><a class="page-number" href="/page/3/#content-inner">3</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">John Doe</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">26</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">29</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" title="定时任务">定时任务</a><time datetime="2026-01-23T05:36:10.000Z" title="Created 2026-01-23 13:36:10">2026-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/Cacheable%E6%B3%A8%E8%A7%A3/" title="Cacheable注解">Cacheable注解</a><time datetime="2026-01-23T03:42:23.000Z" title="Created 2026-01-23 11:42:23">2026-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/redis-%E5%AE%9E%E4%BE%8B/" title="redis 实例">redis 实例</a><time datetime="2026-01-22T11:25:36.000Z" title="Created 2026-01-22 19:25:36">2026-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/" title="事务及使用实例">事务及使用实例</a><time datetime="2026-01-22T06:47:40.000Z" title="Created 2026-01-22 14:47:40">2026-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/MapStruct/" title="MapStruct">MapStruct</a><time datetime="2026-01-22T06:14:37.000Z" title="Created 2026-01-22 14:14:37">2026-01-22</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
-            <i class="fas fa-folder-open"></i>
-            <span>Categories</span>
-            <a class="card-more-btn" href="/categories/" title="View More">
-      <i class="fas fa-angle-right"></i></a>
-          </div>
-          <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/papers/"><span class="card-category-list-name">papers</span><span class="card-category-list-count">3</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/papers/conclusion/"><span class="card-category-list-name">conclusion</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/papers/work2/"><span class="card-category-list-name">work2</span><span class="card-category-list-count">2</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/radio-map-dataset/"><span class="card-category-list-name">radio map dataset</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%BB%93%E5%BA%93/"><span class="card-category-list-name">仓库</span><span class="card-category-list-count">4</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E4%BB%93%E5%BA%93/%E9%A1%B9%E7%9B%AE/"><span class="card-category-list-name">项目</span><span class="card-category-list-count">1</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/"><span class="card-category-list-name">基础知识</span><span class="card-category-list-count">17</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/"><span class="card-category-list-name">开发</span><span class="card-category-list-count">16</span></a></li></ul></li>
-          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/" style="font-size: 1.1em; color: #999">高并发</a> <a href="/tags/dataset/" style="font-size: 1.1em; color: #999">dataset</a> <a href="/tags/conclusion/" style="font-size: 1.1em; color: #999">conclusion</a> <a href="/tags/JSON/" style="font-size: 1.1em; color: #999">JSON</a> <a href="/tags/Lombok/" style="font-size: 1.1em; color: #999">Lombok</a> <a href="/tags/INR/" style="font-size: 1.1em; color: #999">INR</a> <a href="/tags/%E6%90%AD%E5%BB%BA/" style="font-size: 1.1em; color: #999">搭建</a> <a href="/tags/XML/" style="font-size: 1.1em; color: #999">XML</a> <a href="/tags/%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" style="font-size: 1.1em; color: #999">异常处理</a> <a href="/tags/API/" style="font-size: 1.1em; color: #999">API</a> <a href="/tags/web%E7%BB%84%E4%BB%B6/" style="font-size: 1.37em; color: #99a4b2">web组件</a> <a href="/tags/%E8%BF%94%E5%9B%9E/" style="font-size: 1.1em; color: #999">返回</a> <a href="/tags/%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BA%A4%E4%BA%92/" style="font-size: 1.1em; color: #999">前后端交互</a> <a href="/tags/frequency/" style="font-size: 1.1em; color: #999">frequency</a> <a href="/tags/%E5%8D%9A%E5%AE%A2/" style="font-size: 1.1em; color: #999">博客</a> <a href="/tags/%E8%B5%84%E6%BA%90/" style="font-size: 1.23em; color: #999ea6">资源</a> <a href="/tags/%E9%9D%A2%E5%90%91%E5%AE%9E%E9%99%85/" style="font-size: 1.1em; color: #999">面向实际</a> <a href="/tags/%E5%AE%9E%E4%BD%93%E7%B1%BB%E5%91%BD%E5%90%8D/" style="font-size: 1.1em; color: #999">实体类命名</a> <a href="/tags/%E4%BC%98%E9%9B%85%E7%BC%96%E7%A8%8B/" style="font-size: 1.23em; color: #999ea6">优雅编程</a> <a href="/tags/%E5%AE%9E%E4%BE%8B/" style="font-size: 1.5em; color: #99a9bf">实例</a> <a href="/tags/cv/" style="font-size: 1.1em; color: #999">cv</a> <a href="/tags/notes/" style="font-size: 1.23em; color: #999ea6">notes</a> <a href="/tags/%E5%AE%89%E8%A3%85/" style="font-size: 1.1em; color: #999">安装</a> <a href="/tags/%E5%AE%9E%E4%BD%93%E7%B1%BB/" style="font-size: 1.1em; color: #999">实体类</a> <a href="/tags/diffusion/" style="font-size: 1.23em; color: #999ea6">diffusion</a> <a href="/tags/%E5%BC%80%E5%8F%91/" style="font-size: 1.37em; color: #99a4b2">开发</a> <a href="/tags/%E9%A1%B9%E7%9B%AE/" style="font-size: 1.1em; color: #999">项目</a> <a href="/tags/AOP/" style="font-size: 1.1em; color: #999">AOP</a> <a href="/tags/%E6%95%B4%E7%90%86/" style="font-size: 1.37em; color: #99a4b2">整理</a></div></div><div class="card-widget card-archives">
-    <div class="item-headline">
-      <i class="fas fa-archive"></i>
-      <span>Archives</span>
+    
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2026-01-23T05:36:10.000Z" class="dt-published" itemprop="datePublished">2026-01-23</time>
+        
       
     </div>
+
+
+        <span>
+    
+        <a class="" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">定时任务</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2026-01-23T03:42:23.000Z" class="dt-published" itemprop="datePublished">2026-01-23</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/Cacheable%E6%B3%A8%E8%A7%A3/">Cacheable注解</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2026-01-22T11:25:36.000Z" class="dt-published" itemprop="datePublished">2026-01-22</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/redis-%E5%AE%9E%E4%BE%8B/">redis 实例</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2026-01-22T06:47:40.000Z" class="dt-published" itemprop="datePublished">2026-01-22</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B/">事务及使用实例</a>
+    
+
+
+</span>
+      </li>
+    
+      <li class="post-item">
+        
+    <div class="meta">
+      
+        
+          <time datetime="2026-01-22T06:14:37.000Z" class="dt-published" itemprop="datePublished">2026-01-22</time>
+        
+      
+    </div>
+
+
+        <span>
+    
+        <a class="" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/MapStruct/">MapStruct</a>
+    
+
+
+</span>
+      </li>
+    
+  </ul>
   
-    <ul class="card-archive-list">
-      
-        <li class="card-archive-list-item">
-          <a class="card-archive-list-link" href="/archives/2026/01/">
-            <span class="card-archive-list-date">
-              January 2026
-            </span>
-            <span class="card-archive-list-count">26</span>
-          </a>
-        </li>
-      
-    </ul>
-  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">26</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2026-01-23T06:24:10.259Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By John Doe</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+</section>
+
+
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2026
+    John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/probberechts">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
