@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>跨域问题 | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="问题定义跨域，就是浏览器出于安全，禁止一个域名下的前端页面，去请求另一个 “不同域名 &#x2F; 端口 &#x2F; 协议” 的后端接口  它不是后端的限制，也不是网络的限制，完全是浏览器强加的安全规则，叫 同源策略（Same-Origin Policy） 只有浏览器有跨域限制，后端之间调用、Postman、curl 等工具，都没有跨域问题  浏览器定义“同源”非常严格，必须 协议、域名、端口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="跨域问题">
+<meta property="og:url" content="https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="问题定义跨域，就是浏览器出于安全，禁止一个域名下的前端页面，去请求另一个 “不同域名 &#x2F; 端口 &#x2F; 协议” 的后端接口  它不是后端的限制，也不是网络的限制，完全是浏览器强加的安全规则，叫 同源策略（Same-Origin Policy） 只有浏览器有跨域限制，后端之间调用、Postman、curl 等工具，都没有跨域问题  浏览器定义“同源”非常严格，必须 协议、域名、端口">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://github.com/chuyunnn/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-28T13:23:41.000Z">
+<meta property="article:modified_time" content="2026-01-28T13:36:46.317Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/chuyunnn/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "跨域问题",
+  "url": "https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/",
+  "image": "https://github.com/chuyunnn/img/butterfly-icon.png",
+  "datePublished": "2026-01-28T13:23:41.000Z",
+  "dateModified": "2026-01-28T13:36:46.317Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://github.com/chuyunnn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/chuyunnn/img/favicon.png"><link rel="canonical" href="https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/chuyunnn/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/chuyunnn/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '跨域问题',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/chuyunnn/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/chuyunnn/"><span class="site-name">跨域问题</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">跨域问题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-28T13:23:41.000Z" title="Created 2026-01-28 21:23:41">2026-01-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-28T13:36:46.317Z" title="Updated 2026-01-28 21:36:46">2026-01-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/chuyunnn/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/chuyunnn/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h2><p><strong>跨域，就是浏览器出于安全，禁止一个域名下的前端页面，去请求另一个 “不同域名 &#x2F; 端口 &#x2F; 协议” 的后端接口</strong></p>
+<ul>
+<li>它不是后端的限制，也不是网络的限制，<strong>完全是浏览器强加的安全规则</strong>，叫 <strong>同源策略（Same-Origin Policy）</strong></li>
+<li>只有浏览器有跨域限制，后端之间调用、Postman、curl 等工具，<strong>都没有跨域问题</strong></li>
+</ul>
+<p>浏览器定义“同源”非常严格，必须 <strong>协议、域名、端口</strong> 三者完全一致。只要有一个不同，就是跨域：</p>
+<p>假设前端地址是：<code>http://localhost:8080</code></p>
+<table>
+<thead>
+<tr>
+<th><strong>请求的目标 URL</strong></th>
+<th><strong>是否跨域</strong></th>
+<th><strong>原因</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>http://localhost:8080/api/user</code></td>
+<td><strong>否</strong></td>
+<td>完全一致（同源）</td>
+</tr>
+<tr>
+<td><code>https://localhost:8080/api/user</code></td>
+<td><strong>是</strong></td>
+<td>协议不同（http vs https）</td>
+</tr>
+<tr>
+<td><code>http://127.0.0.1:8080/api/user</code></td>
+<td><strong>是</strong></td>
+<td>域名不同（localhost vs IP）</td>
+</tr>
+<tr>
+<td><code>http://localhost:9000/api/user</code></td>
+<td><strong>是</strong></td>
+<td>端口不同（8080 vs 9000）</td>
+</tr>
+</tbody></table>
+<p>💡 浏览器为什么要做跨域限制？</p>
+<ol>
+<li><strong>Cookie 被盗用，越权操作</strong></li>
+</ol>
+<p>登录银行网站 <code>bank.com</code>，浏览器保存了登录 Cookie &#x3D;&#x3D;&gt; 打开恶意网站 <code>evil.com</code> </p>
+<ul>
+<li>如果没有跨域限制，<code>evil.com</code> 可以直接用浏览器里的 Cookie，去请求 <code>bank.com</code> 的转账接口，然后就被盗刷了</li>
+</ul>
+<ol start="2">
+<li><strong>窃取敏感页面数据</strong></li>
+</ol>
+<p>恶意页面可以直接读取已登录的邮箱、社交网站的 DOM 内容和接口数据，造成信息泄漏</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><h3 id="方案-1：后端配置-CORS（最标准、生产首选）"><a href="#方案-1：后端配置-CORS（最标准、生产首选）" class="headerlink" title="方案 1：后端配置 CORS（最标准、生产首选）"></a>方案 1：后端配置 CORS（最标准、生产首选）</h3><blockquote>
+<p>CORS &#x3D; Cross-Origin Resource Sharing，跨域资源共享</p>
+</blockquote>
+<p>原理：后端在响应头里加上允许跨域的声明，浏览器看到后，就放行这个请求</p>
+<p>Spring Boot 项目最常用的两种写法：</p>
+<h4 id="方式-A：全局配置类"><a href="#方式-A：全局配置类" class="headerlink" title="方式 A：全局配置类"></a>方式 A：全局配置类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.CorsRegistry;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.config.annotation.WebMvcConfigurer;</span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CorsConfig</span> <span class="keyword">implements</span> <span class="title class_">WebMvcConfigurer</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addCorsMappings</span><span class="params">(CorsRegistry registry)</span> &#123;</span><br><span class="line">        registry.addMapping(<span class="string">&quot;/**&quot;</span>) <span class="comment">// 所有接口</span></span><br><span class="line">                .allowedOrigins(<span class="string">&quot;http://localhost:3000&quot;</span>) <span class="comment">// 允许的前端地址</span></span><br><span class="line">                .allowedMethods(<span class="string">&quot;GET&quot;</span>, <span class="string">&quot;POST&quot;</span>, <span class="string">&quot;PUT&quot;</span>, <span class="string">&quot;DELETE&quot;</span>, <span class="string">&quot;OPTIONS&quot;</span>) <span class="comment">// 允许的方法</span></span><br><span class="line">                .allowCredentials(<span class="literal">true</span>) <span class="comment">// 是否允许Cookie</span></span><br><span class="line">                .maxAge(<span class="number">3600</span>); <span class="comment">// 预检有效期</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方式-B：使用-CrossOrigin-注解（单个接口）"><a href="#方式-B：使用-CrossOrigin-注解（单个接口）" class="headerlink" title="方式 B：使用 @CrossOrigin 注解（单个接口）"></a>方式 B：使用 @CrossOrigin 注解（单个接口）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line">    <span class="meta">@CrossOrigin(origins = &quot;http://localhost:3000&quot;)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/user&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getUser</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="方案-2：开发环境用代理（前端解决，仅限开发）"><a href="#方案-2：开发环境用代理（前端解决，仅限开发）" class="headerlink" title="方案 2：开发环境用代理（前端解决，仅限开发）"></a>方案 2：开发环境用代理（前端解决，仅限开发）</h3><p>Vue &#x2F; React &#x2F; Vite &#x2F; Webpack 都自带代理功能</p>
+<p>原理：前端请求自己的地址 → 本地开发服务器转发给后端 → 浏览器认为是同源，不拦截</p>
+<p>例如 Vue 项目 <code>vue.config.js</code>：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">devServer</span>: &#123;</span><br><span class="line">    <span class="attr">proxy</span>: &#123;</span><br><span class="line">      <span class="string">&#x27;/api&#x27;</span>: &#123; <span class="comment">// 将所有/api开头的请求转发到 http://localhost:8080</span></span><br><span class="line">        <span class="attr">target</span>: <span class="string">&#x27;http://localhost:8080&#x27;</span>,</span><br><span class="line">        <span class="attr">changeOrigin</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="attr">pathRewrite</span>: &#123; <span class="string">&#x27;^/api&#x27;</span>: <span class="string">&#x27;/api&#x27;</span> &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>特点：<strong>只适用于开发阶段，生产环境不能用</strong>，生产必须用 CORS 或 nginx。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://github.com/chuyunnn">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/">https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/chuyunnn/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="性能优化-并行访问"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">性能优化-并行访问</div></div><div class="info-2"><div class="info-item-1">串行改并行🙋 问题：页面加载很慢，接口响应耗时比较多 一般可以：加机器、加缓存、串行改并行  ⚠️ 不是什么场景都可以串行改并行的，这种可以： 论坛首页中：分类信息、文章列表、推荐博文、侧边栏，这些板块之间没有任何依赖关系，它们之间的信息获取可以并行执行 电商：商品详情、推荐商品、店铺信息、评价信息、广告位信息，只要是没有依赖的信息封装服务，都可以并行执行  两个接口之间，不需要等待对方的结果，也不需要使用对方返回的任何数据，互相之间没有数据传递、没有逻辑先后顺序的约束，就叫作没有依赖，可以安全地并行执行   并行访问性能优化方法可以将每个调用放到独立的线程中执行，等待所有线程执行完毕之后再返回结果  效果：实现 “多任务同时执行”，解决串行耗时问题（比如串行查 5 个接口要 5s，并行只要 1s）  &#x3D;&#x3D;&gt; 可以借助线程池来执行，避免线程滥用 💡 使用 CompletableFeture 异步编程工具（对上述的封装）简介：是 Java 8 引入的异步编程核心工具  天然支持线程池（可以指定自定义线程池，也能用默认线程池） 用链式调用替代冗余代码，实...</div></div></div></a><a class="pagination-related" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8E%E7%99%BB%E5%BD%95-%E7%94%A8%E6%88%B7/" title="关于登录-用户"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">关于登录-用户</div></div><div class="info-2"><div class="info-item-1">基本概念cookie存储身份标识（session&#x2F;JWT）的一个小载体 💡 客户端请求，通过cookie告诉服务端我是谁 session &#x2F; JWT是服务端生成的，用于存储用户信息，它们是“身份认证的两种核心方案”，通常二选一  Session：有状态认证 服务端需要存储用户会话数据，客户端只携带 SessionID【前端存索引，后端判断session是否有效】 优点：安全可控，可主动销毁会话（如退出登录、踢人），可动态刷新会话过期时间 缺点： 单机受限，需配合 Redis 实现分布式、 没有签名保障     JWT：无状态认证 （JSON）服务端无需存储令牌【前端存储】，令牌自包含用户信息，客户端携带完整令牌 优点：无状态，天然支持分布式 &#x2F; 跨服务，无需共享存储 缺点：令牌一旦生成无法主动销毁（只能靠过期时间），令牌体积比 SessionID 大，信息过多会影响性能 可以使用JWT密钥对JWT签名（比如HS256加签），如果有人改了JWT token内容，签名验证会失效 eg：JWT中包含用户基本信息（ID+role）+ 组织标签信息     ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/chuyunnn/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/chuyunnn/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/chuyunnn/archives/"><div class="headline">Articles</div><div class="length-num">34</div></a><a href="/chuyunnn/tags/"><div class="headline">Tags</div><div class="length-num">33</div></a><a href="/chuyunnn/categories/"><div class="headline">Categories</div><div class="length-num">10</div></a></div><a id="card-info-btn" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-1%EF%BC%9A%E5%90%8E%E7%AB%AF%E9%85%8D%E7%BD%AE-CORS%EF%BC%88%E6%9C%80%E6%A0%87%E5%87%86%E3%80%81%E7%94%9F%E4%BA%A7%E9%A6%96%E9%80%89%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">方案 1：后端配置 CORS（最标准、生产首选）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F-A%EF%BC%9A%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E7%B1%BB"><span class="toc-number">2.1.1.</span> <span class="toc-text">方式 A：全局配置类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F-B%EF%BC%9A%E4%BD%BF%E7%94%A8-CrossOrigin-%E6%B3%A8%E8%A7%A3%EF%BC%88%E5%8D%95%E4%B8%AA%E6%8E%A5%E5%8F%A3%EF%BC%89"><span class="toc-number">2.1.2.</span> <span class="toc-text">方式 B：使用 @CrossOrigin 注解（单个接口）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-2%EF%BC%9A%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E7%94%A8%E4%BB%A3%E7%90%86%EF%BC%88%E5%89%8D%E7%AB%AF%E8%A7%A3%E5%86%B3%EF%BC%8C%E4%BB%85%E9%99%90%E5%BC%80%E5%8F%91%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">方案 2：开发环境用代理（前端解决，仅限开发）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%80%97%E6%97%B6%E7%BB%9F%E8%AE%A1/" title="耗时统计">耗时统计</a><time datetime="2026-01-29T07:12:01.000Z" title="Created 2026-01-29 15:12:01">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="性能优化-并行访问">性能优化-并行访问</a><time datetime="2026-01-29T06:36:21.000Z" title="Created 2026-01-29 14:36:21">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/" title="跨域问题">跨域问题</a><time datetime="2026-01-28T13:23:41.000Z" title="Created 2026-01-28 21:23:41">2026-01-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8E%E7%99%BB%E5%BD%95-%E7%94%A8%E6%88%B7/" title="关于登录-用户">关于登录-用户</a><time datetime="2026-01-28T12:26:59.000Z" title="Created 2026-01-28 20:26:59">2026-01-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/" title="缓存一致性">缓存一致性</a><time datetime="2026-01-28T10:52:09.000Z" title="Created 2026-01-28 18:52:09">2026-01-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/chuyunnn/js/utils.js?v=5.5.3"></script><script src="/chuyunnn/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>性能优化-并行访问 | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="串行改并行🙋 问题：页面加载很慢，接口响应耗时比较多 一般可以：加机器、加缓存、串行改并行  ⚠️ 不是什么场景都可以串行改并行的，这种可以： 论坛首页中：分类信息、文章列表、推荐博文、侧边栏，这些板块之间没有任何依赖关系，它们之间的信息获取可以并行执行 电商：商品详情、推荐商品、店铺信息、评价信息、广告位信息，只要是没有依赖的信息封装服务，都可以并行执行  两个接口之间，不需要等待对方的结果，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="性能优化-并行访问">
+<meta property="og:url" content="https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="串行改并行🙋 问题：页面加载很慢，接口响应耗时比较多 一般可以：加机器、加缓存、串行改并行  ⚠️ 不是什么场景都可以串行改并行的，这种可以： 论坛首页中：分类信息、文章列表、推荐博文、侧边栏，这些板块之间没有任何依赖关系，它们之间的信息获取可以并行执行 电商：商品详情、推荐商品、店铺信息、评价信息、广告位信息，只要是没有依赖的信息封装服务，都可以并行执行  两个接口之间，不需要等待对方的结果，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://github.com/chuyunnn/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-01-29T06:36:21.000Z">
+<meta property="article:modified_time" content="2026-01-29T07:40:57.811Z">
+<meta property="article:author" content="chuyun deng">
+<meta property="article:tag" content="优化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/chuyunnn/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "性能优化-并行访问",
+  "url": "https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/",
+  "image": "https://github.com/chuyunnn/img/butterfly-icon.png",
+  "datePublished": "2026-01-29T06:36:21.000Z",
+  "dateModified": "2026-01-29T07:40:57.811Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://github.com/chuyunnn"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/chuyunnn/img/favicon.png"><link rel="canonical" href="https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/chuyunnn/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/chuyunnn/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '性能优化-并行访问',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/chuyunnn/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/chuyunnn/"><span class="site-name">性能优化-并行访问</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">性能优化-并行访问</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-29T06:36:21.000Z" title="Created 2026-01-29 14:36:21">2026-01-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-29T07:40:57.811Z" title="Updated 2026-01-29 15:40:57">2026-01-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/chuyunnn/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/chuyunnn/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="串行改并行"><a href="#串行改并行" class="headerlink" title="串行改并行"></a>串行改并行</h1><p>🙋 问题：页面加载很慢，接口响应耗时比较多</p>
+<p>一般可以：加机器、加缓存、串行改并行</p>
+<hr>
+<p>⚠️ 不是什么场景都可以串行改并行的，这种可以：</p>
+<p>论坛首页中：分类信息、文章列表、推荐博文、侧边栏，这些板块之间没有任何依赖关系，它们之间的<strong>信息获取可以并行执行</strong></p>
+<p>电商：商品详情、推荐商品、店铺信息、评价信息、广告位信息，只要是没有依赖的信息封装服务，都可以并行执行</p>
+<blockquote>
+<p>两个接口之间，<strong>不需要等待对方的结果，也不需要使用对方返回的任何数据</strong>，互相之间没有数据传递、没有逻辑先后顺序的约束，就叫作<strong>没有依赖</strong>，可以安全地并行执行</p>
+</blockquote>
+<hr>
+<h2 id="并行访问性能优化方法"><a href="#并行访问性能优化方法" class="headerlink" title="并行访问性能优化方法"></a>并行访问性能优化方法</h2><p>可以将每个调用放到<em><strong>独立的线程</strong></em>中执行，等待所有线程执行完毕之后再返回结果</p>
+<ul>
+<li>效果：实现 “多任务同时执行”，解决串行耗时问题（比如串行查 5 个接口要 5s，并行只要 1s）</li>
+</ul>
+<p>&#x3D;&#x3D;&gt; 可以借助线程池来执行，避免线程滥用</p>
+<h3 id="💡-使用-CompletableFeture-异步编程工具（对上述的封装）"><a href="#💡-使用-CompletableFeture-异步编程工具（对上述的封装）" class="headerlink" title="💡 使用 CompletableFeture 异步编程工具（对上述的封装）"></a>💡 使用 <code>CompletableFeture</code> 异步编程工具（对上述的封装）</h3><p>简介：是 Java 8 引入的异步编程核心工具</p>
+<ul>
+<li>天然支持<strong>线程池</strong>（可以指定自定义线程池，也能用默认线程池）</li>
+<li>用<strong>链式调用</strong>替代<strong>冗余代码</strong>，实现 “一行代码一个异步任务”（串联多个<code>CompletableFeture</code>实例来组合多个异步操作，形成异步操作链）<ul>
+<li>**<code>List&lt;CompletableFuture&gt; list</code>**：用列表来管理多个 <code>CompletableFuture</code> 异步任务，说明整个类的核心是批量管理和执行这些异步任务</li>
+</ul>
+</li>
+<li>内置<strong>结果聚合、异常处理、超时控制、依赖编排、回调触发</strong>等能力</li>
+</ul>
+<p>底层思路为 “独立线程执行 + 等待所有结果” ，但它把所有繁琐的细节都封装好了，开发者只需要关注 <strong>“要执行什么任务”</strong>，不用关注<strong>“怎么管理线程、怎么等待结果、怎么处理异常”</strong></p>
+<h4 id="可使用点"><a href="#可使用点" class="headerlink" title="可使用点"></a>可使用点</h4><ol>
+<li><p>创建 CompletableFuture 实例：可以使用 CompletableFuture 的静态方法来创建一个 CompletableFuture 实例，比如 CompletableFuture.supplyAsync () 可以创建一个异步执行的任务。</p>
+</li>
+<li><p>异步操作：CompletableFuture 可以执行异步操作，我们可以使用 thenApply ()、thenAccept ()、thenRun () 等方法来对异步操作的结果进行处理</p>
+</li>
+<li><p>异常处理：可以使用异常处理方法，如 exceptionally ()、handle ()、whenComplete () 等来处理异步操作过程中的异常</p>
+</li>
+<li><p>组合多个 CompletableFuture 实例：使用 thenCompose ()、thenCombine ()、allOf () 等方法可以将多个 CompletableFuture 实例串联起来，形成一个异步操作链</p>
+</li>
+<li><p>等待所有异步操作完成：使用 CompletableFuture.allOf () 方法可以等待所有的 CompletableFuture 实例都完成，然后进行下一步操作</p>
+</li>
+<li><p>取消异步操作：可以使用 CompletableFuture 的 cancel () 方法来取消异步操作，可以使用 isCancelled () 方法来判断异步操作是否已经被取消</p>
+</li>
+<li><p>等待异步操作完成并获取结果：使用 get () 方法可以等待异步操作完成，并获取操作的结果。可以使用 getNow () 方法来获取操作的结果，如果操作尚未完成，则返回默认值</p>
+</li>
+<li><p>设置超时：可以使用 CompletableFuture 的 completeOnTimeout ()、orTimeout () 等方法来设置超时时间，如果操作在指定时间内未完成，则返回默认值或者抛出异常</p>
+</li>
+</ol>
+<h4 id="主要考虑的点："><a href="#主要考虑的点：" class="headerlink" title="主要考虑的点："></a>主要考虑的点：</h4><p>💡 线程池相关参数如何配置？</p>
+<p>线程池的核心参数不是固定值，要根据<strong>任务类型</strong>和<strong>硬件配置</strong>来定，核心思路是 “避免线程过多导致上下文切换，也避免线程过少导致 CPU 空闲”</p>
+<p>核心原则：</p>
+<ul>
+<li><strong>CPU 密集型任务</strong>（比如计算、排序）：线程数 ≈ CPU 核心数 + 1（避免频繁上下文切换）</li>
+<li><strong>IO 密集型任务</strong>（比如数据库、Redis、HTTP 调用）：线程数 ≈ CPU 核心数 × 2 或更高（让 CPU 在等待 IO 时处理其他任务）</li>
+</ul>
+<hr>
+<p>💡 某个任务执行异常怎么处理？</p>
+<p>并行任务最怕 “一个任务失败，导致整个并行流程失败”，必须做<strong>异常隔离和兜底处理</strong>，核心思路是 “单个任务失败不影响全局，给用户返回可用结果”</p>
+<ul>
+<li><strong>单个任务异常处理</strong>：用 CompletableFuture.exceptionally() 或 handle()handle()</li>
+</ul>
+<ul>
+<li><strong>全局异常处理</strong>：用 <code>whenComplete()</code> 捕获所有任务的异常，记录日志并做统一兜底</li>
+<li><strong>超时兜底</strong>：用 <code>orTimeout()</code> 给单个任务加超时，超时后直接返回兜底数据</li>
+<li><strong>熔断降级</strong>：如果某个接口频繁失败，可以结合 Sentinel 等工具做熔断，避免无效调用</li>
+</ul>
+<hr>
+<p>💡 监控怎么做，上下文切换信息丢失？</p>
+<p>并行任务的监控是生产环境的刚需，否则出了问题根本定位不到</p>
+<p>上下文切换的核心是<strong>保证用户身份、请求 ID 等关键信息在子线程中不丢失</strong></p>
+<p>监控方案：</p>
+<ul>
+<li><strong>任务耗时统计</strong>：在 <code>CompletableFutureBridge</code> 中用 <code>cost</code> Map 记录每个任务的耗时，定时上报到监控系统（比如 Prometheus、Grafana）</li>
+<li><strong>异常监控</strong>：用 <code>exceptionally()</code> 捕获异常后，上报到告警系统（比如 Alertmanager、钉钉机器人）</li>
+<li><strong>线程池监控</strong>：监控线程池的活跃线程数、队列大小、任务拒绝数，这些指标能反映线程池是否健康</li>
+</ul>
+<p>上下文传递方案：</p>
+<ul>
+<li><strong>用 <code>ThreadLocal</code> + 线程池钩子</strong>：在任务提交到线程池前，把主线程的 <code>ThreadLocal</code> 内容（比如用户 ID、请求 ID）复制到子线程</li>
+<li>**用 <code>InheritableThreadLocal</code>**：它会自动把父线程的 <code>ThreadLocal</code> 内容传递给子线程，但要注意线程池复用线程时可能导致的上下文污染，需要在任务执行后清理</li>
+<li><strong>用 <code>MDC</code>（SLF4J）</strong>：日志中的请求 ID 可以通过 MDC 传递，子线程执行前复制 MDC 内容，执行后清理</li>
+</ul>
+<hr>
+<p>💡 主子线程导致的事务一致性问题</p>
+<ul>
+<li>主线程开启事务，子线程执行数据库操作，子线程的操作不会被主线程的事务包含，导致 “主线程回滚，子线程操作生效” 的不一致</li>
+<li>子线程开启事务，主线程提交 &#x2F; 回滚，子线程的事务不受影响，导致数据不一致</li>
+</ul>
+<p>解决方案：</p>
+<ul>
+<li><strong>禁止在并行任务中操作事务</strong>：如果必须操作，把事务逻辑放到主线程，并行任务只做无状态的查询或非事务操作</li>
+<li><strong>用分布式事务</strong>：如果业务强要求并行 + 事务，用 Seata 等分布式事务框架，但性能开销较大，尽量避免</li>
+<li><strong>事务补偿</strong>：如果并行任务执行失败，用消息队列做补偿（比如回滚已执行的操作）</li>
+</ul>
+<h1 id="缓存优化"><a href="#缓存优化" class="headerlink" title="缓存优化"></a>缓存优化</h1><p>一般有两种缓存</p>
+<ul>
+<li>本地缓存：Map、成员变量、guava、caffeine等 &#x3D;&#x3D;&gt; 只有当前实例可以使用缓存</li>
+<li>分布式缓存：redis、memcache等 &#x3D;&#x3D;&gt; 集群中所有实例都可以共享缓存</li>
+</ul>
+<p>【guava缓存】一些不怎么变化的类目可以做本地缓存：比如首页查询，可以直接从缓存中获取，不用查db</p>
+<p>【成员变量缓存】本地实例ip的缓存，实际启动之后，ip一般不会变，反复获取会累积一些没必要的时间耗费，可以缓存优化</p>
+<hr>
+<p><strong>服务器 <strong>&#x3D;&#x3D; 本地实例，也就是</strong>当前正在运行项目代码的那一台服务器进程</strong></p>
+<p>**实例 IP **&#x3D;&#x3D; 这台服务器的内网 IP &#x2F; 外网 IP（多数场景下用内网 IP，比如 172.16.0.10、192.168.1.5）</p>
+<p>⚠️ 记录这个ip可以：</p>
+<ol>
+<li>定位问题服务器：主要是在微服务项目中，用于问题定位</li>
+<li>在分布式任务中标记：谁宕机了，谁执行了任务</li>
+<li>微服务架构中<strong>服务注册与发现</strong>：微服务架构中（比如 Spring Cloud&#x2F;Nacos），服务启动时会把【自己的 IP + 端口 + 服务名】注册到注册中心，其他服务通过注册中心获取这个 IP，才能调用它的接口</li>
+<li>限流&#x2F;负载均衡：可以针对IP做限流或权重分配</li>
+<li>分布式追踪：看哪台服务器耗时最长</li>
+</ol>
+<hr>
+<p>总之：<strong>频繁访问</strong>的数据、<strong>查询结果不经常变化又需要快速访问</strong>的数据 可以放到本地缓存</p>
+<h1 id="使用redis"><a href="#使用redis" class="headerlink" title="使用redis"></a>使用redis</h1><p>比如用redis做计数统计，注意缓存一致性问题</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://github.com/chuyunnn">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/">https://github.com/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/chuyunnn/tags/%E4%BC%98%E5%8C%96/">优化</a></div><div class="post-share"><div class="social-share" data-image="/chuyunnn/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%80%97%E6%97%B6%E7%BB%9F%E8%AE%A1/" title="耗时统计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">耗时统计</div></div><div class="info-2"><div class="info-item-1">查看http请求耗时统计整个请求中每个阶段的耗时：直接借助 curl 来实现 1curl -o /dev/null -s -w &quot;time_namelookup: %&#123;time_namelookup&#125;\ntime_connect: %&#123;time_connect&#125;\ntime_appconnect: %&#123;time_appconnect&#125;\ntime_redirect: %&#123;time_redirect&#125;\ntime_pretransfer: %&#123;time_pretransfer&#125;\ntime_starttransfer: %&#123;time_starttransfer&#125;\ntime_total: %&#123;time_total&#125;\n&quot; https://目标地址  参数解析说明 -o /dev/null 把返回值丢掉，不用输出 -s 静默输出，不输出进度条 -w 指定格式打印信息，其中包含一些特定的参数： time_namelookup：从...</div></div></div></a><a class="pagination-related" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/" title="跨域问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">跨域问题</div></div><div class="info-2"><div class="info-item-1">问题定义跨域，就是浏览器出于安全，禁止一个域名下的前端页面，去请求另一个 “不同域名 &#x2F; 端口 &#x2F; 协议” 的后端接口  它不是后端的限制，也不是网络的限制，完全是浏览器强加的安全规则，叫 同源策略（Same-Origin Policy） 只有浏览器有跨域限制，后端之间调用、Postman、curl 等工具，都没有跨域问题  浏览器定义“同源”非常严格，必须 协议、域名、端口 三者完全一致。只要有一个不同，就是跨域： 假设前端地址是：http://localhost:8080    请求的目标 URL 是否跨域 原因    http://localhost:8080/api/user 否 完全一致（同源）   https://localhost:8080/api/user 是 协议不同（http vs https）   http://127.0.0.1:8080/api/user 是 域名不同（localhost vs IP）   http://localhost:9000/api/user 是 端口不同（8080 vs 9000）   💡 浏览器为什么要做...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%9C%BA%E6%99%AF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E7%BB%86%E7%B2%92%E5%BA%A6%E5%AE%9E%E4%BE%8B/" title="高并发场景解决方案细粒度实例"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-19</div><div class="info-item-2">高并发场景解决方案细粒度实例</div></div><div class="info-2"><div class="info-item-1">数据库表中有一个字段会频繁更新（比如递增）这时你可以：  先查询，如果存在就更新，如果不存在就初始化 用一条SQL完成插入和更新，无需先查询（利用id和type的唯一索引）  1234-- 核心SQL：如果记录存在则 cnt+1，不存在则初始化 cnt=1INSERT INTO read_count (document_id, document_type, cnt)VALUES (101, 1, 1)ON DUPLICATE KEY UPDATE cnt = cnt + 1;  原理：因为 idx_document_id_type 是唯一索引，当插入的 (document_id, document_type) 已存在时，会触发 **ON DUPLICATE KEY UPDATE**，执行 cnt = cnt + 1； 优势：原子性操作，避免并发下的 “查询 - 更新” 不一致问题，性能更高。 注意：用递增的方式而不是赋值的方式 &#x3D;&#x3D;&gt; 并发请求下保证计数准确（如果赋值可能会出现覆盖更新的问题） 其他优化思路： 缓冲层缓冲：用**redis做计数缓冲（还可...</div></div></div></a><a class="pagination-related" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%80%97%E6%97%B6%E7%BB%9F%E8%AE%A1/" title="耗时统计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-29</div><div class="info-item-2">耗时统计</div></div><div class="info-2"><div class="info-item-1">查看http请求耗时统计整个请求中每个阶段的耗时：直接借助 curl 来实现 1curl -o /dev/null -s -w &quot;time_namelookup: %&#123;time_namelookup&#125;\ntime_connect: %&#123;time_connect&#125;\ntime_appconnect: %&#123;time_appconnect&#125;\ntime_redirect: %&#123;time_redirect&#125;\ntime_pretransfer: %&#123;time_pretransfer&#125;\ntime_starttransfer: %&#123;time_starttransfer&#125;\ntime_total: %&#123;time_total&#125;\n&quot; https://目标地址  参数解析说明 -o /dev/null 把返回值丢掉，不用输出 -s 静默输出，不输出进度条 -w 指定格式打印信息，其中包含一些特定的参数： time_namelookup：从...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/chuyunnn/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/chuyunnn/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/chuyunnn/archives/"><div class="headline">Articles</div><div class="length-num">34</div></a><a href="/chuyunnn/tags/"><div class="headline">Tags</div><div class="length-num">33</div></a><a href="/chuyunnn/categories/"><div class="headline">Categories</div><div class="length-num">10</div></a></div><a id="card-info-btn" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%B2%E8%A1%8C%E6%94%B9%E5%B9%B6%E8%A1%8C"><span class="toc-number">1.</span> <span class="toc-text">串行改并行</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E8%A1%8C%E8%AE%BF%E9%97%AE%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">并行访问性能优化方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-%E4%BD%BF%E7%94%A8-CompletableFeture-%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7%EF%BC%88%E5%AF%B9%E4%B8%8A%E8%BF%B0%E7%9A%84%E5%B0%81%E8%A3%85%EF%BC%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">💡 使用 CompletableFeture 异步编程工具（对上述的封装）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E4%BD%BF%E7%94%A8%E7%82%B9"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">可使用点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E8%80%83%E8%99%91%E7%9A%84%E7%82%B9%EF%BC%9A"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">主要考虑的点：</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E4%BC%98%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">缓存优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8redis"><span class="toc-number">3.</span> <span class="toc-text">使用redis</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%80%97%E6%97%B6%E7%BB%9F%E8%AE%A1/" title="耗时统计">耗时统计</a><time datetime="2026-01-29T07:12:01.000Z" title="Created 2026-01-29 15:12:01">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="性能优化-并行访问">性能优化-并行访问</a><time datetime="2026-01-29T06:36:21.000Z" title="Created 2026-01-29 14:36:21">2026-01-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/" title="跨域问题">跨域问题</a><time datetime="2026-01-28T13:23:41.000Z" title="Created 2026-01-28 21:23:41">2026-01-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E5%85%B3%E4%BA%8E%E7%99%BB%E5%BD%95-%E7%94%A8%E6%88%B7/" title="关于登录-用户">关于登录-用户</a><time datetime="2026-01-28T12:26:59.000Z" title="Created 2026-01-28 20:26:59">2026-01-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/chuyunnn/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7/" title="缓存一致性">缓存一致性</a><time datetime="2026-01-28T10:52:09.000Z" title="Created 2026-01-28 18:52:09">2026-01-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/chuyunnn/js/utils.js?v=5.5.3"></script><script src="/chuyunnn/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
