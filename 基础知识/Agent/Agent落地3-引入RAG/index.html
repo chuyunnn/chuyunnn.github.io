@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent落地3-引入RAG | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="RAG不是模型能力，是系统能力 在这里没有把RAG设计成特殊的模型模式，而是把RAG当成一个工具 💡 因为在 Agent 的世界里，RAG 和 “查天气”“查日期” 没有本质上的区别：  都是模型发现自己不知道 都是通过工具向系统请求信息 都是拿到结果后继续推理  Agent 视角下的一次 RAG 调用从 Agent 的角度看，一次完整的 RAG 流程如下：  用户提出问题 ↓  Agent 判">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent落地3-引入RAG">
+<meta property="og:url" content="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="RAG不是模型能力，是系统能力 在这里没有把RAG设计成特殊的模型模式，而是把RAG当成一个工具 💡 因为在 Agent 的世界里，RAG 和 “查天气”“查日期” 没有本质上的区别：  都是模型发现自己不知道 都是通过工具向系统请求信息 都是拿到结果后继续推理  Agent 视角下的一次 RAG 调用从 Agent 的角度看，一次完整的 RAG 流程如下：  用户提出问题 ↓  Agent 判">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-02T08:06:04.000Z">
+<meta property="article:modified_time" content="2026-03-02T09:30:21.029Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Agent落地3-引入RAG",
+  "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-03-02T08:06:04.000Z",
+  "dateModified": "2026-03-02T09:30:21.029Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent落地3-引入RAG',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">Agent落地3-引入RAG</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Agent落地3-引入RAG</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-02T08:06:04.000Z" title="Created 2026-03-02 16:06:04">2026-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-02T09:30:21.029Z" title="Updated 2026-03-02 17:30:21">2026-03-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/">Agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>RAG不是模型能力，是系统能力</p>
+<p>在这里没有把RAG设计成特殊的模型模式，而是把RAG当成一个工具</p>
+<p>💡 因为在 Agent 的世界里，RAG 和 “查天气”“查日期” 没有本质上的区别：</p>
+<ul>
+<li>都是模型发现自己不知道</li>
+<li>都是通过工具向系统请求信息</li>
+<li>都是拿到结果后继续推理</li>
+</ul>
+<h2 id="Agent-视角下的一次-RAG-调用"><a href="#Agent-视角下的一次-RAG-调用" class="headerlink" title="Agent 视角下的一次 RAG 调用"></a>Agent 视角下的一次 RAG 调用</h2><p>从 Agent 的角度看，一次完整的 RAG 流程如下：</p>
+<ol>
+<li><p>用户提出问题</p>
+<p>↓</p>
+</li>
+<li><p>Agent 判断：我是否需要查阅知识库？</p>
+<p>↓</p>
+</li>
+<li><p>Agent 调用 KnowledgeTool</p>
+<p>↓</p>
+</li>
+<li><p>系统执行向量检索</p>
+<p>↓</p>
+</li>
+<li><p>返回相关文档内容</p>
+<p>↓</p>
+</li>
+<li><p>Agent 基于内容生成最终回答</p>
+</li>
+</ol>
+<p>Agent 最关心的一件事，是现在缺的背景信息。</p>
+<h2 id="从RAG中查询内容流程"><a href="#从RAG中查询内容流程" class="headerlink" title="从RAG中查询内容流程"></a>从RAG中查询内容流程</h2><ul>
+<li>用户提问（往往缺少背景信息）</li>
+<li>对<strong>用户问题进行 Embedding</strong> 【向量化】</li>
+<li>使用用户问题的向量在向量数据库中执行<strong>向量相似度检索</strong></li>
+<li>检索到的 Top-K 条 chunk，会被作为<strong>补充上下文</strong>，与用户原始问题一起发送给大模型</li>
+<li>模型基于用户问题和检索到的知识片段生成最终回答并返回给用户</li>
+</ul>
+<p>这一步的本质是：<strong>RAG 负责 “找对信息”，AI 负责 “说清楚信息”</strong></p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>1️⃣ 检索到的 Top-K chunk 会被放在 Prompt 中<strong>「SystemMessage（可选）之后、用户原始问题之前」的位置，且会明确标注 “参考文档”</strong>，让模型知道这是补充的背景信息，而非用户的提问或历史对话。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;messages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;system&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你是一个Java编程助手，必须基于参考文档回答用户问题，参考文档中没有的内容请回复“暂无相关信息”。&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;参考文档：\n【文档1】Java中的String是不可变的，每次修改都会生成新的对象，底层基于char数组实现。\n【文档2】String的intern()方法会将字符串常量池中的对象引用返回，减少内存占用。&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Java中的String为什么是不可变的？&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>2️⃣ 如果担心用 <code>UserMessage</code> 封装 chunk 会让模型误解为 “用户输入”，可以用<strong>「自定义 Message 类型」或「直接拼接在 SystemMessage 末尾」</strong></p>
+<p>以下位置会导致模型理解混乱，绝对不要用：</p>
+<ol>
+<li><strong>chunk 放在用户问题之后</strong>：模型先看到问题，再看文档，容易遗漏关键信息</li>
+<li><strong>chunk 无标识直接拼接</strong>：模型无法区分 “文档内容” 和 “用户问题”，比如直接写 “Java 中的 String 是不可变的…Java 中的 String 为什么是不可变的？”</li>
+<li><strong>chunk 混入历史对话</strong>：历史对话是用户和模型的交互，混入文档会导致 Token 浪费 + 逻辑混乱</li>
+</ol>
+</blockquote>
+<h2 id="KnowledgeTool"><a href="#KnowledgeTool" class="headerlink" title="KnowledgeTool"></a>KnowledgeTool</h2><p>Agent 并不会直接调用 <code>RagService</code>，它只认识一个工具：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Tool(</span></span><br><span class="line"><span class="meta">    name = &quot;KnowledgeTool&quot;,</span></span><br><span class="line"><span class="meta">    description = &quot;从知识库中执行语义检索&quot;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">knowledgeQuery</span><span class="params">(String kbsId, String query)</span> &#123;</span><br><span class="line">    List&lt;String&gt; results = ragService.similaritySearch(kbsId, query);</span><br><span class="line">    <span class="keyword">return</span> String.join(<span class="string">&quot;\n&quot;</span>, results);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>RAG 被封装成一个标准工具（KnowledgeTool）</strong></li>
+</ol>
+<ul>
+<li>Agent 不直接操作底层的 <code>RagService</code>（向量检索服务），而是通过一个名为 <code>KnowledgeTool</code> 的工具来访问知识库。</li>
+<li>这符合 Agent 的统一设计：所有外部能力（查天气、查日期、查知识库）都被封装成 <code>ToolCallback</code>，Agent 只需要通过工具名和参数来调用。</li>
+</ul>
+<ol start="2">
+<li><strong>工具的核心逻辑</strong></li>
+</ol>
+<ul>
+<li><code>knowledgeQuery</code> 方法接收两个参数：<code>kbsId</code>（知识库 ID，用于区分不同的知识库）和 <code>query</code>（用户的问题 &#x2F; 检索词）</li>
+</ul>
+<p>调用 <code>ragService.similaritySearch</code> 执行向量相似度检索，得到 Top-K 的文档片段（chunk） &#x3D;&#x3D;&gt; 将这些片段用换行符拼接成一个字符串返回，作为工具的执行结果</p>
+<ol start="3">
+<li>为了让 Agent 在 Think 阶段能够正确判断是否要使用 RAG，我们会在提示词中明确告诉它：</li>
+</ol>
+<ul>
+<li>当前允许访问哪些知识库</li>
+<li>每个知识库的大致用途</li>
+</ul>
+<p>这些信息并不会被模型 “记住”，但会在当前决策中起到非常关键的引导作用。</p>
+<p>一旦模型意识到：“这个问题我可以通过知识库解决”，它就会主动选择调用 <code>KnowledgeTool</code>。</p>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>告知模型 “可用知识库” 和 “可用工具” 的提示词，都集中在 Think 阶段的 SystemPrompt（也就是「落地2.md」提到的 thinkPrompt）中</p>
+<p>一个提示词模板：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Think 阶段的核心 SystemPrompt（thinkPrompt）</span></span><br><span class="line"><span class="type">String</span> <span class="variable">thinkPrompt</span> <span class="operator">=</span> <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    现在你是一个智能的「决策模块」，请根据以下规则完成决策：</span></span><br><span class="line"><span class="string">    === 可用知识库（仅当问题需要专业知识时调用） ===</span></span><br><span class="line"><span class="string">    1. 知识库ID：java_kb，用途：解答Java编程相关的语法、原理、框架问题；</span></span><br><span class="line"><span class="string">    2. 知识库ID：product_kb，用途：解答公司产品功能、使用方法、常见问题；</span></span><br><span class="line"><span class="string">    3. 知识库ID：weather_kb，用途：解答全国城市天气相关的历史数据、预报问题；</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    === 可用工具（仅当需要外部数据/知识库时调用） ===</span></span><br><span class="line"><span class="string">    1. 工具名：KnowledgeTool，参数：kbsId（知识库ID）、query（检索词），用途：从指定知识库中检索相关信息；</span></span><br><span class="line"><span class="string">    2. 工具名：WeatherTool，参数：city（城市名）、date（日期），用途：查询指定城市指定日期的天气；</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    === 决策规则 ===</span></span><br><span class="line"><span class="string">    1. 先判断用户问题是否需要外部信息：</span></span><br><span class="line"><span class="string">       - 不需要 → 直接生成自然语言回答，不调用任何工具；</span></span><br><span class="line"><span class="string">       - 需要 → 选择对应的工具（优先选KnowledgeTool，其次选WeatherTool）；</span></span><br><span class="line"><span class="string">    2. 调用工具时，必须严格按照格式返回：&#123;&quot;action&quot;:&quot;call_tool&quot;,&quot;tool_name&quot;:&quot;xxx&quot;,&quot;parameters&quot;:&#123;&quot;xxx&quot;:&quot;xxx&quot;&#125;&#125;；</span></span><br><span class="line"><span class="string">    3. 仅使用上述列出的知识库和工具，禁止调用未列出的资源；</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>关键说明：</p>
+<ol>
+<li><strong>知识库信息</strong>：放在 SystemPrompt 的开头，明确 “有哪些库、能解决什么问题”，让模型快速匹配用户问题和知识库；</li>
+<li><strong>工具信息</strong>：紧跟知识库信息，明确 “有哪些工具、参数是什么、能做什么”，让模型知道 “该调用哪个工具、传什么参数”；</li>
+<li><strong>决策规则</strong>：最后给出判断逻辑，引导模型按规则选择是否调用工具。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 2. 将工具传入模型（告知技术定义）</span></span><br><span class="line"><span class="built_in">this</span>.lastChatResponse = chatClient</span><br><span class="line">        .prompt(prompt) <span class="comment">// 基础上下文（用户问题+历史）</span></span><br><span class="line">        .system(thinkPrompt) <span class="comment">// 告知业务含义+知识库信息</span></span><br><span class="line">        .toolCallbacks(knowledgeTool, weatherTool) <span class="comment">// 告知技术定义</span></span><br><span class="line">        .call()</span><br><span class="line">        .chatClientResponse()</span><br><span class="line">        .chatResponse();</span><br></pre></td></tr></table></figure>
+
+<p>💡 这里是<code>thinkPrompt</code> + <code>toolCallbacks</code> 双重告知的方法</p>
+<p>为什么需要 “双重告知”？</p>
+<ul>
+<li>SystemPrompt 解决 “该不该调、调哪个” 的问题（业务逻辑）</li>
+<li>toolCallbacks () 解决 “怎么调、传什么参数” 的问题（技术规范）</li>
+</ul>
+<p>两者缺一不可，否则模型要么 “不知道什么时候调”，要么 “调的时候参数错误”。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/">https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B0-%E6%80%BB/" title="Agent落地-总"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Agent落地-总</div></div><div class="info-2"><div class="info-item-1">从前端的一次输入开始整个流程的起点非常普通，用户在聊天输入框中敲下一段文字，按下回车。 在前端看来，这一步并没有任何 “Agent” 的概念，它只做三件事：  如果当前还没有会话，先创建一个会话 创建一条 用户消息 把这条消息立刻渲染到聊天列表中  也就是说，前端不会等待 AI 的任何结果 这是一个非常重要的设计点，用户输入的那一刻，系统就应该 “立刻有反应”  具体流程是这样的：  用户输入并回车 前端立刻渲染用户消息到聊天列表，让用户看到 “我发了这句话” 同时发起异步 HTTP 请求（或 WebSocket）到后端，携带用户消息和会话 ID   前端等待响应期间 聊天列表中，在用户消息下方显示一个 “AI 正在思考” 的占位元素 &#x3D;&#x3D;&gt; 让用户感知到系统已经收到消息，正在处理   后端处理并返回结果 后端执行 Agent Loop（Think → Execute → 循环），生成最终回答 最终回答通过 HTTP 响应或 WebSocket 消息推回前端   前端更新 UI 收到后端返回的 AI 回答后，前端把 “AI 正在输入” 的占位替换成真实的...</div></div></div></a><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/" title="Agent落地2-引入AgentLoop"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Agent落地2-引入AgentLoop</div></div><div class="info-2"><div class="info-item-1">在聊天功能的前提下，引入Agent Loop，让agent开始具备：  判断是否需要外部能力 主动发起工具调用 根据工具结果推进任务  💡 根本问题：这一次模型回复是不是最终答案？ &#x3D;&#x3D;&gt; 如果不是，系统介入，推进下一步 首先，新增的字段有： 123456public class JChatMindV2 extends JChatMindV1 &#123;    protected List&lt;ToolCallback&gt; availableTools;    protected ToolCallingManager toolCallingManager;    protected ChatOptions chatOptions;    protected ChatResponse lastChatResponse;&#125;   List&lt;ToolCallback&gt; availableTools   含义：Agent 当前可调用的外部能力列表。 作用：Agent 在对话中判断需要调用工具时，会从这个列表中选择合适的工具 这里的 ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Agent-%E8%A7%86%E8%A7%92%E4%B8%8B%E7%9A%84%E4%B8%80%E6%AC%A1-RAG-%E8%B0%83%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">Agent 视角下的一次 RAG 调用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8ERAG%E4%B8%AD%E6%9F%A5%E8%AF%A2%E5%86%85%E5%AE%B9%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">从RAG中查询内容流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#KnowledgeTool"><span class="toc-number">3.</span> <span class="toc-text">KnowledgeTool</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B0-%E6%80%BB/" title="Agent落地-总">Agent落地-总</a><time datetime="2026-03-02T11:06:22.000Z" title="Created 2026-03-02 19:06:22">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/" title="Agent落地3-引入RAG">Agent落地3-引入RAG</a><time datetime="2026-03-02T08:06:04.000Z" title="Created 2026-03-02 16:06:04">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/" title="Agent落地2-引入AgentLoop">Agent落地2-引入AgentLoop</a><time datetime="2026-03-02T06:54:09.000Z" title="Created 2026-03-02 14:54:09">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/" title="Agent-prompt">Agent-prompt</a><time datetime="2026-03-02T06:02:35.000Z" title="Created 2026-03-02 14:02:35">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B01-%E5%AE%9E%E7%8E%B0%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD/" title="Agent落地1-实现聊天功能">Agent落地1-实现聊天功能</a><time datetime="2026-03-02T05:30:06.000Z" title="Created 2026-03-02 13:30:06">2026-03-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

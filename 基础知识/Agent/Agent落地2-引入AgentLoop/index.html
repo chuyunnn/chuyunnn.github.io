@@ -1,0 +1,330 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent落地2-引入AgentLoop | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在聊天功能的前提下，引入Agent Loop，让agent开始具备：  判断是否需要外部能力 主动发起工具调用 根据工具结果推进任务  💡 根本问题：这一次模型回复是不是最终答案？ &#x3D;&#x3D;&gt; 如果不是，系统介入，推进下一步 首先，新增的字段有： 123456public class JChatMindV2 extends JChatMindV1 &#123;    pro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent落地2-引入AgentLoop">
+<meta property="og:url" content="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="在聊天功能的前提下，引入Agent Loop，让agent开始具备：  判断是否需要外部能力 主动发起工具调用 根据工具结果推进任务  💡 根本问题：这一次模型回复是不是最终答案？ &#x3D;&#x3D;&gt; 如果不是，系统介入，推进下一步 首先，新增的字段有： 123456public class JChatMindV2 extends JChatMindV1 &#123;    pro">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-02T06:54:09.000Z">
+<meta property="article:modified_time" content="2026-03-02T08:06:43.072Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Agent落地2-引入AgentLoop",
+  "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-03-02T06:54:09.000Z",
+  "dateModified": "2026-03-02T08:06:43.072Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent落地2-引入AgentLoop',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">Agent落地2-引入AgentLoop</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Agent落地2-引入AgentLoop</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-02T06:54:09.000Z" title="Created 2026-03-02 14:54:09">2026-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-02T08:06:43.072Z" title="Updated 2026-03-02 16:06:43">2026-03-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/">Agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>在聊天功能的前提下，引入Agent Loop，让agent开始具备：</p>
+<ul>
+<li>判断是否需要外部能力</li>
+<li>主动发起工具调用</li>
+<li>根据工具结果推进任务</li>
+</ul>
+<p>💡 根本问题：<strong>这一次模型回复是不是最终答案？</strong> &#x3D;&#x3D;&gt; 如果不是，系统介入，推进下一步</p>
+<p>首先，新增的字段有：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JChatMindV2</span> <span class="keyword">extends</span> <span class="title class_">JChatMindV1</span> &#123;</span><br><span class="line">    <span class="keyword">protected</span> List&lt;ToolCallback&gt; availableTools;</span><br><span class="line">    <span class="keyword">protected</span> ToolCallingManager toolCallingManager;</span><br><span class="line">    <span class="keyword">protected</span> ChatOptions chatOptions;</span><br><span class="line">    <span class="keyword">protected</span> ChatResponse lastChatResponse;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong><code>List&lt;ToolCallback&gt; availableTools</code></strong></li>
+</ol>
+<ul>
+<li><strong>含义</strong>：Agent 当前可调用的外部能力列表。</li>
+<li>作用：Agent 在对话中判断需要调用工具时，会从这个列表中选择合适的工具<ul>
+<li>这里的 <code>ToolCallback</code> 是每个外部工具的封装，包含工具的名称、描述、参数定义和执行逻辑</li>
+</ul>
+</li>
+<li><strong>示例</strong>：比如列表中包含 <code>WeatherToolCallback</code>、<code>CalculatorToolCallback</code>，Agent 就可以根据用户提问，决定调用 “查天气” 或 “做计算”</li>
+</ul>
+<ol start="2">
+<li><strong><code>ToolCallingManager toolCallingManager</code></strong></li>
+</ol>
+<ul>
+<li><strong>含义</strong>：统一执行工具调用的协调器</li>
+<li>作用：<ul>
+<li>**<u>解析</u>模型返回的工具调用<u>请求</u>**（如函数调用指令），从 <code>availableTools</code> 中找到对应的 <code>ToolCallback</code></li>
+<li><strong><u>执行</u>工具的具体逻辑</strong>，并将工具**<u>返回</u>**的结果整理成模型能理解的格式，再交给模型进行下一步处理</li>
+</ul>
+</li>
+</ul>
+<p>是 Agent 实现 “思考 → 调用工具 → 整合结果再回答” 这一闭环的核心组件</p>
+<ol start="3">
+<li><strong><code>ChatOptions chatOptions</code></strong></li>
+</ol>
+<ul>
+<li><strong>含义</strong>：显式控制模型行为的配置项</li>
+<li>作用：<ul>
+<li>用于覆盖或精细化模型的调用参数<ul>
+<li>如 <code>temperature</code>（温度，控制随机性）、<code>maxTokens</code>（最大生成长度）、<code>topP</code>（核采样）、<code>stopSequences</code>（停止词）等</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>相比 V1 中可能硬编码的参数，V2 通过 <code>ChatOptions</code> 实现了参数的可配置化和可复用性，让 Agent 的行为更可控</p>
+<ol start="3">
+<li><strong><code>ChatResponse lastChatResponse</code></strong></li>
+</ol>
+<ul>
+<li><strong>含义</strong>：保存最近一次模型输出，作为执行阶段的输入</li>
+<li>作用：<ul>
+<li>在工具调用流程中，模型第一次输出的可能不是最终答案，而是一个工具调用指令（如 <code>&#123;&quot;name&quot;: &quot;getWeather&quot;, &quot;parameters&quot;: &#123;&quot;city&quot;: &quot;北京&quot;&#125;&#125;</code>）。</li>
+<li>把第一次的 <code>ChatResponse</code> 保存下来，当工具执行完成后，Agent 会<strong>结合工具结果和这个历史响应，再次调用模型生成最终回答</strong></li>
+</ul>
+</li>
+</ul>
+<p>它是实现多轮工具调用和上下文延续的关键状态存储</p>
+<h2 id="执行流程控制"><a href="#执行流程控制" class="headerlink" title="执行流程控制"></a>执行流程控制</h2><p>SpringAI的原生模型支持 模型-&gt;自动执行工具-&gt;回填结果 的流程，这里把它关掉了，对执行过程进行控制</p>
+<p>一旦工具被自动执行，Agent 将失去：</p>
+<ul>
+<li>记录执行轨迹的能力</li>
+<li>插入中断、回滚、重试的机会</li>
+<li>对 “是否继续” 的判断权</li>
+</ul>
+<p>功能划分概览：</p>
+<ul>
+<li><strong>Think（决策模块）</strong>：负责分析当前对话上下文与系统状态，判断<strong>下一步行动策略</strong></li>
+<li><strong>LLMs（大语言模型）</strong>：根据 Think 阶段给定的<strong>决策约束与上下文信息</strong>，生成结构化的推理结果，包括<strong>普通回复</strong>或<strong>带有工具调用描述</strong>的输出</li>
+<li><strong>Execute（执行器）</strong>：负责<strong>解析并执行 LLMs 生成的工具调用请求</strong>，将真实执行结果以标准化形式回注到对话历史中</li>
+</ul>
+<p>三个部分之间交互预览：</p>
+<ul>
+<li><strong>Think → LLMs</strong>：生成策略与行为规划</li>
+<li><strong>LLMs → Execute</strong>：输出动作描述与工具调用请求</li>
+<li><strong>Execute → Think</strong>：反馈执行结果并更新系统状态</li>
+</ul>
+<p>这个<strong>循环会持续运行</strong>，直到<strong>任务被明确标记为完成</strong>，或者<strong>超过循环最高次数限制</strong></p>
+<h2 id="Think-阶段"><a href="#Think-阶段" class="headerlink" title="Think 阶段"></a>Think 阶段</h2><p>决定：“下一步干什么” &#x3D;&#x3D;&gt; 不是给用户回答，而是做决策</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="type">boolean</span> <span class="title function_">think</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">thinkPrompt</span> <span class="operator">=</span> <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        现在你是一个智能的「决策模块」。</span></span><br><span class="line"><span class="string">        请根据当前对话上下文，决定下一步的动作。</span></span><br><span class="line"><span class="string">        如果需要调用工具来完成任务，请调用相应的工具。</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后是模型调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">this</span>.lastChatResponse = chatClient</span><br><span class="line">        .prompt(prompt)</span><br><span class="line">        .system(thinkPrompt) <span class="comment">// 优先级最高，决策规则</span></span><br><span class="line">        .toolCallbacks(availableTools.toArray(<span class="keyword">new</span> <span class="title class_">ToolCallback</span>[<span class="number">0</span>]))</span><br><span class="line">        .call()</span><br><span class="line">        .chatClientResponse()</span><br><span class="line">        .chatResponse();</span><br></pre></td></tr></table></figure>
+
+<p>这里发生的三件事：</p>
+<ol>
+<li>使用完整的上下文（chatMemory）</li>
+<li>暴露所有可用工具</li>
+<li><strong>获取完整 ChatResponse，而不是直接取文本</strong>，因为 ChatResponse <strong>包含了工具调用的内容</strong></li>
+</ol>
+<p>⚠️ 其中：</p>
+<ol>
+<li><code>.prompt(prompt)</code> 中的 <code>prompt</code>：一个完整的 <code>Prompt</code> 对象</li>
+</ol>
+<ul>
+<li>包含「对话上下文（历史消息）+ 本次用户提问 + 可能的默认系统提示」等所有基础内容</li>
+</ul>
+<p><strong>作用</strong>：提供模型决策所需的**全部<u>对话上下文</u>**，是 Think 阶段的 “事实依据”</p>
+<ol start="2">
+<li><code>.system(thinkPrompt)</code> 中的 <code>thinkPrompt</code>：一段<strong>纯文本字符串</strong>，专门作为「<strong>SystemMessage（系统提示词）</strong>」覆盖 &#x2F; 补充到上述 <code>Prompt</code> 对象中</li>
+</ol>
+<ul>
+<li><strong>内容</strong>：是给模型的 “决策指令”（比如 “你是决策模块，决定是否调用工具”），是 Think 阶段的 “规则约束”</li>
+</ul>
+<p><strong>作用</strong>：定义模型在 Think 阶段的<strong>角色和决策规则</strong>，让模型专注于 “做决策” 而非 “直接回答用户”</p>
+<h2 id="ToolCall-出现时，为什么不立刻写入-memory？"><a href="#ToolCall-出现时，为什么不立刻写入-memory？" class="headerlink" title="ToolCall 出现时，为什么不立刻写入 memory？"></a>ToolCall 出现时，为什么不立刻写入 memory？</h2><p>Think 阶段结束后，做了一个预防 bug 的处理：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (toolCalls.isEmpty()) &#123;</span><br><span class="line">    chatMemory.add(sessionId, output);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>也就是说：</p>
+<ul>
+<li><strong>没有工具调用</strong> → 这是最终回复 → 写入 memory</li>
+<li><strong>有工具调用</strong> → 暂不写入 → 交给 execute () 统一处理</li>
+</ul>
+<p>💡 这一点非常重要。如果把 “带 tool_calls 的 AssistantMessage” 提前写入 memory，而后面工具执行失败或缺失，会导致上下文不一致</p>
+<blockquote>
+<p>1️⃣ 中间指令不作为上下文：不浪费token</p>
+<p>2️⃣ 工具执行失败（最常见）</p>
+<p>假设用户问 “查北京今天温度”，模型生成工具调用指令后，你提前写入 memory，然后工具执行失败（比如天气接口报错）：</p>
+<ol>
+<li>提前写入的错误上下文（memory 中的内容）</li>
+<li><strong>工具执行失败</strong>：无法获取温度，<strong>需要模型重新决策（比如提示 “接口异常，无法查询”）</strong></li>
+<li>模型下次读取 memory 时，会看到 “自己已经发了工具调用指令”，但没有后续的 “工具执行结果 &#x2F; 最终回答”，会产生两个问题：<ul>
+<li>模型误以为 “工具已经调用成功”，继续追问 “温度结果呢？”，但实际根本没结果</li>
+<li>或模型重复生成相同的工具调用指令，陷入 “调用失败→重复调用” 的死循环</li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>如果不存memory：</p>
+<p>模型读取 memory 时，只看到 “用户要查温度”，完全不知道 “之前生成过工具调用指令”（因为没写入 memory），它会基于 “用户的原始需求” 重新决策：</p>
+<ul>
+<li>既然工具执行失败，就直接生成 “失败提示” 给用户，而非纠结 “为什么工具调用没结果”</li>
+<li>不会重复生成工具调用指令，因为 memory 中没有 “我已经发过指令” 的记录</li>
+</ul>
+</blockquote>
+<ul>
+<li><p>写入了工具调用指令 → 模型认为 “我已经做了这个决策”</p>
+</li>
+<li><p>没写入 → 模型完全不知道 “自己曾经生成过工具调用指令”，只会基于用户的原始提问重新思考</p>
+<ul>
+<li>只看到请求和结果，不会重复指令</li>
+</ul>
+</li>
+</ul>
+<h2 id="Execute阶段：系统真正动手的地方"><a href="#Execute阶段：系统真正动手的地方" class="headerlink" title="Execute阶段：系统真正动手的地方"></a>Execute阶段：系统真正动手的地方</h2><p>Agent 从 “会想” 走向 “会做” 的关键步骤</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ToolExecutionResult</span> <span class="variable">toolExecutionResult</span> <span class="operator">=</span></span><br><span class="line">        toolCallingManager.executeToolCalls(prompt, <span class="built_in">this</span>.lastChatResponse);</span><br><span class="line"><span class="type">ToolResponseMessage</span> <span class="variable">toolResponseMessage</span> <span class="operator">=</span> (ToolResponseMessage) toolExecutionResult</span><br><span class="line">        .conversationHistory()</span><br><span class="line">        .get(toolExecutionResult.conversationHistory().size() - <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>取出带 <code>tool_calls</code> 的 <code>AssistantMessage</code></li>
+<li>根据 <code>name</code> + <code>arguments</code> 执行工具</li>
+<li>生成 <code>ToolResponseMessage</code></li>
+<li>返回完整的新对话历史</li>
+</ol>
+<h2 id="step：Think-Execute-的最小「循环」单元"><a href="#step：Think-Execute-的最小「循环」单元" class="headerlink" title="step：Think + Execute 的最小「循环」单元"></a>step：Think + Execute 的最小「循环」单元</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">step</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (think()) &#123;</span><br><span class="line">        execute();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        agentState = AgentState.FINISHED;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一次 step &#x3D; 一次决策 +（可选的）一次执行</p>
+<h3 id="chat-方法，已经不再是-“一次调用”"><a href="#chat-方法，已经不再是-“一次调用”" class="headerlink" title="chat () 方法，已经不再是 “一次调用”"></a>chat () 方法，已经不再是 “一次调用”</h3><p>在 V2 中，<code>chat()</code> 方法已经发生了语义变化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; MAX_STEPS &amp;&amp; agentState != AgentState.FINISHED; i++) &#123;</span><br><span class="line">    step();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这不再是 “问一句，答一句”，而是：给 Agent 一个目标，让它自己跑完</p>
+<p><code>MAX_STEPS</code> 的存在，也清晰地表达了一个工程态度：</p>
+<ul>
+<li>Agent <strong>不应该无限循环</strong></li>
+<li>模型的<strong>推理深度是有上限</strong></li>
+<li>系统必须兜底</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这样我们就有了一个Agent loop，后面无论是加RAG还是其他东西，都是在这个loop的基础上加层</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/">https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/" title="Agent落地3-引入RAG"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Agent落地3-引入RAG</div></div><div class="info-2"><div class="info-item-1">RAG不是模型能力，是系统能力 在这里没有把RAG设计成特殊的模型模式，而是把RAG当成一个工具 💡 因为在 Agent 的世界里，RAG 和 “查天气”“查日期” 没有本质上的区别：  都是模型发现自己不知道 都是通过工具向系统请求信息 都是拿到结果后继续推理  Agent 视角下的一次 RAG 调用从 Agent 的角度看，一次完整的 RAG 流程如下：  用户提出问题 ↓  Agent 判断：我是否需要查阅知识库？ ↓  Agent 调用 KnowledgeTool ↓  系统执行向量检索 ↓  返回相关文档内容 ↓  Agent 基于内容生成最终回答   Agent 最关心的一件事，是现在缺的背景信息。 从RAG中查询内容流程 用户提问（往往缺少背景信息） 对用户问题进行 Embedding 【向量化】 使用用户问题的向量在向量数据库中执行向量相似度检索 检索到的 Top-K 条 chunk，会被作为补充上下文，与用户原始问题一起发送给大模型 模型基于用户问题和检索到的知识片段生成最终回答并返回给用户  这一步的本质是：RAG 负责 “找对信息”，AI 负责 “说清楚信...</div></div></div></a><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/" title="Agent-prompt"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Agent-prompt</div></div><div class="info-2"><div class="info-item-1">一个完整的 Prompt 本质是 List&lt;Message&gt;，包含三类消息（按顺序）：    Message 类型 作用 对应 Prompt 位置    SystemMessage 系统提示（模型人设） 最前面（固定）   历史 UserMessage 之前的用户提问 系统消息后，按时间排序   历史 AssistantMessage 之前的 AI 回复 对应用户消息后   最新 UserMessage 本次用户提问 最后面（当前请求）   ❗️ 因为token跟整个 Prompt（包含系统提示、历史提问、历史回答、当前提问） + 回答 都有关 1. 把“长回答 &#x2F; 长提问 &#x2F; 历史消息” 塞进 Prompt，就会消耗对应 TokenMessageWindowChatMemory 的核心价值，就是通过限制历史消息数量，控制 Prompt 总长度，从而控制 Token 消耗 🙋 如果提问、回答很长，会整个塞进prompt里面吗？ ：会！默认情况下，只要没做特殊处理，历史长提问会完整塞进 Prompt； 如果想避免大量token消耗，有 3 种主流处...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">执行流程控制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Think-%E9%98%B6%E6%AE%B5"><span class="toc-number">2.</span> <span class="toc-text">Think 阶段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ToolCall-%E5%87%BA%E7%8E%B0%E6%97%B6%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E7%AB%8B%E5%88%BB%E5%86%99%E5%85%A5-memory%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">ToolCall 出现时，为什么不立刻写入 memory？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Execute%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%9C%9F%E6%AD%A3%E5%8A%A8%E6%89%8B%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="toc-number">4.</span> <span class="toc-text">Execute阶段：系统真正动手的地方</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#step%EF%BC%9AThink-Execute-%E7%9A%84%E6%9C%80%E5%B0%8F%E3%80%8C%E5%BE%AA%E7%8E%AF%E3%80%8D%E5%8D%95%E5%85%83"><span class="toc-number">5.</span> <span class="toc-text">step：Think + Execute 的最小「循环」单元</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#chat-%E6%96%B9%E6%B3%95%EF%BC%8C%E5%B7%B2%E7%BB%8F%E4%B8%8D%E5%86%8D%E6%98%AF-%E2%80%9C%E4%B8%80%E6%AC%A1%E8%B0%83%E7%94%A8%E2%80%9D"><span class="toc-number">5.1.</span> <span class="toc-text">chat () 方法，已经不再是 “一次调用”</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B0-%E6%80%BB/" title="Agent落地-总">Agent落地-总</a><time datetime="2026-03-02T11:06:22.000Z" title="Created 2026-03-02 19:06:22">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/" title="Agent落地3-引入RAG">Agent落地3-引入RAG</a><time datetime="2026-03-02T08:06:04.000Z" title="Created 2026-03-02 16:06:04">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/" title="Agent落地2-引入AgentLoop">Agent落地2-引入AgentLoop</a><time datetime="2026-03-02T06:54:09.000Z" title="Created 2026-03-02 14:54:09">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/" title="Agent-prompt">Agent-prompt</a><time datetime="2026-03-02T06:02:35.000Z" title="Created 2026-03-02 14:02:35">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B01-%E5%AE%9E%E7%8E%B0%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD/" title="Agent落地1-实现聊天功能">Agent落地1-实现聊天功能</a><time datetime="2026-03-02T05:30:06.000Z" title="Created 2026-03-02 13:30:06">2026-03-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

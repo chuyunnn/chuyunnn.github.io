@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent-prompt | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一个完整的 Prompt 本质是 List&lt;Message&gt;，包含三类消息（按顺序）：    Message 类型 作用 对应 Prompt 位置    SystemMessage 系统提示（模型人设） 最前面（固定）   历史 UserMessage 之前的用户提问 系统消息后，按时间排序   历史 AssistantMessage 之前的 AI 回复 对应用户消息后   最新 Us">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent-prompt">
+<meta property="og:url" content="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="一个完整的 Prompt 本质是 List&lt;Message&gt;，包含三类消息（按顺序）：    Message 类型 作用 对应 Prompt 位置    SystemMessage 系统提示（模型人设） 最前面（固定）   历史 UserMessage 之前的用户提问 系统消息后，按时间排序   历史 AssistantMessage 之前的 AI 回复 对应用户消息后   最新 Us">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-02T06:02:35.000Z">
+<meta property="article:modified_time" content="2026-03-02T06:42:29.698Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Agent-prompt",
+  "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-03-02T06:02:35.000Z",
+  "dateModified": "2026-03-02T06:42:29.698Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent-prompt',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">Agent-prompt</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Agent-prompt</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-02T06:02:35.000Z" title="Created 2026-03-02 14:02:35">2026-03-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-02T06:42:29.698Z" title="Updated 2026-03-02 14:42:29">2026-03-02</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/">Agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>一个完整的 Prompt 本质是 <code>List&lt;Message&gt;</code>，包含三类消息（按顺序）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">Message 类型</th>
+<th align="left">作用</th>
+<th align="left">对应 Prompt 位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SystemMessage</td>
+<td align="left">系统提示（模型人设）</td>
+<td align="left">最前面（固定）</td>
+</tr>
+<tr>
+<td align="left">历史 UserMessage</td>
+<td align="left">之前的用户提问</td>
+<td align="left">系统消息后，按时间排序</td>
+</tr>
+<tr>
+<td align="left">历史 AssistantMessage</td>
+<td align="left">之前的 AI 回复</td>
+<td align="left">对应用户消息后</td>
+</tr>
+<tr>
+<td align="left">最新 UserMessage</td>
+<td align="left">本次用户提问</td>
+<td align="left">最后面（当前请求）</td>
+</tr>
+</tbody></table>
+<p>❗️ 因为token跟<strong>整个 Prompt（包含系统提示、历史提问、历史回答、当前提问） + 回答</strong> 都有关</p>
+<h2 id="1-把“长回答-长提问-历史消息”-塞进-Prompt，就会消耗对应-Token"><a href="#1-把“长回答-长提问-历史消息”-塞进-Prompt，就会消耗对应-Token" class="headerlink" title="1. 把“长回答 &#x2F; 长提问 &#x2F; 历史消息” 塞进 Prompt，就会消耗对应 Token"></a>1. 把“长回答 &#x2F; 长提问 &#x2F; 历史消息” 塞进 Prompt，就会消耗对应 Token</h2><p>MessageWindowChatMemory 的核心价值，就是通过限制历史消息数量，控制 Prompt 总长度，从而控制 Token 消耗</p>
+<p>🙋 如果提问、回答很长，会整个塞进prompt里面吗？</p>
+<p>：会！<strong>默认情况下，只要没做特殊处理，历史长提问会完整塞进 Prompt</strong>；</p>
+<p>如果想避免大量token消耗，有 3 种主流处理方式（按优先级排序）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">处理方式</th>
+<th align="left">核心逻辑</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1. 滑动窗口（最常用：限制上下文数量）</td>
+<td align="left">只保留最近 N 条消息（MessageWindowChatMemory）</td>
+<td align="left">大多数普通聊天场景</td>
+</tr>
+<tr>
+<td align="left">2. 消息摘要（性价比高：控制每条上下文的长度）</td>
+<td align="left"><strong>调用模型生成</strong>：把长历史消息 &#x2F; 长回答总结成短文本，只带摘要进 Prompt</td>
+<td align="left">单条消息很长（如几百字）</td>
+</tr>
+<tr>
+<td align="left">3. 上下文压缩（进阶）</td>
+<td align="left">用 <strong>Spring AI 提供的 <code>ContextCompressor</code> 自动精简上下文</strong>（保留关键信息）：<strong>基于当前提问筛选</strong>关键上下文</td>
+<td align="left">专业场景（如客服、知识库）</td>
+</tr>
+</tbody></table>
+<h2 id="2-和JSON的关系？"><a href="#2-和JSON的关系？" class="headerlink" title="2. 和JSON的关系？"></a>2. 和<code>JSON</code>的关系？</h2><p><strong>ChatMemory 提取的上下文，先组装成 Prompt（Spring AI 上层概念），再由 Spring AI 把这个 Prompt 完整序列化成 JSON 请求体（底层传输格式）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 从 ChatMemory 提取上下文（原始内容层）</span></span><br><span class="line">List&lt;Message&gt; contextMessages = chatMemory.get(sessionId);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 组装成 Spring AI 的 Prompt 对象（框架封装层）</span></span><br><span class="line"><span class="comment">// 这一步就是“拼接Prompt”——把所有上下文都放进 Prompt 里，没有拆分</span></span><br><span class="line">List&lt;Message&gt; promptMessages = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">promptMessages.add(<span class="keyword">new</span> <span class="title class_">SystemMessage</span>(<span class="string">&quot;你是友好助手&quot;</span>)); <span class="comment">// 系统提示</span></span><br><span class="line">promptMessages.addAll(contextMessages);               <span class="comment">// 全部上下文（无拆分）</span></span><br><span class="line">promptMessages.add(<span class="keyword">new</span> <span class="title class_">UserMessage</span>(<span class="string">&quot;今天温度多少？&quot;</span>)); <span class="comment">// 本次提问</span></span><br><span class="line"><span class="type">Prompt</span> <span class="variable">prompt</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Prompt</span>(promptMessages);           <span class="comment">// 完整的 Prompt 对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 调用 ChatClient 发送请求（底层自动序列化）</span></span><br><span class="line"><span class="comment">// Spring AI 会把上面的 Prompt 对象，完整转换成 JSON 请求体（网络传输层）</span></span><br><span class="line"><span class="type">ChatResponse</span> <span class="variable">response</span> <span class="operator">=</span> chatClient.call(prompt);</span><br></pre></td></tr></table></figure>
+
+<p>其中，SystemMessage、UserMessage、AssistantMessage等完整序列化成 JSON 的 <code>messages</code> 数组中的不同部分</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;model&quot;</span><span class="punctuation">:</span> <span class="string">&quot;gpt-3.5-turbo&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;temperature&quot;</span><span class="punctuation">:</span> <span class="number">0.7</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;messages&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span>  <span class="comment">// 上下文的核心载体：数组形式，按对话顺序排列</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;system&quot;</span><span class="punctuation">,</span>       <span class="comment">// 角色：系统/用户/助手</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;你是一个友好的助手&quot;</span>  <span class="comment">// 消息内容</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;北京明天有雨吗？&quot;</span>    <span class="comment">// 历史用户消息</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;assistant&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;北京明天多云，没有雨&quot;</span> <span class="comment">// 历史助手回复</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;user&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;今天温度多少？&quot;</span>      <span class="comment">// 本次用户提问</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-systemPrompt会在对话一开始的时候放进chatMemory中"><a href="#3-systemPrompt会在对话一开始的时候放进chatMemory中" class="headerlink" title="3. systemPrompt会在对话一开始的时候放进chatMemory中"></a>3. systemPrompt会在对话一开始的时候放进chatMemory中</h2><p>💡 确保每次组装prompt的时候，都出现在<strong>最前面</strong></p>
+<p><code>SystemPrompt</code>（系统提示词）是<strong>给 AI 模型的 “全局指令”</strong></p>
+<p>&#x3D;&#x3D;&gt; 用来定义模型的角色、行为准则、回答风格、知识范围等，是整个会话的 “底层规则”，优先级高于用户的提问</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">示例 SystemPrompt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">角色定义</td>
+<td align="left">“你是一个专业的 Java 编程导师，只用简洁的语言回答编程问题，不聊无关内容。”</td>
+</tr>
+<tr>
+<td align="left">格式要求</td>
+<td align="left">“所有回答必须以 markdown 格式呈现，代码片段需要加语言标识，比如&#96;&#96;&#96;java。”</td>
+</tr>
+<tr>
+<td align="left">约束规则</td>
+<td align="left">“拒绝回答任何违法、暴力、色情相关问题，遇到此类问题直接回复‘无法回答’。”</td>
+</tr>
+<tr>
+<td align="left">知识范围</td>
+<td align="left">“你的知识仅限于 2024 年之前的 Java 技术，不回答 2024 年后发布的新框架相关问题。”</td>
+</tr>
+<tr>
+<td align="left">个性化风格</td>
+<td align="left">“你的回答要像朋友聊天一样轻松，带一点点幽默，但不要过度调侃。”</td>
+</tr>
+</tbody></table>
+<p>由于 <code>MessageWindowChatMemory</code> 是按 “消息数量” 截断，<strong>建议把 SystemPrompt 排除在滑动窗口的计数外</strong>（否则可能被截断）</p>
+<h2 id="4-新增-修改systemPrompt怎么做？"><a href="#4-新增-修改systemPrompt怎么做？" class="headerlink" title="4. 新增&#x2F;修改systemPrompt怎么做？"></a>4. 新增&#x2F;修改systemPrompt怎么做？</h2><p>1️⃣ 替换原有 SystemPrompt：最常用的方式，直接更新 SystemPrompt，后续组装 Prompt 时用新的规则</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 会话中需要修改 SystemPrompt</span></span><br><span class="line"><span class="type">String</span> <span class="variable">newSystemPrompt</span> <span class="operator">=</span> <span class="string">&quot;你是一个专业的Python编程导师，回答要详细，包含代码示例。&quot;</span>;</span><br><span class="line"><span class="built_in">this</span>.systemPrompt = newSystemPrompt; <span class="comment">// 替换原有值</span></span><br><span class="line"><span class="comment">// 2. 组装新的 Prompt 时，使用新的 SystemPrompt</span></span><br><span class="line">List&lt;Message&gt; promptMessages = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">promptMessages.add(<span class="keyword">new</span> <span class="title class_">SystemMessage</span>(<span class="built_in">this</span>.systemPrompt)); <span class="comment">// 新规则</span></span><br><span class="line">promptMessages.addAll(chatMemory.get(sessionId)); <span class="comment">// 历史用户/助手消息</span></span><br></pre></td></tr></table></figure>
+
+<p>2️⃣ 追加systemPrompt：在原有规则上补充（比如新增 “回答要带示例”）</p>
+<p>合并成一个，模型读取「唯一的全局指令」，按合并后的规则执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 原有 SystemPrompt</span></span><br><span class="line"><span class="type">String</span> <span class="variable">originalSystemPrompt</span> <span class="operator">=</span> <span class="string">&quot;你是一个专业的Java编程导师，只用简洁的语言回答。&quot;</span>;</span><br><span class="line"><span class="comment">// 新增补充规则</span></span><br><span class="line"><span class="type">String</span> <span class="variable">supplementPrompt</span> <span class="operator">=</span> <span class="string">&quot;补充：所有回答必须包含至少一个代码示例。&quot;</span>;</span><br><span class="line"><span class="comment">// 合并成新的 SystemPrompt</span></span><br><span class="line"><span class="type">String</span> <span class="variable">newSystemPrompt</span> <span class="operator">=</span> originalSystemPrompt + <span class="string">&quot;\n&quot;</span> + supplementPrompt;</span><br><span class="line"><span class="built_in">this</span>.systemPrompt = newSystemPrompt;</span><br></pre></td></tr></table></figure>
+
+<p>3️⃣ 动态添加到 ChatMemory：不建议把多个 SystemPrompt 存入 ChatMemory（会导致规则混乱），但如果必须这么做，需要确保最新的 SystemPrompt 在最前面</p>
+<p>多个独立的系统指令，模型读取「多个全局指令」，可能出现规则冲突 &#x2F; 优先级模糊</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 会话中新增 SystemPrompt 并放入 ChatMemory</span></span><br><span class="line"><span class="type">SystemMessage</span> <span class="variable">newSystemMsg</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SystemMessage</span>(<span class="string">&quot;你现在需要用更详细的方式回答问题。&quot;</span>);</span><br><span class="line">chatMemory.add(sessionId, newSystemMsg);</span><br><span class="line"><span class="comment">// 组装 Prompt 时，把所有 SystemMessage 提取出来，只保留最新的一个</span></span><br><span class="line">List&lt;Message&gt; contextMessages = chatMemory.get(sessionId);</span><br><span class="line">List&lt;Message&gt; filteredMessages = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="type">SystemMessage</span> <span class="variable">latestSystemMsg</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 遍历上下文，分离 SystemMessage 和普通消息</span></span><br><span class="line"><span class="keyword">for</span> (Message msg : contextMessages) &#123;</span><br><span class="line">    <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> SystemMessage) &#123;</span><br><span class="line">        latestSystemMsg = (SystemMessage) msg; <span class="comment">// 保留最新的 SystemMessage</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        filteredMessages.add(msg); <span class="comment">// 普通消息正常保留</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 组装最终 Prompt：最新 SystemMessage + 普通消息</span></span><br><span class="line">List&lt;Message&gt; promptMessages = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">if</span> (latestSystemMsg != <span class="literal">null</span>) &#123;</span><br><span class="line">    promptMessages.add(latestSystemMsg);</span><br><span class="line">&#125;</span><br><span class="line">promptMessages.addAll(filteredMessages);</span><br></pre></td></tr></table></figure>
+
+<h3 id="🙋-如果新的systempromt和原来的有冲突，会怎么判断呢？"><a href="#🙋-如果新的systempromt和原来的有冲突，会怎么判断呢？" class="headerlink" title="🙋 如果新的systempromt和原来的有冲突，会怎么判断呢？"></a>🙋 如果新的systempromt和原来的有冲突，会怎么判断呢？</h3><ul>
+<li>多<code>SystemPrompt</code>场景：靠运气<ul>
+<li>如果发给模型的 <code>messages</code> 数组里有多个冲突的 SystemMessage（比如一个要求 “简洁”，一个要求 “详细”），模型的处理逻辑是：<ul>
+<li><strong>优先级模糊</strong>：模型不会严格按 “最后出现的规则” 执行，也不会按 “最先出现的”，而是根据训练数据的 <strong>“偏好” 随机选择</strong>（比如 GPT 可能优先遵循 “详细”，讯飞星火可能优先遵循 “简洁”）</li>
+<li><strong>规则稀释</strong>：冲突规则会互相抵消，模型可能既不简洁也不详细，只给出 “折中但不符合预期” 的回答</li>
+<li><strong>极端情况</strong>：模型会忽略所有冲突规则，只按默认行为回答（相当于 SystemPrompt 失效）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>单 SystemMessage 场景（替换 &#x2F; 合并）：模型 “按文本顺序执行，后补充的规则优先级更高”<ul>
+<li>如果是<strong>一个完整的 SystemMessage</strong> 里包含冲突内容（比如 “回答要简洁，且回答要详细带代码示例”），模型会：<ul>
+<li>优先遵循 “<strong>后出现的规则</strong>”（比如 “详细带代码示例” 会覆盖 “简洁”）；</li>
+<li>尽量 “<strong>折中</strong>执行”（比如回答详细但控制篇幅，或简洁但加一行代码）；</li>
+<li>无法折中时，会忽略矛盾的部分，只执行能落地的规则（比如只带代码示例，不管简洁要求）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>总结上述三种方式：<strong>只有 <u>“完全替换”</u> 能彻底规避冲突风险</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">处理方式</th>
+<th align="left">是否有冲突风险</th>
+<th align="left">核心原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">存多个 SystemMessage</td>
+<td align="left">✅ 高风险</td>
+<td align="left">模型无明确优先级，随机执行</td>
+</tr>
+<tr>
+<td align="left">合并冲突规则到一个</td>
+<td align="left">✅ 中风险</td>
+<td align="left">模型会折中 &#x2F; 忽略，无法完全按预期执行</td>
+</tr>
+<tr>
+<td align="left">完全替换原有 SystemPrompt</td>
+<td align="left">❌ 无风险</td>
+<td align="left">模型只接收唯一规则，无冲突</td>
+</tr>
+</tbody></table>
+<h3 id="🙋-新增的系统提示词比较简短，怎么补充基础内容呢？"><a href="#🙋-新增的系统提示词比较简短，怎么补充基础内容呢？" class="headerlink" title="🙋 新增的系统提示词比较简短，怎么补充基础内容呢？"></a>🙋 新增的系统提示词比较简短，怎么补充基础内容呢？</h3><p>实际场景中，动态新增的 SystemPrompt 往往是 “临时规则”（比如 “本次回答用 markdown”），而基础内容（角色、核心约束）需要保留，核心思路是：<strong>把 “基础规则 + 临时规则” 合并成一个无冲突的完整 SystemPrompt</strong>，具体分 3 步：</p>
+<p>步骤 1：拆分 SystemPrompt 结构（便于动态拼接）</p>
+<p>步骤 2：会话中新增简短临时规则（无冲突）</p>
+<p>步骤 3：会话中新增冲突规则（完全替换）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/">https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/" title="Agent落地2-引入AgentLoop"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Agent落地2-引入AgentLoop</div></div><div class="info-2"><div class="info-item-1">在聊天功能的前提下，引入Agent Loop，让agent开始具备：  判断是否需要外部能力 主动发起工具调用 根据工具结果推进任务  💡 根本问题：这一次模型回复是不是最终答案？ &#x3D;&#x3D;&gt; 如果不是，系统介入，推进下一步 首先，新增的字段有： 123456public class JChatMindV2 extends JChatMindV1 &#123;    protected List&lt;ToolCallback&gt; availableTools;    protected ToolCallingManager toolCallingManager;    protected ChatOptions chatOptions;    protected ChatResponse lastChatResponse;&#125;   List&lt;ToolCallback&gt; availableTools   含义：Agent 当前可调用的外部能力列表。 作用：Agent 在对话中判断需要调用工具时，会从这个列表中选择合适的工具 这里的 ...</div></div></div></a><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B01-%E5%AE%9E%E7%8E%B0%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD/" title="Agent落地1-实现聊天功能"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Agent落地1-实现聊天功能</div></div><div class="info-2"><div class="info-item-1">这是一个最小 Agent 实现，目标为：集成 LLM，能够完成最基本的聊天功能 在这个版本中，只保留 Agent 的基本功能即可 123456789public class JChatMindV1 &#123;    protected String name;    protected String description;    protected String systemPrompt; // 系统提示词    protected ChatClient chatClient; // 模型能力入口    protected ChatMemory chatMemory; // 会话上下文    protected AgentState agentState; // 当前agent的状态    protected String sessionId; // 会话id&#125;  chatMemory模型的上下文记忆是系统完成的，这一步就是在限制最多保存的消息数量【通过滑动窗口的方式保留最近N条消息】 💡 控制每次发给 AI 模型的 Prompt 里，包含多少条历史会话上下文  ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%8A%8A%E2%80%9C%E9%95%BF%E5%9B%9E%E7%AD%94-%E9%95%BF%E6%8F%90%E9%97%AE-%E5%8E%86%E5%8F%B2%E6%B6%88%E6%81%AF%E2%80%9D-%E5%A1%9E%E8%BF%9B-Prompt%EF%BC%8C%E5%B0%B1%E4%BC%9A%E6%B6%88%E8%80%97%E5%AF%B9%E5%BA%94-Token"><span class="toc-number">1.</span> <span class="toc-text">1. 把“长回答 &#x2F; 长提问 &#x2F; 历史消息” 塞进 Prompt，就会消耗对应 Token</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%92%8CJSON%E7%9A%84%E5%85%B3%E7%B3%BB%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">2. 和JSON的关系？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-systemPrompt%E4%BC%9A%E5%9C%A8%E5%AF%B9%E8%AF%9D%E4%B8%80%E5%BC%80%E5%A7%8B%E7%9A%84%E6%97%B6%E5%80%99%E6%94%BE%E8%BF%9BchatMemory%E4%B8%AD"><span class="toc-number">3.</span> <span class="toc-text">3. systemPrompt会在对话一开始的时候放进chatMemory中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%96%B0%E5%A2%9E-%E4%BF%AE%E6%94%B9systemPrompt%E6%80%8E%E4%B9%88%E5%81%9A%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">4. 新增&#x2F;修改systemPrompt怎么做？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%99%8B-%E5%A6%82%E6%9E%9C%E6%96%B0%E7%9A%84systempromt%E5%92%8C%E5%8E%9F%E6%9D%A5%E7%9A%84%E6%9C%89%E5%86%B2%E7%AA%81%EF%BC%8C%E4%BC%9A%E6%80%8E%E4%B9%88%E5%88%A4%E6%96%AD%E5%91%A2%EF%BC%9F"><span class="toc-number">4.1.</span> <span class="toc-text">🙋 如果新的systempromt和原来的有冲突，会怎么判断呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%99%8B-%E6%96%B0%E5%A2%9E%E7%9A%84%E7%B3%BB%E7%BB%9F%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%AF%94%E8%BE%83%E7%AE%80%E7%9F%AD%EF%BC%8C%E6%80%8E%E4%B9%88%E8%A1%A5%E5%85%85%E5%9F%BA%E7%A1%80%E5%86%85%E5%AE%B9%E5%91%A2%EF%BC%9F"><span class="toc-number">4.2.</span> <span class="toc-text">🙋 新增的系统提示词比较简短，怎么补充基础内容呢？</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B0-%E6%80%BB/" title="Agent落地-总">Agent落地-总</a><time datetime="2026-03-02T11:06:22.000Z" title="Created 2026-03-02 19:06:22">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/" title="Agent落地3-引入RAG">Agent落地3-引入RAG</a><time datetime="2026-03-02T08:06:04.000Z" title="Created 2026-03-02 16:06:04">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/" title="Agent落地2-引入AgentLoop">Agent落地2-引入AgentLoop</a><time datetime="2026-03-02T06:54:09.000Z" title="Created 2026-03-02 14:54:09">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/" title="Agent-prompt">Agent-prompt</a><time datetime="2026-03-02T06:02:35.000Z" title="Created 2026-03-02 14:02:35">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B01-%E5%AE%9E%E7%8E%B0%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD/" title="Agent落地1-实现聊天功能">Agent落地1-实现聊天功能</a><time datetime="2026-03-02T05:30:06.000Z" title="Created 2026-03-02 13:30:06">2026-03-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

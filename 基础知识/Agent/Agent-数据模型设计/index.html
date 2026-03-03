@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Agent-数据模型设计 | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Agent中需要持久化的数据可以分成三类：  Agent 与对话状态本身，它们描述的是：谁在和模型交互，这次对话进行到哪一步了。 比如用户 ID、当前对话轮次、当前任务进度等，用来恢复对话上下文   对话过程中产生的消息记录 用户输入、模型输出、工具执行结果，以及中间的各种元信息   Agent 需要 “按需查阅” 的系统知识。这些知识不属于模型本身，而是通过 RAG 的方式，在需要时提供给模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent-数据模型设计">
+<meta property="og:url" content="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="Agent中需要持久化的数据可以分成三类：  Agent 与对话状态本身，它们描述的是：谁在和模型交互，这次对话进行到哪一步了。 比如用户 ID、当前对话轮次、当前任务进度等，用来恢复对话上下文   对话过程中产生的消息记录 用户输入、模型输出、工具执行结果，以及中间的各种元信息   Agent 需要 “按需查阅” 的系统知识。这些知识不属于模型本身，而是通过 RAG 的方式，在需要时提供给模型。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-02-27T07:35:58.000Z">
+<meta property="article:modified_time" content="2026-02-27T08:59:06.119Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Agent-数据模型设计",
+  "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-02-27T07:35:58.000Z",
+  "dateModified": "2026-02-27T08:59:06.119Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Agent-数据模型设计',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">Agent-数据模型设计</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Agent-数据模型设计</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-02-27T07:35:58.000Z" title="Created 2026-02-27 15:35:58">2026-02-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-02-27T08:59:06.119Z" title="Updated 2026-02-27 16:59:06">2026-02-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/">Agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>Agent中需要持久化的数据可以分成三类：</p>
+<ol>
+<li>Agent 与对话状态本身，它们描述的是：谁在和模型交互，这次对话进行到哪一步了。<ul>
+<li>比如用户 ID、当前对话轮次、当前任务进度等，用来恢复对话上下文</li>
+</ul>
+</li>
+<li>对话过程中产生的消息记录<ul>
+<li>用户输入、模型输出、工具执行结果，以及中间的各种元信息</li>
+</ul>
+</li>
+<li>Agent 需要 “按需查阅” 的系统知识。这些知识不属于模型本身，而是通过 RAG 的方式，在需要时提供给模型。<ul>
+<li>AI 在需要时，通过检索增强生成（RAG）技术去查询这些资料，再结合用户问题给出回答</li>
+</ul>
+</li>
+</ol>
+<h2 id="Agent表"><a href="#Agent表" class="headerlink" title="Agent表"></a>Agent表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> agent (</span><br><span class="line">    id UUID <span class="keyword">PRIMARY KEY</span> <span class="keyword">DEFAULT</span> gen_random_uuid(),  <span class="comment">-- 主键，自动生成随机UUID作为Agent唯一标识</span></span><br><span class="line">    name TEXT <span class="keyword">NOT NULL</span>,                             <span class="comment">-- Agent名称，必填，用于识别和展示</span></span><br><span class="line">    description TEXT,                               <span class="comment">-- 描述信息，用户可见的Agent说明</span></span><br><span class="line">    system_prompt TEXT,                              <span class="comment">-- 系统指令，定义Agent的行为、角色和任务边界</span></span><br><span class="line">    model TEXT,                                      <span class="comment">-- 默认使用的大语言模型（如GPT-4、Claude等）</span></span><br><span class="line">    allowed_tools JSONB,                            <span class="comment">-- 允许使用的工具列表，以JSONB格式存储（如代码解释器、搜索工具等）</span></span><br><span class="line">    allowed_kbs JSONB,                               <span class="comment">-- 允许访问的知识库列表，以JSONB格式存储（如企业文档库、产品手册等）</span></span><br><span class="line">    chat_options JSONB,                              <span class="comment">-- 其他对话配置项，如温度、top_p、最大token数等</span></span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW(),              <span class="comment">-- 创建时间，默认取当前时间</span></span><br><span class="line">    updated_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW()               <span class="comment">-- 更新时间，默认取当前时间</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>在很多简单示例中，Agent 以代码类的形式存在，它的系统指令（system prompt）、可用工具、可访问知识库等核心配置均直接写在代码中，完全依赖开发者手动定义。</p>
+<p>&#x3D;&#x3D;&gt; 当系统规模扩大、Agent 数量增多或需求频繁变更时，硬编码方式会导致「修改成本高、扩展性差、权限与能力边界模糊」，最终引发管理失控</p>
+<p>放在一个表里可以：</p>
+<ul>
+<li>创建、修改、禁用agent，不需要改代码</li>
+<li>系统运行时能够明确：当前agent能做什么不能做什么</li>
+</ul>
+<p>这个Agent表描述了：</p>
+<ul>
+<li>agent是谁：name、description</li>
+<li>行为基调：系统指令（行为、角色、任务边界）</li>
+<li>能力边界：model、allowed_tools、allowed_kbs、chat_options</li>
+</ul>
+<blockquote>
+<p>[!NOTE]</p>
+<p>这里这个chat_options是发给大模型的请求参数，其中：</p>
+<ul>
+<li><p>温度、top_p：控制回答的<strong>随机性 &#x2F; 创造性</strong></p>
+</li>
+<li><p>最大 token 数：控制回答的<strong>长度上限</strong></p>
+</li>
+</ul>
+<p>最终目的：让模型输出更贴合你的业务场景（比如客服场景要严谨，创意场景要灵活）</p>
+<h4 id="1-温度（temperature）——-控制回答的-“脑洞大小”"><a href="#1-温度（temperature）——-控制回答的-“脑洞大小”" class="headerlink" title="1. 温度（temperature）—— 控制回答的 “脑洞大小”"></a>1. 温度（temperature）—— 控制回答的 “脑洞大小”</h4><h5 id="温度是一个0-2-之间的浮点数（不同平台上限可能不同，比如-OpenAI-是-02，部分国产模型是-01），核心控制模型输出的随机性和多样性"><a href="#温度是一个0-2-之间的浮点数（不同平台上限可能不同，比如-OpenAI-是-02，部分国产模型是-01），核心控制模型输出的随机性和多样性" class="headerlink" title="温度是一个0~2 之间的浮点数（不同平台上限可能不同，比如 OpenAI 是 02，部分国产模型是 01），核心控制模型输出的随机性和多样性"></a>温度是一个<strong>0~2 之间的浮点数</strong>（不同平台上限可能不同，比如 OpenAI 是 0<del>2，部分国产模型是 0</del>1），核心控制模型输出的<strong>随机性和多样性</strong></h5><p>可以把模型想象成一个 “答题者”：</p>
+<ul>
+<li>温度 &#x3D; 0：答题者极度严谨，只会选 “最可能正确” 的答案，输出固定、无创意，甚至重复</li>
+<li>温度 &#x3D; 1：答题者正常发挥，平衡严谨和创意</li>
+<li>温度 &#x3D; 2：答题者放飞自我，脑洞极大，答案天马行空，甚至可能偏离主题、出现错误</li>
+</ul>
+<p>模型生成文字时，会为每个候选词计算 “<strong>概率得分</strong>”：</p>
+<ul>
+<li>温度越低 → 模型越倾向于选概率最高的词 → 输出越固定、保守</li>
+<li>温度越高 → 模型会给低概率词更多机会 → 输出越多样、有创意</li>
+</ul>
+<h4 id="2-top-p（核采样）——-控制回答的-“候选词范围”"><a href="#2-top-p（核采样）——-控制回答的-“候选词范围”" class="headerlink" title="2. top_p（核采样）—— 控制回答的 “候选词范围”"></a>2. top_p（核采样）—— 控制回答的 “候选词范围”</h4><p><strong>top_p 是一个0~1 之间的浮点数，也叫 “核采样”，核心是通过 “概率累积” 控制模型可选的候选词范围</strong></p>
+<p>模型生成<strong>每个词</strong>时，会列出所有<strong>候选词</strong>并按概率从高到低排序：</p>
+<ul>
+<li>top_p&#x3D;0.1：只从 “概率累积到 10%（前10%）” 的前几个词里选 → 候选范围极小，输出极固定；</li>
+<li>top_p&#x3D;0.9：从 “概率累积到 90%（前90%）” 的词里选 → 候选范围大，输出多样；</li>
+<li>top_p&#x3D;1：包含所有候选词 → 等价于不限制范围。</li>
+</ul>
+<p>和温度的区别：</p>
+<ul>
+<li>温度是 “给低概率词加权”（改变概率分布）</li>
+<li>top_p 是 “直接筛选候选词范围”（不改变概率，只缩小范围）</li>
+</ul>
+<p>⚠️ 重要：<strong>不建议同时调整温度和 top_p</strong>，选其一即可（行业通用做法是优先调温度，特殊场景再用 top_p）</p>
+<h4 id="3-最大-token-数（max-tokens-max-length）——-控制回答的-“长度上限”"><a href="#3-最大-token-数（max-tokens-max-length）——-控制回答的-“长度上限”" class="headerlink" title="3. 最大 token 数（max_tokens&#x2F;max_length）—— 控制回答的 “长度上限”"></a>3. 最大 token 数（max_tokens&#x2F;max_length）—— 控制回答的 “长度上限”</h4><p>token 是大模型的 “最小文本单位”（不是汉字 &#x2F; 单词）：</p>
+<ul>
+<li>1 个汉字 ≈ 1 个 token</li>
+<li>1 个英文单词 ≈ 1~2 个 token（比如 “hello”&#x3D;1 个，”beautiful”&#x3D;1 个）</li>
+<li>标点、空格也会占 token</li>
+</ul>
+<p>max_tokens 是模型<strong>生成回答的最大 token 数量上限</strong>（注意：不是 “必须生成这么多”，而是 “最多生成这么多”）</p>
+<ol>
+<li><strong>上下文 token 限制</strong>：模型有总 token 上限（比如 GPT-3.5 是 4096，GPT-4 是 8192&#x2F;128k），这个上限包含 “用户提问的 token + 模型回答的 token”。比如总上限 4096，你提问用了 1000token，那么 max_tokens 最多只能设为 3096（否则会报错）。</li>
+<li><strong>业务成本</strong>：token 数越多，调用 API 的费用越高（按 token 计费），同时生成速度越慢。</li>
+</ol>
+</blockquote>
+<h2 id="chat-session-表"><a href="#chat-session-表" class="headerlink" title="chat_session 表"></a>chat_session 表</h2><p>关于这个agent和session的对应关系：</p>
+<ul>
+<li>一个session对应多个agent：使用多个agent的能力</li>
+<li>一个agent对应多个session：多个session复用同一个agent的能力，不用为每个session都创建一个新的agent</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建对话会话表：用于记录每一次独立对话的基础信息</span></span><br><span class="line"><span class="keyword">CREATE TABLE</span> chat_session (</span><br><span class="line">    <span class="comment">-- 主键ID：采用UUID类型，保证全球唯一性，默认调用生成随机UUID的函数自动填充</span></span><br><span class="line">    id UUID <span class="keyword">PRIMARY KEY</span> <span class="keyword">DEFAULT</span> gen_random_uuid(),</span><br><span class="line">    <span class="comment">-- 关联AgentID：UUID类型，关联agent表的id字段</span></span><br><span class="line">    <span class="comment">-- 外键约束：ON DELETE SET NULL 表示如果关联的agent被删除，此字段设为空值（不删除会话 ==&gt; 不丢失历史会话）</span></span><br><span class="line">    agent_id UUID <span class="keyword">REFERENCES</span> agent(id) <span class="keyword">ON</span> <span class="keyword">DELETE</span> <span class="keyword">SET</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="comment">-- 会话标题：文本类型，用于展示会话的简要名称（通常由系统自动生成）</span></span><br><span class="line">    title TEXT,</span><br><span class="line">    <span class="comment">-- 元信息：JSONB格式，存储扩展字段（非必填）</span></span><br><span class="line">    <span class="comment">-- 可存储输入语言、设备类型、会话初始条件等灵活化的辅助信息</span></span><br><span class="line">    metadata JSONB,</span><br><span class="line">    <span class="comment">-- 创建时间：时间戳类型，默认取当前数据库时间</span></span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW(),</span><br><span class="line">    <span class="comment">-- 更新时间：时间戳类型，默认取当前数据库时间</span></span><br><span class="line">    updated_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>一次对话是成一个过程，而不是一次请求，它本身不承载太多信息，只起到一个锚点的作用：把这次对话绑定到某一个 Agent，并为后续所有行为提供归属</p>
+<ol>
+<li><strong>对话是过程，不是单次请求</strong></li>
+</ol>
+<ul>
+<li>一次完整的人机交互（比如 “帮我写代码 → 我提修改意见 → 你再改代码”）是一个<strong>连续过程</strong>，而不是孤立的单次 API 调用<ul>
+<li>这个过程需要一个 “容器” 来贯穿始终，这就是 <code>chat_session</code>（对话会话）</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li><strong>会话是 “锚点”，不是信息载体</strong></li>
+</ol>
+<ul>
+<li><strong>会话本身不存储具体的聊天内容、工具调用结果等信息</strong>，这些都存在后续的<strong>消息表</strong>（<code>chat_message</code>）里<ul>
+<li>&#x3D;&#x3D;&gt; 会话核心作用是锚定归属：<ul>
+<li>把这次对话绑定到某个特定的 <code>Agent</code>（通过 <code>agent_id</code> 字段）</li>
+<li>让后续所有的消息、工具调用、知识库查询等行为，都能明确归属于这一次对话</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li><strong>设计价值</strong></li>
+</ol>
+<ul>
+<li>让系统能清晰地知道 “这条消息属于哪次对话”“这次对话是由哪个 Agent 处理的”，方便上下文管理、历史追溯和权限控制</li>
+<li>避免把所有信息都塞到单次请求里，让系统结构更清晰、可维护性更强</li>
+</ul>
+<h2 id="chat-message-表"><a href="#chat-message-表" class="headerlink" title="chat_message 表"></a>chat_message 表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建消息表：存储对话过程中的每一条具体内容（用户输入、AI回复、工具返回等）</span></span><br><span class="line"><span class="keyword">CREATE TABLE</span> chat_message (</span><br><span class="line">    <span class="comment">-- 主键ID：UUID类型，全球唯一，自动生成</span></span><br><span class="line">    id UUID <span class="keyword">PRIMARY KEY</span> <span class="keyword">DEFAULT</span> gen_random_uuid(),</span><br><span class="line">    <span class="comment">-- 关联会话ID：UUID类型，非空，关联chat_session表的id</span></span><br><span class="line">    <span class="comment">-- 外键约束：ON DELETE CASCADE 表示如果所属【会话】删除，这条消息也会被【自动删除】（级联删除）</span></span><br><span class="line">    session_id UUID <span class="keyword">NOT NULL</span> <span class="keyword">REFERENCES</span> chat_session(id) <span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE,</span><br><span class="line">    <span class="comment">-- 消息角色：文本类型，非空，标识消息发送方</span></span><br><span class="line">    <span class="comment">-- 可选值：user(用户)、assistant(AI助手)、system(系统指令)、tool(工具调用结果)</span></span><br><span class="line">    role TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    <span class="comment">-- 主体内容：文本类型，存储消息的核心文本内容</span></span><br><span class="line">    content TEXT,</span><br><span class="line">    <span class="comment">-- 元信息：JSONB格式，存储扩展数据</span></span><br><span class="line">    <span class="comment">-- 可记录工具调用参数、RAG检索到的上下文片段、模型生成参数等细节</span></span><br><span class="line">    metadata JSONB,</span><br><span class="line">    <span class="comment">-- 创建时间：默认取当前数据库时间</span></span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW(),</span><br><span class="line">    <span class="comment">-- 更新时间：默认取当前数据库时间</span></span><br><span class="line">    updated_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>这张表的设计思路非常简单，但非常重要：对对话过程中出现的所有语义片段，都应该是可追溯的。</p>
+<p>content 存的是模型真正 “说的话”，metadata 存的是那些不适合直接拼进 prompt，但对系统来说非常重要的结构化信息，比如工具参数、RAG 命中内容、模型选项等。</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>关于为什么要存sql表：</p>
+<h4 id="1-会话中断-恢复：解决-“上下文丢失”-问题"><a href="#1-会话中断-恢复：解决-“上下文丢失”-问题" class="headerlink" title="1. 会话中断 &#x2F; 恢复：解决 “上下文丢失” 问题"></a>1. 会话中断 &#x2F; 恢复：解决 “上下文丢失” 问题</h4><p>模型的 Prompt 上下文是<strong>内存级临时数据</strong>，如果用户关闭页面、网络中断、服务重启，拼接在 Prompt 里的上下文会直接消失</p>
+<p>这是最基础的需求，比如用户问 “帮我调试超分模型”→ 发了报错日志 → 中途退出 → 重新进入后，Agent 能从数据库拉取 “报错日志” 这条消息，无需用户重新发送。</p>
+<h4 id="2-长会话场景：突破模型上下文-token-限制"><a href="#2-长会话场景：突破模型上下文-token-限制" class="headerlink" title="2. 长会话场景：突破模型上下文 token 限制"></a>2. 长会话场景：突破模型上下文 token 限制</h4><p>模型的上下文窗口（比如 GPT-3.5 的 4096 token）是有限的，但用户的对话可能很长（比如聊了 100 轮）</p>
+<ul>
+<li>存数据库：可以基于<code>chat_message</code>表做「上下文压缩 &#x2F; 摘要 &#x2F; 检索」—— 比如只把和当前问题相关的 5 轮消息（从数据库查）拼接进 Prompt，既满足模型输入要求，又保留关键上下文。</li>
+</ul>
+<h4 id="3-可追溯性-审计：满足业务合规-问题排查需求"><a href="#3-可追溯性-审计：满足业务合规-问题排查需求" class="headerlink" title="3. 可追溯性 &amp; 审计：满足业务合规 &#x2F; 问题排查需求"></a>3. 可追溯性 &amp; 审计：满足业务合规 &#x2F; 问题排查需求</h4><ul>
+<li>合规要求：金融、医疗、政务等场景，必须留存用户和 AI 的所有交互记录，供监管审计；</li>
+<li>问题排查：当 Agent 回答出错时，能从<code>chat_message</code>表查到 “用户输入→工具调用参数→AI 回复” 的完整链路，定位是 “用户输入理解错了” 还是 “工具调用参数错了”。</li>
+</ul>
+<p>如果只拼接进 Prompt 而不存储，这些关键信息会随推理结束而消失，出问题后根本无法溯源。</p>
+<h4 id="4-多端同步-多-Agent-协作"><a href="#4-多端同步-多-Agent-协作" class="headerlink" title="4. 多端同步 &#x2F; 多 Agent 协作"></a>4. 多端同步 &#x2F; 多 Agent 协作</h4><ul>
+<li>多端同步：用户在手机端和电脑端登录同一个账号，需要看到相同的对话历史，这就需要从数据库拉取<code>chat_message</code>表的数据；</li>
+<li>多 Agent 协作：比如 “调试 Agent” 处理完报错后，把结果交给 “文档 Agent” 生成报告，“文档 Agent” 需要从数据库读取之前的对话记录（用户需求、报错信息、调试结果），而不是依赖临时拼接的 Prompt。</li>
+</ul>
+<h4 id="5-数据分析-模型优化"><a href="#5-数据分析-模型优化" class="headerlink" title="5. 数据分析 &amp; 模型优化"></a>5. 数据分析 &amp; 模型优化</h4><ul>
+<li>统计用户高频问题（比如 “超分模型报错” 出现多少次），优化 Agent 的提示词；</li>
+<li>分析 Agent 回答的准确率（对比用户问题和 AI 回复），调整模型参数（温度 &#x2F;top_p）；</li>
+<li>挖掘工具调用的高频场景（比如 “代码解释器” 被调用的次数），优化工具配置。</li>
+</ul>
+<p>这些分析都需要长期存储的结构化数据，临时拼接的 Prompt 完全做不到。</p>
+<h4 id="6-个性化-上下文复用"><a href="#6-个性化-上下文复用" class="headerlink" title="6. 个性化 &amp; 上下文复用"></a>6. 个性化 &amp; 上下文复用</h4><p>比如用户 A 经常问 “超分模型部署” 相关问题，系统可以从<code>chat_message</code>表检索该用户的历史对话，生成个性化的回答（比如记住用户的服务器环境、常用框架），而不是每次都从零开始。</p>
+</blockquote>
+<h2 id="knowledage-base-表"><a href="#knowledage-base-表" class="headerlink" title="knowledage_base 表"></a>knowledage_base 表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> knowledge_base (</span><br><span class="line">    id UUID <span class="keyword">PRIMARY KEY</span> <span class="keyword">DEFAULT</span> gen_random_uuid(),</span><br><span class="line">    name TEXT <span class="keyword">NOT NULL</span>,      <span class="comment">-- 知识库的名称，用于标识和检索</span></span><br><span class="line">    description TEXT,</span><br><span class="line">    metadata JSONB,          <span class="comment">-- 业务属性，如行业分类、标签、权限等</span></span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW(),</span><br><span class="line">    updated_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>知识库，就是RAG，在必要的时候，通过RAG的方式把相关背景信息临时提供给模型</p>
+<p>&#x3D;&#x3D;&gt; 代表系统私有知识，不是模型记忆的一部分</p>
+<h2 id="document-表"><a href="#document-表" class="headerlink" title="document 表"></a>document 表</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> document (</span><br><span class="line">    id UUID <span class="keyword">PRIMARY KEY</span> <span class="keyword">DEFAULT</span> gen_random_uuid(),</span><br><span class="line">    kb_id UUID <span class="keyword">NOT NULL</span> <span class="keyword">REFERENCES</span> knowledge_base(id) <span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE,  <span class="comment">-- 属于哪个知识库</span></span><br><span class="line">    filename TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    filetype TEXT,         <span class="comment">-- pdf / md / txt 等</span></span><br><span class="line">    size <span class="type">BIGINT</span>,          <span class="comment">-- 文件大小</span></span><br><span class="line">    metadata JSONB,       <span class="comment">-- 页数、上传方式、解析参数等</span></span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW(),</span><br><span class="line">    updated_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>RAG原始素材层的核心表，主要记录一些文档的二进制信息，不存储原始文档</p>
+<p>&#x3D;&#x3D;&gt; 原始文档一般存在对象存储oss里面</p>
+<h2 id="chunk-bge-m3"><a href="#chunk-bge-m3" class="headerlink" title="chunk_bge_m3"></a>chunk_bge_m3</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建文档切片表：存储由bge-m3模型生成的向量切片，是RAG检索的核心表</span></span><br><span class="line"><span class="keyword">CREATE TABLE</span> chunk_bge_m3 (</span><br><span class="line">    <span class="comment">-- 主键ID：UUID类型，全球唯一，自动生成</span></span><br><span class="line">    id UUID <span class="keyword">PRIMARY KEY</span> <span class="keyword">DEFAULT</span> gen_random_uuid(),</span><br><span class="line">    <span class="comment">-- 关联知识库ID：UUID类型，非空，关联knowledge_base表</span></span><br><span class="line">    <span class="comment">-- 外键约束：ON DELETE CASCADE 表示如果所属知识库被删除，该切片也会被级联删除</span></span><br><span class="line">    kb_id UUID <span class="keyword">NOT NULL</span> <span class="keyword">REFERENCES</span> knowledge_base(id) <span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE,</span><br><span class="line">    <span class="comment">-- 关联文档ID：UUID类型，非空，关联document表</span></span><br><span class="line">    <span class="comment">-- 外键约束：ON DELETE CASCADE 表示如果所属文档被删除，该切片也会被级联删除</span></span><br><span class="line">    doc_id UUID <span class="keyword">NOT NULL</span> <span class="keyword">REFERENCES</span> document(id) <span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE,</span><br><span class="line">    <span class="comment">-- 切片文本内容：文本类型，非空，存储【切片后的可读文本】（RAG中真正拼进prompt的内容）</span></span><br><span class="line">    content TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    <span class="comment">-- 元信息：JSONB格式，存储切片的来源信息，如页码、段落号、chunk index等</span></span><br><span class="line">    metadata JSONB,</span><br><span class="line">    <span class="comment">-- 向量表示：VECTOR(1024)类型，非空，由bge-m3模型生成的1024维向量，用于相似度检索</span></span><br><span class="line">    embedding VECTOR(<span class="number">1024</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    <span class="comment">-- 创建时间：默认取当前数据库时间</span></span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW(),</span><br><span class="line">    <span class="comment">-- 更新时间：默认取当前数据库时间</span></span><br><span class="line">    updated_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW()</span><br><span class="line">);</span><br><span class="line"><span class="comment">-- 给向量字段创建索引，用于加速相似度检索</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_chunk_embedding</span><br><span class="line"><span class="keyword">ON</span> chunk_bge_m3</span><br><span class="line"><span class="keyword">USING</span> ivfflat (embedding vector_l2_ops)  <span class="comment">-- 使用ivfflat索引，基于L2距离计算相似度</span></span><br><span class="line"><span class="keyword">WITH</span> (lists <span class="operator">=</span> <span class="number">100</span>);                      <span class="comment">-- 索引参数：将向量空间划分为100个列表，平衡检索速度和精度</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>embedding</code>（向量）：只用于<strong>相似度检索阶段</strong>，是 “检索钥匙”，目的是快速找到和用户问题相关的文本切片</p>
+</li>
+<li><p><code>content</code>（切片文本）：才是<strong>最终拼进 Prompt 的内容</strong>，是 “检索结果”，目的是给模型提供私有知识库的上下文</p>
+</li>
+</ul>
+<p><code>chunk_bge_m3</code>表的<code>embedding</code>字段，本质是为检索阶段提供 “匹配依据”，而非直接输入模型。</p>
+<p>&#x3D;&#x3D;&gt; <strong><code>chunk_bge_m3</code>表是 “中小规模场景的简化版”，本质是把 “业务属性 + 向量 + 文本” 都放在了 PostgreSQL 里，减少系统复杂度</strong>。</p>
+<p>💡 当切片数量超过 10 万，PostgreSQL 的 ivfflat 索引检索速度会下降，此时会采用 “混合存储” 方案，而不是抛弃 SQL 表：</p>
+<table>
+<thead>
+<tr>
+<th align="left">存储位置</th>
+<th align="left">存储内容</th>
+<th align="left">核心作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">chunk_bge_m3（SQL 表）</td>
+<td align="left">id、kb_id、doc_id、content、metadata、created_at</td>
+<td align="left">存储<strong>业务属性 + 原始文本</strong>，负责 “按业务规则过滤”（如只查近 3 个月的切片、只查某知识库的切片）</td>
+</tr>
+<tr>
+<td align="left">ES&#x2F;Milvus（向量库）</td>
+<td align="left">id、embedding</td>
+<td align="left">存储<strong>向量 + 切片 ID</strong>，负责 “高速相似度检索”</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1/">https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/SpringAI/" title="SpringAI"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">SpringAI</div></div><div class="info-2"><div class="info-item-1">当系统中有不止一次模型调用、不止一个agent、不止一个模型的时候，怎么把agent接入系统，作为一种可配置、可切换、可扩展的基础设施？ SpringAI 在 Agent 系统中的角色在没有框架的情况下，每接入一个模型，你都需要自己处理：  HTTP 请求构造 鉴权与重试 不同模型的参数差异 工具调用协议差异  这些工作并不困难，但它们不属于 Agent 的核心逻辑。 💡 Spring AI 把 “和模型交互” 这件事抽象成了一套统一的接口，让你可以把精力放在 Agent 的行为设计上，而不是模型厂商的细节上。 在 Agent 系统中，我们只关心一件事：给我一个可以用来和模型对话的对象。 而这个对象就是 Spring AI 中 ChatClient。 SpringAI接入在 Spring Boot 项目中，接入 Spring AI 非常简单。 首先，通过 BOM 管理版本，避免依赖冲突：避免不同 Spring AI 组件（如核心包、各厂商 starter）因版本不一致导致的依赖冲突、功能兼容问题 1234567891011&lt;dependencyManagement&gt;...</div></div></div></a><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/PostgreSQL/" title="PostgreSQL"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">PostgreSQL</div></div><div class="info-2"><div class="info-item-1">对象 - 关系型数据库（ORDBMS）：在传统关系型数据库（表、行、列、SQL）的基础上，增加了对象、继承、自定义类型等特性，兼顾 “关系型的严谨” 和 “非关系型的灵活” 功能： 原生支持复杂查询、事务 ACID 特性、MVCC（多版本并发控制）（高并发下无锁读，性能更稳定）  支持自定义函数 &#x2F; 存储过程（可使用 Python&#x2F;Java&#x2F;C 等多种语言编写，不局限于 SQL）  原生支持JSON&#x2F;JSONB、数组、地理信息（GIS）、全文检索（可替代Elasticsearch做轻量级的文本检索）  支持分区表、表空间、事务回滚、点查 &#x2F; 范围查优化，适合处理海量数据和复杂业务   选择建议： 如果业务是简单的增删改查、高并发读写（如电商前台、小程序、博客），选MySQL（部署简单、优化成熟、社区资料多）  如果业务有复杂查询、海量数据分析、JSON 灵活存储、地理信息等需求（如企业后台、大数据平台、地图应用），选PostgreSQL（一步到位，无需额外集成其他组件）   </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Agent%E8%A1%A8"><span class="toc-number">1.</span> <span class="toc-text">Agent表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%B8%A9%E5%BA%A6%EF%BC%88temperature%EF%BC%89%E2%80%94%E2%80%94-%E6%8E%A7%E5%88%B6%E5%9B%9E%E7%AD%94%E7%9A%84-%E2%80%9C%E8%84%91%E6%B4%9E%E5%A4%A7%E5%B0%8F%E2%80%9D"><span class="toc-number">1.0.1.</span> <span class="toc-text">1. 温度（temperature）—— 控制回答的 “脑洞大小”</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B8%A9%E5%BA%A6%E6%98%AF%E4%B8%80%E4%B8%AA0-2-%E4%B9%8B%E9%97%B4%E7%9A%84%E6%B5%AE%E7%82%B9%E6%95%B0%EF%BC%88%E4%B8%8D%E5%90%8C%E5%B9%B3%E5%8F%B0%E4%B8%8A%E9%99%90%E5%8F%AF%E8%83%BD%E4%B8%8D%E5%90%8C%EF%BC%8C%E6%AF%94%E5%A6%82-OpenAI-%E6%98%AF-02%EF%BC%8C%E9%83%A8%E5%88%86%E5%9B%BD%E4%BA%A7%E6%A8%A1%E5%9E%8B%E6%98%AF-01%EF%BC%89%EF%BC%8C%E6%A0%B8%E5%BF%83%E6%8E%A7%E5%88%B6%E6%A8%A1%E5%9E%8B%E8%BE%93%E5%87%BA%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%80%A7%E5%92%8C%E5%A4%9A%E6%A0%B7%E6%80%A7"><span class="toc-number">1.0.1.1.</span> <span class="toc-text">温度是一个0~2 之间的浮点数（不同平台上限可能不同，比如 OpenAI 是 02，部分国产模型是 01），核心控制模型输出的随机性和多样性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-top-p%EF%BC%88%E6%A0%B8%E9%87%87%E6%A0%B7%EF%BC%89%E2%80%94%E2%80%94-%E6%8E%A7%E5%88%B6%E5%9B%9E%E7%AD%94%E7%9A%84-%E2%80%9C%E5%80%99%E9%80%89%E8%AF%8D%E8%8C%83%E5%9B%B4%E2%80%9D"><span class="toc-number">1.0.2.</span> <span class="toc-text">2. top_p（核采样）—— 控制回答的 “候选词范围”</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%9C%80%E5%A4%A7-token-%E6%95%B0%EF%BC%88max-tokens-max-length%EF%BC%89%E2%80%94%E2%80%94-%E6%8E%A7%E5%88%B6%E5%9B%9E%E7%AD%94%E7%9A%84-%E2%80%9C%E9%95%BF%E5%BA%A6%E4%B8%8A%E9%99%90%E2%80%9D"><span class="toc-number">1.0.3.</span> <span class="toc-text">3. 最大 token 数（max_tokens&#x2F;max_length）—— 控制回答的 “长度上限”</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#chat-session-%E8%A1%A8"><span class="toc-number">2.</span> <span class="toc-text">chat_session 表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#chat-message-%E8%A1%A8"><span class="toc-number">3.</span> <span class="toc-text">chat_message 表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BC%9A%E8%AF%9D%E4%B8%AD%E6%96%AD-%E6%81%A2%E5%A4%8D%EF%BC%9A%E8%A7%A3%E5%86%B3-%E2%80%9C%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%A2%E5%A4%B1%E2%80%9D-%E9%97%AE%E9%A2%98"><span class="toc-number">3.0.1.</span> <span class="toc-text">1. 会话中断 &#x2F; 恢复：解决 “上下文丢失” 问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E9%95%BF%E4%BC%9A%E8%AF%9D%E5%9C%BA%E6%99%AF%EF%BC%9A%E7%AA%81%E7%A0%B4%E6%A8%A1%E5%9E%8B%E4%B8%8A%E4%B8%8B%E6%96%87-token-%E9%99%90%E5%88%B6"><span class="toc-number">3.0.2.</span> <span class="toc-text">2. 长会话场景：突破模型上下文 token 限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%8F%AF%E8%BF%BD%E6%BA%AF%E6%80%A7-%E5%AE%A1%E8%AE%A1%EF%BC%9A%E6%BB%A1%E8%B6%B3%E4%B8%9A%E5%8A%A1%E5%90%88%E8%A7%84-%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E9%9C%80%E6%B1%82"><span class="toc-number">3.0.3.</span> <span class="toc-text">3. 可追溯性 &amp; 审计：满足业务合规 &#x2F; 问题排查需求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%A4%9A%E7%AB%AF%E5%90%8C%E6%AD%A5-%E5%A4%9A-Agent-%E5%8D%8F%E4%BD%9C"><span class="toc-number">3.0.4.</span> <span class="toc-text">4. 多端同步 &#x2F; 多 Agent 协作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%A8%A1%E5%9E%8B%E4%BC%98%E5%8C%96"><span class="toc-number">3.0.5.</span> <span class="toc-text">5. 数据分析 &amp; 模型优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-%E4%B8%AA%E6%80%A7%E5%8C%96-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%A4%8D%E7%94%A8"><span class="toc-number">3.0.6.</span> <span class="toc-text">6. 个性化 &amp; 上下文复用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#knowledage-base-%E8%A1%A8"><span class="toc-number">4.</span> <span class="toc-text">knowledage_base 表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#document-%E8%A1%A8"><span class="toc-number">5.</span> <span class="toc-text">document 表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#chunk-bge-m3"><span class="toc-number">6.</span> <span class="toc-text">chunk_bge_m3</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B0-%E6%80%BB/" title="Agent落地-总">Agent落地-总</a><time datetime="2026-03-02T11:06:22.000Z" title="Created 2026-03-02 19:06:22">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/" title="Agent落地3-引入RAG">Agent落地3-引入RAG</a><time datetime="2026-03-02T08:06:04.000Z" title="Created 2026-03-02 16:06:04">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/" title="Agent落地2-引入AgentLoop">Agent落地2-引入AgentLoop</a><time datetime="2026-03-02T06:54:09.000Z" title="Created 2026-03-02 14:54:09">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/" title="Agent-prompt">Agent-prompt</a><time datetime="2026-03-02T06:02:35.000Z" title="Created 2026-03-02 14:02:35">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B01-%E5%AE%9E%E7%8E%B0%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD/" title="Agent落地1-实现聊天功能">Agent落地1-实现聊天功能</a><time datetime="2026-03-02T05:30:06.000Z" title="Created 2026-03-02 13:30:06">2026-03-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

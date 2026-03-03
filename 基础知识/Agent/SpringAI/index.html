@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringAI | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="当系统中有不止一次模型调用、不止一个agent、不止一个模型的时候，怎么把agent接入系统，作为一种可配置、可切换、可扩展的基础设施？ SpringAI 在 Agent 系统中的角色在没有框架的情况下，每接入一个模型，你都需要自己处理：  HTTP 请求构造 鉴权与重试 不同模型的参数差异 工具调用协议差异  这些工作并不困难，但它们不属于 Agent 的核心逻辑。 💡 Spring AI 把">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringAI">
+<meta property="og:url" content="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/SpringAI/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="当系统中有不止一次模型调用、不止一个agent、不止一个模型的时候，怎么把agent接入系统，作为一种可配置、可切换、可扩展的基础设施？ SpringAI 在 Agent 系统中的角色在没有框架的情况下，每接入一个模型，你都需要自己处理：  HTTP 请求构造 鉴权与重试 不同模型的参数差异 工具调用协议差异  这些工作并不困难，但它们不属于 Agent 的核心逻辑。 💡 Spring AI 把">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-02-27T08:58:49.000Z">
+<meta property="article:modified_time" content="2026-02-27T09:27:37.220Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SpringAI",
+  "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/SpringAI/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-02-27T08:58:49.000Z",
+  "dateModified": "2026-02-27T09:27:37.220Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/SpringAI/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringAI',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">SpringAI</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">SpringAI</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-02-27T08:58:49.000Z" title="Created 2026-02-27 16:58:49">2026-02-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-02-27T09:27:37.220Z" title="Updated 2026-02-27 17:27:37">2026-02-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/">Agent</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>当系统中有不止一次模型调用、不止一个agent、不止一个模型的时候，怎么把agent接入系统，作为一种可配置、可切换、可扩展的基础设施？</p>
+<h2 id="SpringAI-在-Agent-系统中的角色"><a href="#SpringAI-在-Agent-系统中的角色" class="headerlink" title="SpringAI 在 Agent 系统中的角色"></a>SpringAI 在 Agent 系统中的角色</h2><p>在没有框架的情况下，每接入一个模型，你都需要自己处理：</p>
+<ul>
+<li>HTTP 请求构造</li>
+<li>鉴权与重试</li>
+<li>不同模型的参数差异</li>
+<li>工具调用协议差异</li>
+</ul>
+<p>这些工作并不困难，但它们不属于 Agent 的核心逻辑。</p>
+<p>💡 Spring AI 把 “和模型交互” 这件事抽象成了一套<strong>统一的接口</strong>，让你可以把精力放在 Agent 的行为设计上，而不是模型厂商的细节上。</p>
+<p>在 Agent 系统中，我们只关心一件事：给我一个可以用来和模型对话的对象。</p>
+<p>而这个对象就是 Spring AI 中 <code>ChatClient</code>。</p>
+<h2 id="SpringAI接入"><a href="#SpringAI接入" class="headerlink" title="SpringAI接入"></a>SpringAI接入</h2><p>在 Spring Boot 项目中，接入 Spring AI 非常简单。</p>
+<h3 id="首先，通过-BOM-管理版本，避免依赖冲突："><a href="#首先，通过-BOM-管理版本，避免依赖冲突：" class="headerlink" title="首先，通过 BOM 管理版本，避免依赖冲突："></a>首先，通过 BOM 管理版本，避免依赖冲突：</h3><p>避免不同 Spring AI 组件（如核心包、各厂商 starter）因版本不一致导致的依赖冲突、功能兼容问题</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.ai<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-ai-bom<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="然后，根据不同的厂商，引入不同的-starter"><a href="#然后，根据不同的厂商，引入不同的-starter" class="headerlink" title="然后，根据不同的厂商，引入不同的 starter"></a>然后，根据不同的厂商，引入不同的 starter</h3><p>deepseek 和 智谱 AI 的 starter 案例：Starter 内置了该厂商模型的 HTTP 客户端、鉴权、参数映射等配置，开发者无需手动编写配置类，实现 “引入即可用”</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.ai<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-ai-starter-model-deepseek<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.ai<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-ai-starter-model-zhipuai<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="最后，在-application-yaml-中配置模型参数："><a href="#最后，在-application-yaml-中配置模型参数：" class="headerlink" title="最后，在 application.yaml 中配置模型参数："></a>最后，在 <code>application.yaml</code> 中配置模型参数：</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">ai:</span></span><br><span class="line">    <span class="attr">deepseek:</span></span><br><span class="line">      <span class="attr">api-key:</span> <span class="string">$&#123;DEEPSEEK_API_KEY&#125;</span></span><br><span class="line">      <span class="attr">chat:</span></span><br><span class="line">        <span class="attr">options:</span></span><br><span class="line">          <span class="attr">model:</span> <span class="string">deepseek-chat</span> <span class="comment">## 指定使用哪个模型</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">zhipuai:</span></span><br><span class="line">      <span class="attr">api-key:</span> <span class="string">$&#123;ZHIPU_API_KEY&#125;</span></span><br><span class="line">      <span class="attr">chat:</span></span><br><span class="line">        <span class="attr">options:</span></span><br><span class="line">          <span class="attr">model:</span> <span class="string">glm-4.6</span></span><br></pre></td></tr></table></figure>
+
+<p>到这里，模型已经被 Spring AI 自动装配成了 <code>ChatModel</code> Bean。</p>
+<h2 id="在系统里使用模型"><a href="#在系统里使用模型" class="headerlink" title="在系统里使用模型"></a>在系统里使用模型</h2><p>在 Agent 系统中，我们约定，每一个可用的模型，对应一个 ChatClient 对象</p>
+<p>&#x3D;&#x3D;&gt; ChatClient 是对 “<strong>模型能力</strong>” 的封装，它屏蔽了模型调用的细节，只暴露统一的对话接口</p>
+<p>我们为每个模型创建一个独立的 ChatClient Bean：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiChatClientConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean(&quot;deepseek-chat&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ChatClient <span class="title function_">deepSeekChatClient</span><span class="params">(DeepSeekChatModel model)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ChatClient.create(model);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean(&quot;glm-4.6&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ChatClient <span class="title function_">zhiPuChatClient</span><span class="params">(ZhiPuAiChatModel model)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> ChatClient.create(model);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>一个模型 ≠ 一个 Agent</strong>：模型是 Agent 的 “对话能力组件”，Agent 是包含模型、工具、状态、知识库的完整智能体</p>
+<ul>
+<li><p><strong>ChatClient 是模型的 “标准化封装层”</strong>：屏蔽不同模型的调用差异，<strong>给 Agent 提供统一的<u>对话</u>接口</strong></p>
+</li>
+<li><p><strong>Agent 是更高层的封装</strong>：整合 ChatClient（模型能力）+ 工具调用 + 状态管理 + RAG 检索，实现端到端的智能交互</p>
+</li>
+</ul>
+<h3 id="ChatClientRegistry-模型注册中心"><a href="#ChatClientRegistry-模型注册中心" class="headerlink" title="ChatClientRegistry 模型注册中心"></a>ChatClientRegistry 模型注册中心</h3><p>当系统中存在多个 ChatClient 后，下一个问题自然出现了，在运行时，如何根据 Agent 的配置，选择正确的模型？</p>
+<p>💡 答案是：不要写 if &#x2F;switch，而是交给 Spring。</p>
+<p>Spring 会自动把所有 <code>ChatClient</code> 类型的 Bean 注入到一个 Map 中，Key 为 Bean 名称，Value 为实例本身</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ChatClientRegistry</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, ChatClient&gt; registry;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ChatClientRegistry</span><span class="params">(Map&lt;String, ChatClient&gt; registry)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.registry = registry;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> ChatClient <span class="title function_">get</span><span class="params">(String modelName)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> registry.get(modelName);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这一小段代码，实际上解决了一个非常重要的工程问题：</p>
+<ul>
+<li>新增模型，不需要改任何调度代码：新增一个bean，<code>ChatClientRegistry</code> 会<strong>自动将其纳入注册表</strong>，无需修改任何调度逻辑</li>
+<li>模型注册是<strong>声明式</strong>的，而不是控制流式的：通过<code>@Bean</code>注解声明，而不是if-else</li>
+<li><strong>模型选择完全由数据驱动</strong></li>
+</ul>
+<p>在 Agent 系统中，这种 “注册表模式” 是多模型支持的核心。</p>
+<h3 id="Agent绑定模型能力"><a href="#Agent绑定模型能力" class="headerlink" title="Agent绑定模型能力"></a>Agent绑定模型能力</h3><p>在前面的数据库设计中，Agent 表中包含一个 <code>model</code> 字段，用来描述该 Agent 默认使用的模型</p>
+<p>当系统真正创建 Agent 的运行实例时，会发生这样一件事：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ChatClient</span> <span class="variable">chatClient</span> <span class="operator">=</span> chatClientRegistry.get(agent.getModel());</span><br><span class="line"><span class="keyword">if</span> (chatClient == <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(</span><br><span class="line">        <span class="string">&quot;未找到对应的模型: &quot;</span> + agent.getModel()</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里，我们完成了<strong>模型的动态切换</strong>能力：</p>
+<ul>
+<li>Agent 只依赖 <code>ChatClient</code> 接口</li>
+<li>Agent 完全不知道模型来自哪家厂商（封装成功）</li>
+<li>模型的切换，不需要修改 Agent 代码</li>
+</ul>
+<p>模型已经从 “写死的依赖”，变成了运行时注入的能力。</p>
+<blockquote>
+<p>⚠️ 总结！你完成了：</p>
+<p>模型统一抽象成ChatClient，实现多模型在系统中共存，Agent能够自由切换模型，模型接入和Agent行为解耦</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/SpringAI/">https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/SpringAI/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B01-%E5%AE%9E%E7%8E%B0%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD/" title="Agent落地1-实现聊天功能"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Agent落地1-实现聊天功能</div></div><div class="info-2"><div class="info-item-1">这是一个最小 Agent 实现，目标为：集成 LLM，能够完成最基本的聊天功能 在这个版本中，只保留 Agent 的基本功能即可 123456789public class JChatMindV1 &#123;    protected String name;    protected String description;    protected String systemPrompt; // 系统提示词    protected ChatClient chatClient; // 模型能力入口    protected ChatMemory chatMemory; // 会话上下文    protected AgentState agentState; // 当前agent的状态    protected String sessionId; // 会话id&#125;  chatMemory模型的上下文记忆是系统完成的，这一步就是在限制最多保存的消息数量【通过滑动窗口的方式保留最近N条消息】 💡 控制每次发给 AI 模型的 Prompt 里，包含多少条历史会话上下文  ...</div></div></div></a><a class="pagination-related" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E8%AE%BE%E8%AE%A1/" title="Agent-数据模型设计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Agent-数据模型设计</div></div><div class="info-2"><div class="info-item-1">Agent中需要持久化的数据可以分成三类：  Agent 与对话状态本身，它们描述的是：谁在和模型交互，这次对话进行到哪一步了。 比如用户 ID、当前对话轮次、当前任务进度等，用来恢复对话上下文   对话过程中产生的消息记录 用户输入、模型输出、工具执行结果，以及中间的各种元信息   Agent 需要 “按需查阅” 的系统知识。这些知识不属于模型本身，而是通过 RAG 的方式，在需要时提供给模型。 AI 在需要时，通过检索增强生成（RAG）技术去查询这些资料，再结合用户问题给出回答    Agent表123456789101112CREATE TABLE agent (    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),  -- 主键，自动生成随机UUID作为Agent唯一标识    name TEXT NOT NULL,                             -- Agent名称，必填，用于识别和展示    description TEXT,                               -- 描述...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">50</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SpringAI-%E5%9C%A8-Agent-%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%A7%92%E8%89%B2"><span class="toc-number">1.</span> <span class="toc-text">SpringAI 在 Agent 系统中的角色</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SpringAI%E6%8E%A5%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">SpringAI接入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A6%96%E5%85%88%EF%BC%8C%E9%80%9A%E8%BF%87-BOM-%E7%AE%A1%E7%90%86%E7%89%88%E6%9C%AC%EF%BC%8C%E9%81%BF%E5%85%8D%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81%EF%BC%9A"><span class="toc-number">2.1.</span> <span class="toc-text">首先，通过 BOM 管理版本，避免依赖冲突：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%84%B6%E5%90%8E%EF%BC%8C%E6%A0%B9%E6%8D%AE%E4%B8%8D%E5%90%8C%E7%9A%84%E5%8E%82%E5%95%86%EF%BC%8C%E5%BC%95%E5%85%A5%E4%B8%8D%E5%90%8C%E7%9A%84-starter"><span class="toc-number">2.2.</span> <span class="toc-text">然后，根据不同的厂商，引入不同的 starter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%EF%BC%8C%E5%9C%A8-application-yaml-%E4%B8%AD%E9%85%8D%E7%BD%AE%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%EF%BC%9A"><span class="toc-number">2.3.</span> <span class="toc-text">最后，在 application.yaml 中配置模型参数：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E7%B3%BB%E7%BB%9F%E9%87%8C%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">在系统里使用模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ChatClientRegistry-%E6%A8%A1%E5%9E%8B%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83"><span class="toc-number">3.1.</span> <span class="toc-text">ChatClientRegistry 模型注册中心</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Agent%E7%BB%91%E5%AE%9A%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%8A%9B"><span class="toc-number">3.2.</span> <span class="toc-text">Agent绑定模型能力</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B0-%E6%80%BB/" title="Agent落地-总">Agent落地-总</a><time datetime="2026-03-02T11:06:22.000Z" title="Created 2026-03-02 19:06:22">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/" title="Agent落地3-引入RAG">Agent落地3-引入RAG</a><time datetime="2026-03-02T08:06:04.000Z" title="Created 2026-03-02 16:06:04">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B02-%E5%BC%95%E5%85%A5AgentLoop/" title="Agent落地2-引入AgentLoop">Agent落地2-引入AgentLoop</a><time datetime="2026-03-02T06:54:09.000Z" title="Created 2026-03-02 14:54:09">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-prompt/" title="Agent-prompt">Agent-prompt</a><time datetime="2026-03-02T06:02:35.000Z" title="Created 2026-03-02 14:02:35">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B01-%E5%AE%9E%E7%8E%B0%E8%81%8A%E5%A4%A9%E5%8A%9F%E8%83%BD/" title="Agent落地1-实现聊天功能">Agent落地1-实现聊天功能</a><time datetime="2026-03-02T05:30:06.000Z" title="Created 2026-03-02 13:30:06">2026-03-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
