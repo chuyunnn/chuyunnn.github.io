@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>文件下载逻辑说明 | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="首先看代码逻辑： 1234567891011121314151617181920&#x2F;&#x2F; 从数据库获取文件信息            FileUpload fileUpload &#x3D; fileUploadRepository.findByFileMd5(fileMd5)                    .orElseThrow(() -&gt; new RuntimeException(&amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文件下载逻辑说明">
+<meta property="og:url" content="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%BB%E8%BE%91%E8%AF%B4%E6%98%8E/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="首先看代码逻辑： 1234567891011121314151617181920&#x2F;&#x2F; 从数据库获取文件信息            FileUpload fileUpload &#x3D; fileUploadRepository.findByFileMd5(fileMd5)                    .orElseThrow(() -&gt; new RuntimeException(&amp;quot">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-23T08:07:22.000Z">
+<meta property="article:modified_time" content="2026-03-23T08:12:47.490Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "文件下载逻辑说明",
+  "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%BB%E8%BE%91%E8%AF%B4%E6%98%8E/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-03-23T08:07:22.000Z",
+  "dateModified": "2026-03-23T08:12:47.490Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%BB%E8%BE%91%E8%AF%B4%E6%98%8E/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '文件下载逻辑说明',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">文件下载逻辑说明</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">文件下载逻辑说明</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-23T08:07:22.000Z" title="Created 2026-03-23 16:07:22">2026-03-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-23T08:12:47.490Z" title="Updated 2026-03-23 16:12:47">2026-03-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>首先看代码逻辑：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从数据库获取文件信息</span></span><br><span class="line">            <span class="type">FileUpload</span> <span class="variable">fileUpload</span> <span class="operator">=</span> fileUploadRepository.findByFileMd5(fileMd5)</span><br><span class="line">                    .orElseThrow(() -&gt; <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;文件不存在: &quot;</span> + fileMd5));</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// MinIO中的对象路径格式: merged/文件名</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">objectName</span> <span class="operator">=</span> <span class="string">&quot;merged/&quot;</span> + fileUpload.getFileName();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 生成预签名URL，有效期1小时</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">presignedUrl</span> <span class="operator">=</span> minioClient.getPresignedObjectUrl(</span><br><span class="line">                    GetPresignedObjectUrlArgs.builder()</span><br><span class="line">                            .method(Method.GET)</span><br><span class="line">                            .bucket(<span class="string">&quot;uploads&quot;</span>)</span><br><span class="line">                            .object(objectName)</span><br><span class="line">                            .expiry(<span class="number">3600</span>) <span class="comment">// 1小时有效期</span></span><br><span class="line">                            .build()</span><br><span class="line">            );</span><br><span class="line">            </span><br><span class="line">            logger.info(<span class="string">&quot;成功生成文件下载链接: fileMd5=&#123;&#125;, fileName=&#123;&#125;, objectName=&#123;&#125;&quot;</span>, </span><br><span class="line">                    fileMd5, fileUpload.getFileName(), objectName);</span><br><span class="line">            <span class="keyword">return</span> presignedUrl;</span><br></pre></td></tr></table></figure>
+
+<p>总体说明：“预签名”</p>
+<p>service层调用 <code>minioClient</code>（给定库） 算出一段带有复杂参数的URL（即预签名链接），有效期1小时，允许拿着这个url去minIO中进行文件下载，否则无法访问。</p>
+<p>&#x3D;&#x3D;&gt; 前端浏览器拿到URL后，<strong>直接向 MinIO 服务器</strong>发起请求。minIO验证URL里的签名合法且没过期，就开始传输文件数据。</p>
+<p>生成的 <code>presignedUrl</code> 看起来通常是这样的： <code>http://minio-server:9000/uploads/merged/test.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=...&amp;X-Amz-Date=20260323T080000Z&amp;X-Amz-Expires=3600&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=abcd1234...</code></p>
+<p><strong>它包含三部分关键信息：</strong></p>
+<ul>
+<li><strong>资源路径</strong>：你要下载哪个桶（uploads）里的哪个文件（merged&#x2F;test.pdf）</li>
+<li><strong>有效期</strong>：<code>X-Amz-Expires=3600</code> 告诉minIO这个链接1小时后就作废</li>
+<li><strong>数字签名</strong>：<code>X-Amz-Signature</code> 是最核心的部分。它是后端用你的 <code>SecretKey</code> 对请求内容进行的加密哈希。只要URL被改动一个字，或者过期了，签名校验就会失败</li>
+</ul>
+<p>优势：</p>
+<ul>
+<li><strong>减轻后端压力</strong>：文件数据直接从存储服务器 minIO 传给用户，<strong>不经过java后端</strong><ul>
+<li>如果文件很大（比如 1GB），后端程序不会因为传输文件而占用大量内存或带宽</li>
+</ul>
+</li>
+<li><strong>安全性</strong>：你的存储桶可以设置为“私有”，外界无法直接访问。只有经过你后端逻辑验证（比如用户登录了）的人，才能拿到临时下载权限</li>
+<li><strong>限时性</strong>：即使链接被泄露了，1小时后它就自动失效了</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%BB%E8%BE%91%E8%AF%B4%E6%98%8E/">https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%BB%E8%BE%91%E8%AF%B4%E6%98%8E/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/kafka%E5%AE%9E%E9%99%85%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/" title="kafka实际引用逻辑总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">kafka实际引用逻辑总结</div></div><div class="info-2"><div class="info-item-1">具体怎么把数据从消息队列中拿出来，怎么消费？这个流程有几个部分：分片校验、分片上传、minIO存储分片信息并合并、sql存储文件元数据信息（不是分片） 存储路径设置：storagePath &#x3D; “chunks&#x2F;“ + fileMd5 + “&#x2F;“ + chunkIndex; 🌟 首先让我们明确kafka里面存储的都是什么数据：元数据，主要告诉消费者可以去哪里找这些数据：MD5、一共有多少分片、合并之后存在哪里 🌟 然后让我们明确kafka是在哪个步骤解耦的： [!NOTE] 分片数据（File Chunks）的数据流转过程：前端 -&gt; 后端服务 -&gt; MinIO 临时目录。  步骤 A（写入）：前端每上传一个分片，后端接收到二进制流后，立即将其写入 MinIO。  存储规则：按文件 MD5 划分文件夹。例如s3://temp-bucket/md5_abc123/chunk_0, chunk_1…  步骤 B（驻留）：这些分片在 MinIO 的临时目录下静静地躺着，直到所有分片上传完毕。  步骤 C（合并）：当收到合并指令时，MinIO ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">53</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8B%E8%BD%BD%E9%80%BB%E8%BE%91%E8%AF%B4%E6%98%8E/" title="文件下载逻辑说明">文件下载逻辑说明</a><time datetime="2026-03-23T08:07:22.000Z" title="Created 2026-03-23 16:07:22">2026-03-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/kafka%E5%AE%9E%E9%99%85%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/" title="kafka实际引用逻辑总结">kafka实际引用逻辑总结</a><time datetime="2026-03-23T07:58:07.000Z" title="Created 2026-03-23 15:58:07">2026-03-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/SQL%E8%90%BD%E5%9C%B0/" title="SQL落地">SQL落地</a><time datetime="2026-03-23T07:57:18.000Z" title="Created 2026-03-23 15:57:18">2026-03-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B0-%E6%80%BB/" title="Agent落地-总">Agent落地-总</a><time datetime="2026-03-02T11:06:22.000Z" title="Created 2026-03-02 19:06:22">2026-03-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent%E8%90%BD%E5%9C%B03-%E5%BC%95%E5%85%A5RAG/" title="Agent落地3-引入RAG">Agent落地3-引入RAG</a><time datetime="2026-03-02T08:06:04.000Z" title="Created 2026-03-02 16:06:04">2026-03-02</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
