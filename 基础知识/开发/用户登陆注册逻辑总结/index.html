@@ -7,7 +7,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
 <meta property="article:published_time" content="2026-03-24T03:52:50.000Z">
-<meta property="article:modified_time" content="2026-03-26T03:04:41.935Z">
+<meta property="article:modified_time" content="2026-03-26T07:27:16.115Z">
 <meta property="article:author" content="chuyun deng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
@@ -17,7 +17,7 @@
   "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E7%94%A8%E6%88%B7%E7%99%BB%E9%99%86%E6%B3%A8%E5%86%8C%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/",
   "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
   "datePublished": "2026-03-24T03:52:50.000Z",
-  "dateModified": "2026-03-26T03:04:41.935Z",
+  "dateModified": "2026-03-26T07:27:16.115Z",
   "author": [
     {
       "@type": "Person",
@@ -158,8 +158,8 @@
   isHighlightShrink: false,
   isToc: false,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">用户登陆注册逻辑总结</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">用户登陆注册逻辑总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-24T03:52:50.000Z" title="Created 2026-03-24 11:52:50">2026-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-26T03:04:41.935Z" title="Updated 2026-03-26 11:04:41">2026-03-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ol>
-<li>密码加密：用spring security 内置的BCrypt加密算法</li>
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">用户登陆注册逻辑总结</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">用户登陆注册逻辑总结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-24T03:52:50.000Z" title="Created 2026-03-24 11:52:50">2026-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-26T07:27:16.115Z" title="Updated 2026-03-26 15:27:16">2026-03-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/">开发</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><ol>
+<li>密码加密：用spring security 内置的<strong>BCrypt</strong>加密算法</li>
 </ol>
 <p>每次生成一个随机的盐，用这个盐对密码进行加密，存储加密后的内容+盐。后面对明文密码，取出对应的盐，判断加密后是否一致。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;</span><br><span class="line"><span class="comment">// 使用Spring Security 内置的 BCrypt 加密算法</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PasswordUtil</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">BCryptPasswordEncoder</span> <span class="variable">encoder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BCryptPasswordEncoder</span>();</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 加密密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> rawPassword 明文密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 加密后的密码</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">encode</span><span class="params">(String rawPassword)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> encoder.encode(rawPassword);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 验证密码是否匹配</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> rawPassword     明文密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> encodedPassword 加密后的密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 是否匹配</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">matches</span><span class="params">(String rawPassword, String encodedPassword)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> encoder.matches(rawPassword, encodedPassword);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -184,14 +184,17 @@
 <ol start="4">
 <li>JWT token生成逻辑</li>
 </ol>
-<p>从配置文件中取出密钥字符串，转成jwt能用的加密钥匙 &#x3D;&#x3D;&gt; 根据userId去数据库中查找出用户信息 &#x3D;&#x3D;&gt; 将信息装进jwt里面（tokenId、role、userId、组织标签信息、主组织标签信息） &#x3D;&#x3D;&gt; 缓存token 到redis</p>
+<p>从**<u>配置文件</u><strong>中取出</strong>密钥字符串**，转成jwt能用的加密钥匙 &#x3D;&#x3D;&gt; 根据userId去数据库中查找出用户信息 &#x3D;&#x3D;&gt; 将信息装进jwt里面（tokenId、role、userId、组织标签信息、主组织标签信息） &#x3D;&#x3D;&gt; 缓存token 到redis</p>
 <p>检查是否需要刷新：（Filter，前端任何请求都要先经过filer才到controller）</p>
 <ul>
 <li>检查离过期时间是不是只剩下五分钟 &#x2F; 过期是否小于10分钟 &#x3D;&#x3D;&gt;(yes) 生成全新的JWT</li>
 </ul>
 <p>💡 结果：如果一直用，就不会过期。如果长时间不用，就会过期。</p>
 <ul>
-<li>如果Access Token彻底过期（上述内容救不回来），采用refresh token换新的</li>
+<li>如果Access Token彻底过期（上述内容救不回来），采用refresh token换新的<ul>
+<li>后端返回token失效，前端请求&#x2F;refresh进行刷新</li>
+</ul>
+</li>
 </ul>
 <blockquote>
 <p>Access Token：30分钟，Refresh Token：7天，redis有效期长五分钟，防止jwt没过期，redis过期了</p>
@@ -199,7 +202,12 @@
 <p>🌟 补充：</p>
 <ol>
 <li>redis的key：String key &#x3D; <strong>USER_TOKENS_PREFIX + userId + “:tokens”;</strong></li>
-<li>redis数据结构：<strong>Set类型</strong>（可以存放多个值，不会重复，适合存一个用户的多个Token，且一个token不会存多次）</li>
+<li>redis数据结构：<strong>Set类型</strong>（可以存放多个值，不会重复，适合存一个用户的多个Token，且一个token不会存多次）<ul>
+<li>同一个用户，不同设备登陆</li>
+<li>多次登陆刷新会产生新的jwt</li>
+<li>无感刷新时新旧token会共存</li>
+</ul>
+</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redisTemplate.opsForSet().add(key, tokenId);</span><br></pre></td></tr></table></figure>
 
