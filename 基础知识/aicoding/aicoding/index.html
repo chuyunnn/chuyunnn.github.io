@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>aicoding | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="创建应用：  输入目标页面场景（如「在线表单」「商品展示页」） 描述页面整体框架（如「顶部导航栏 + 中部内容区 + 底部按钮」） 提供清晰、详细的需求提示 拆分复杂需求，避免长文本输入，降低模型理解偏差 发送指令，等待生成结果  如果需要持续修改页面：  输入时，尽量清晰地描述要修改的具体位置，以便更准确地实现修改需求。 页面一些 AI 无法知道的信息我们要表述清楚，包括页面内的文字、跳转链接等">
+<meta property="og:type" content="article">
+<meta property="og:title" content="aicoding">
+<meta property="og:url" content="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/aicoding/aicoding/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="创建应用：  输入目标页面场景（如「在线表单」「商品展示页」） 描述页面整体框架（如「顶部导航栏 + 中部内容区 + 底部按钮」） 提供清晰、详细的需求提示 拆分复杂需求，避免长文本输入，降低模型理解偏差 发送指令，等待生成结果  如果需要持续修改页面：  输入时，尽量清晰地描述要修改的具体位置，以便更准确地实现修改需求。 页面一些 AI 无法知道的信息我们要表述清楚，包括页面内的文字、跳转链接等">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-03-26T09:40:15.000Z">
+<meta property="article:modified_time" content="2026-03-26T09:51:35.761Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "aicoding",
+  "url": "https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/aicoding/aicoding/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-03-26T09:40:15.000Z",
+  "dateModified": "2026-03-26T09:51:35.761Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/aicoding/aicoding/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'aicoding',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">aicoding</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">aicoding</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-26T09:40:15.000Z" title="Created 2026-03-26 17:40:15">2026-03-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-26T09:51:35.761Z" title="Updated 2026-03-26 17:51:35">2026-03-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">基础知识</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/aicoding/">aicoding</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>创建应用：</p>
+<ol>
+<li>输入目标页面场景（如「在线表单」「商品展示页」）</li>
+<li>描述页面整体框架（如「顶部导航栏 + 中部内容区 + 底部按钮」）</li>
+<li>提供清晰、详细的需求提示</li>
+<li>拆分复杂需求，避免长文本输入，降低模型理解偏差</li>
+<li>发送指令，等待生成结果</li>
+</ol>
+<p>如果需要持续修改页面：</p>
+<ol>
+<li>输入时，尽量清晰地描述要修改的具体位置，以便更准确地实现修改需求。</li>
+<li>页面一些 AI 无法知道的信息我们要表述清楚，包括页面内的文字、跳转链接等。</li>
+<li>若修改信息较多，建议分点描述或分次进行调整，确保修改内容的准确性和完整性。</li>
+</ol>
+<p>除了文本内容，还能为作品增添图片元素来提升视觉效果！具体操作如下：</p>
+<ol>
+<li><p>点击输入框中的「上传」按钮，选择您想添加的图片；</p>
+</li>
+<li><p>告知模型图片需要插入的位置（例如：“请将图片添加到第一段末尾”），模型会协助您完成排版，让作品更美观。</p>
+</li>
+<li><p>结构化“全能”框架</p>
+</li>
+</ol>
+<p>如果你想从零开始构建一个功能，推荐使用这个模板：</p>
+<ul>
+<li><strong>Role (角色):</strong> 你是世界顶级的 [技术栈] 开发者。</li>
+<li><strong>Vibe (风格):</strong> 界面要像 Linear 一样简洁，交互要像 Apple 一样流畅。</li>
+<li><strong>Task (任务):</strong> 帮我写一个 [具体功能]。</li>
+<li><strong>Constraints (约束):</strong> 响应式、支持深色模式、不要冗余代码。</li>
+</ul>
+<ol start="2">
+<li>描述“感觉”而非逻辑</li>
+</ol>
+<p>在 Vibe Coding 中，你可以多用形容词。AI 对这些视觉和交互属性的理解已经非常强了。</p>
+<ul>
+<li><p><strong>视觉提示词：</strong></p>
+<blockquote>
+<p>“给我做一个登录页面，要 <strong>Glassmorphism（玻璃拟态）</strong> 风格，背景要有那种 <strong>极光流动的渐变感</strong>，字体用 <strong>Inter</strong>，看起来要很贵、很高级。”</p>
+</blockquote>
+</li>
+<li><p><strong>交互提示词：</strong></p>
+<blockquote>
+<p>“给这个按钮加一个 <strong>弹簧动画</strong>。用户点击时，按钮要稍微收缩再弹回，反馈要非常 <strong>Snappy（干脆利落）</strong>。”</p>
+</blockquote>
+</li>
+</ul>
+<ol start="3">
+<li>“我有一个想法”型（快速原型）</li>
+</ol>
+<p>如果你只有一个模糊的念头，可以尝试“倒逼”AI 给你方案：</p>
+<blockquote>
+<p>“我想做一个记录心情的极简 App。不要复杂的表单，只需要用户选一个颜色代表今天的心情。请基于这个 <strong>Vibe</strong> 帮我构思 UI 布局，并直接输出可运行的 React + Tailwind 代码。”</p>
+</blockquote>
+<ol start="4">
+<li>调试与重构（Vibe Check）</li>
+</ol>
+<p>当你觉得代码写得“太烂”或“太重”时：</p>
+<ul>
+<li><p><strong>重构提示词：</strong></p>
+<blockquote>
+<p>“这段代码现在的逻辑太啰嗦了。请用 <strong>更优雅、更函数式</strong> 的写法重写它。保持代码的可读性，像写诗一样简洁。”</p>
+</blockquote>
+</li>
+<li><p><strong>找茬提示词：</strong></p>
+<blockquote>
+<p>“检查一下这个页面的 <strong>UX Vibe</strong>。有没有哪里操作起来觉得反人类？请直接修改代码优化掉。”</p>
+</blockquote>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/aicoding/aicoding/">https://chuyunnn.github.io/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/aicoding/aicoding/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%80%BB%E8%BE%91%E8%A7%A3%E6%9E%90/" title="文件上传逻辑解析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">文件上传逻辑解析</div></div><div class="info-2"><div class="info-item-1">分片上传并存储分片到minIO@PostMapping(&quot;/chunk&quot;)，controller接收参数： 1234567891011/*** @param fileMd5 文件的MD5值，用于唯一标识文件* @param chunkIndex 分片索引，表示当前分片的位置* @param totalSize 文件总大小* @param fileName 文件名* @param totalChunks 总分片数量 可以不传（最后一片的时候传过来）* @param orgTag 组织标签，如果未指定则使用用户的主组织标签* @param isPublic 是否公开，默认为false* @param file 分片文件对象* @return 返回包含已上传分片和上传进度的响应**/   首先进行文件类型验证：不支持压缩包、图片、视频、数据库文件这些 获取用户的组织标签信息。如果前端未给出，就去查找用户的主组织标签 调用service进行分片上传  1uploadService.uploadChunk(fileMd5, chunkIndex, totalSize, ...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">61</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">12</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/aicoding/aicoding/" title="aicoding">aicoding</a><time datetime="2026-03-26T09:40:15.000Z" title="Created 2026-03-26 17:40:15">2026-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%80%BB%E8%BE%91%E8%A7%A3%E6%9E%90/" title="文件上传逻辑解析">文件上传逻辑解析</a><time datetime="2026-03-26T03:19:16.000Z" title="Created 2026-03-26 11:19:16">2026-03-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/Agent%E5%85%B7%E4%BD%93prompt%E8%AE%BE%E8%AE%A1%E6%80%BB%E7%BB%93/" title="Agent具体prompt设计总结">Agent具体prompt设计总结</a><time datetime="2026-03-24T08:44:25.000Z" title="Created 2026-03-24 16:44:25">2026-03-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E7%94%A8%E6%88%B7%E7%99%BB%E9%99%86%E6%B3%A8%E5%86%8C%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/" title="用户登陆注册逻辑总结">用户登陆注册逻辑总结</a><time datetime="2026-03-24T03:52:50.000Z" title="Created 2026-03-24 11:52:50">2026-03-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E7%BB%84%E7%BB%87%E6%A0%87%E7%AD%BE%E7%AE%A1%E7%90%86/" title="组织标签管理">组织标签管理</a><time datetime="2026-03-23T12:10:05.000Z" title="Created 2026-03-23 20:10:05">2026-03-23</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
