@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Openclaw | CYun's</title><meta name="author" content="chuyun deng"><meta name="copyright" content="chuyun deng"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="很类似于cc啊，本质上就是用自然语言驱动工具完成任务（对接大模型）。可以在本地电脑或者云服务器上，通过IM工具（飞书、钉钉）进行管理    Claw 名称 类型 部署方式 核心优势 适合人群    OpenClaw 开源原生 本地 &#x2F; 自建 完全自由、隐私、生态强 开发者、极客、深度定制   ArkClaw 商业 SaaS 云端 零部署、7×24、飞书集成 普通用户、企业、办公   QC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openclaw">
+<meta property="og:url" content="https://chuyunnn.github.io/AI-coding/Openclaw/index.html">
+<meta property="og:site_name" content="CYun&#39;s">
+<meta property="og:description" content="很类似于cc啊，本质上就是用自然语言驱动工具完成任务（对接大模型）。可以在本地电脑或者云服务器上，通过IM工具（飞书、钉钉）进行管理    Claw 名称 类型 部署方式 核心优势 适合人群    OpenClaw 开源原生 本地 &#x2F; 自建 完全自由、隐私、生态强 开发者、极客、深度定制   ArkClaw 商业 SaaS 云端 零部署、7×24、飞书集成 普通用户、企业、办公   QC">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://chuyunnn.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-07T06:49:14.000Z">
+<meta property="article:modified_time" content="2026-04-07T09:36:36.571Z">
+<meta property="article:author" content="chuyun deng">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chuyunnn.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Openclaw",
+  "url": "https://chuyunnn.github.io/AI-coding/Openclaw/",
+  "image": "https://chuyunnn.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-04-07T06:49:14.000Z",
+  "dateModified": "2026-04-07T09:36:36.571Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "chuyun deng",
+      "url": "https://chuyunnn.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chuyunnn.github.io/AI-coding/Openclaw/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Openclaw',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">CYun's</span></a><a class="nav-page-title" href="/"><span class="site-name">Openclaw</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Openclaw</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-07T06:49:14.000Z" title="Created 2026-04-07 14:49:14">2026-04-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-07T09:36:36.571Z" title="Updated 2026-04-07 17:36:36">2026-04-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI-coding/">AI coding</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>很类似于cc啊，本质上就是用自然语言驱动工具完成任务（对接大模型）。可以在本地电脑或者云服务器上，通过IM工具（飞书、钉钉）进行管理</p>
+<table>
+<thead>
+<tr>
+<th>Claw 名称</th>
+<th>类型</th>
+<th>部署方式</th>
+<th>核心优势</th>
+<th>适合人群</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>OpenClaw</strong></td>
+<td>开源原生</td>
+<td>本地 &#x2F; 自建</td>
+<td>完全自由、隐私、生态强</td>
+<td>开发者、极客、深度定制</td>
+</tr>
+<tr>
+<td><strong>ArkClaw</strong></td>
+<td>商业 SaaS</td>
+<td>云端</td>
+<td>零部署、7×24、飞书集成</td>
+<td>普通用户、企业、办公</td>
+</tr>
+<tr>
+<td><strong>QClaw</strong></td>
+<td>商业本地</td>
+<td>本地一键</td>
+<td>微信 &#x2F; QQ 遥控、隐私</td>
+<td>微信用户、远程控制</td>
+</tr>
+<tr>
+<td><strong>KimiClaw</strong></td>
+<td>社区衍生</td>
+<td>本地</td>
+<td>Kimi 深度集成、长文本</td>
+<td>文档 &#x2F; 代码工作者</td>
+</tr>
+<tr>
+<td><strong>PicoClaw</strong></td>
+<td>社区衍生</td>
+<td>本地 &#x2F; 嵌入式</td>
+<td>超轻量、低资源</td>
+<td>嵌入式、低配置设备</td>
+</tr>
+<tr>
+<td><strong>ZeroClaw</strong></td>
+<td>社区衍生</td>
+<td>本地</td>
+<td>零代码、可视化</td>
+<td>非技术、快速搭建</td>
+</tr>
+<tr>
+<td><strong>AutoClaw</strong></td>
+<td></td>
+<td>本地</td>
+<td>开箱即用，飞书集成</td>
+<td>大众用户、办公、快速上手</td>
+</tr>
+</tbody></table>
+<p>我现在的问题在于没有api，仍在使用免费的codex :)</p>
+<p>hook：事件发生的时候，自动执行一段预设逻辑的功能（系统自动触发）</p>
+<p>skill：识别到意图之后，可以自动加载skill，按步骤执行，不需要现想</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>启动会话时，只加载skills的元数据，让模型快速发现有哪些技能可以使用</p>
+<p>用户意图匹配到某个skill，加载完整的skill.md正文，读取具体的执行指令</p>
+<p>如果需要参考资料或者脚本，读取references&#x2F;下的文件或运行scripts&#x2F;里的脚本 &#x3D;&#x3D;&gt; 脚本用于执行，而不是加载进上下文，因此token消耗不会随着skills的数量线性增长</p>
+</blockquote>
+<p>api配置：默认国外版本</p>
+<ol>
+<li>kimi：</li>
+</ol>
+<p>国内主域名：moonshot.cn，国外主域名：moonshot.ai</p>
+<p>配置命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw config set models.providers.moonshot.baseUrl &quot;http://api.moonshot.ai/v1&quot;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>minimax</li>
+</ol>
+<p>国内主域名：minimaxi.com，国外主域名：minimax.ai</p>
+<p>配置命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw config set models.providers.minimax.baseUrl http://api.minimax.com/anthropic</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>智谱GLM</li>
+</ol>
+<p>国内主域名：bigmodel.cn，国外主域名：z.ai</p>
+<p>无需额外配置</p>
+<p>openclaw+飞书配置文档：</p>
+<p><a target="_blank" rel="noopener" href="https://xinyouduzhong.feishu.cn/docx/XLsldkTQGoaowUxeoeQcgvjxn9g">https://xinyouduzhong.feishu.cn/docx/XLsldkTQGoaowUxeoeQcgvjxn9g</a></p>
+<p>💡 说明：这个文档比较老了，事实上飞书现在支持一键配置openclaw</p>
+<p>多Agent：</p>
+<p>每个Agent有自己的工作区，有自己的配置文件，通过bindings字段绑定到不同的IM通道上</p>
+<p>&#x3D;&#x3D;&gt; 同时运行，同一个openclaw gateway管理，但是各自响应，互不干扰</p>
+<p>自动部署：arkclaw、autoclaw。给cc&#x2F;其他ai编程工具提供本地&#x2F;云端执行环境，无需手动配置，订阅了之后支持自动切换模型。</p>
+<p><a target="_blank" rel="noopener" href="https://www.volcengine.com/activity/codingplan?gad_source=1&gad_campaignid=23620670313&gbraid=0AAAAA9fhLMRHwdJUIW4aW1fQksYuySdaf&gclid=CjwKCAjw1tLOBhAMEiwAiPkRHvDZNCMsARjfaluoRsmh8Pz7EeQSwD6e7OZViJUVluJQzTvipBrOeBoCO7AQAvD_BwE">https://www.volcengine.com/activity/codingplan?gad_source=1&amp;gad_campaignid=23620670313&amp;gbraid=0AAAAA9fhLMRHwdJUIW4aW1fQksYuySdaf&amp;gclid=CjwKCAjw1tLOBhAMEiwAiPkRHvDZNCMsARjfaluoRsmh8Pz7EeQSwD6e7OZViJUVluJQzTvipBrOeBoCO7AQAvD_BwE</a></p>
+<p>企业微信配置：</p>
+<p>直接选择长连接不需要配置回调URL</p>
+<blockquote>
+<p>[!NOTE]</p>
+<p>配置回调URL：需要暴露一个公网可以访问的URL，企业微信服务器有消息的时候，主动HTTP请求URL</p>
+<p>使用长连接（websocket）：openclaw主动连接企微服务器，连接建立之后一直保持不断开，可以不暴露公网ip，有事通过连接通道发送即可</p>
+</blockquote>
+<p>讯飞版：</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/A6cxTz0kuRLF9bJjHfvKzw">https://mp.weixin.qq.com/s/A6cxTz0kuRLF9bJjHfvKzw</a></p>
+<p>Autoclaw：<a target="_blank" rel="noopener" href="https://autoglm.zhipuai.cn/autoclaw/">https://autoglm.zhipuai.cn/autoclaw/</a></p>
+<p>💡 配置：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/q0sqQY8l8dGO2PAYEtUEWw">https://mp.weixin.qq.com/s/q0sqQY8l8dGO2PAYEtUEWw</a></p>
+<p>让cc介入Coding plan，可以用其他的大模型，减少token焦虑：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0FxuRnRFo1GTEdlxVvvZLQ">https://mp.weixin.qq.com/s/0FxuRnRFo1GTEdlxVvvZLQ</a></p>
+<p>💡 cc本身不生产思考能力，它是一个执行壳，大脑来自api</p>
+<p>openclaw卸载：（codex生成）</p>
+<p>参考： <a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/z02mZYqn3Wv-euhhPIBYGQ">https://mp.weixin.qq.com/s/z02mZYqn3Wv-euhhPIBYGQ</a></p>
+<p>整理一下核心逻辑：不要只执行 <code>npm uninstall -g openclaw</code>，这样卸载不干净，容易残留状态、配置、插件缓存，后面重装时可能遇到端口占用、配置冲突、插件加载失败。</p>
+<p>正确姿势分三步。</p>
+<p>第一步：先停掉 Gateway 服务，最好先看状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openclaw gateway status</span><br><span class="line">openclaw gateway stop</span><br></pre></td></tr></table></figure>
+
+<p>如果 Gateway 还在跑任务，直接停掉可能会丢数据，所以最好先确认已经 stopped 再继续。</p>
+<p>第二步：执行官方卸载命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw uninstall</span><br></pre></td></tr></table></figure>
+
+<p>这个命令会进入交互式选择，文章里的建议是直接空格全选，然后回车确认。它主要会做这些事：</p>
+<ul>
+<li>停止并卸载 Gateway 服务</li>
+<li>删除 <code>~/.openclaw/</code> 状态目录</li>
+<li>清理工作区配置</li>
+<li>移除插件和缓存</li>
+</ul>
+<p>第三步：移除全局 CLI 包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm <span class="built_in">rm</span> -g openclaw</span><br></pre></td></tr></table></figure>
+
+<p>如果你当时不是用 npm 装的，对应换成：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pnpm <span class="built_in">rm</span> -g openclaw</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">bun <span class="built_in">rm</span> -g openclaw</span><br></pre></td></tr></table></figure>
+
+<p>遇到权限问题再加 <code>sudo</code>。</p>
+<p>卸载后可以再检查一下是不是已经清干净：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 检查全局包</span></span><br><span class="line">npm list -g openclaw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查目录</span></span><br><span class="line"><span class="built_in">ls</span> ~/.openclaw/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查端口占用</span></span><br><span class="line">lsof -i:18789</span><br></pre></td></tr></table></figure>
+
+<p>如果都返回空，或者提示 <code>not found</code>，基本就算卸干净了。</p>
+<p><code>~/.openclaw/</code> 之所以重要，本质上因为这里存的是本地状态和运行痕迹；如果只删全局包，不清这个目录，就可能把旧配置、旧插件缓存、旧工作区信息留到下一次安装里。</p>
+<p>如果 <code>openclaw uninstall</code> 不可用，再手动清理这些位置：</p>
+<ul>
+<li>二进制：<code>/usr/local/bin/openclaw</code></li>
+<li>状态目录：<code>~/.openclaw/</code></li>
+<li>服务：<ul>
+<li>macOS 用 <code>launchctl</code></li>
+<li>Linux 用 <code>systemctl</code></li>
+</ul>
+</li>
+</ul>
+<p>💡 说明：不同版本的文档和命令行为可能有差异，实际操作前也可以先看一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw uninstall --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io">chuyun deng</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://chuyunnn.github.io/AI-coding/Openclaw/">https://chuyunnn.github.io/AI-coding/Openclaw/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/uncategorized/GLM-5-1/" title="GLM-5.1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">GLM-5.1</div></div><div class="info-2"><div class="info-item-1">特别之处：在长程任务上表现比较靠谱 💡 AI编程的不同阶段：  最早AI只能当个提效小助手，帮你补补代码、查查文档  后来流行起了 vibe coding，你有个想法跟AI聊聊，它就能帮你搓出一个产品原型来  再后来到了 Agentic 编程时代，大家开始让AI自主规划、自己写代码、自己调试   但真正在真实世界里有价值的业务，绝对不是靠一句提示词或者调两次接口就能搞定的。让AI帮你写个函数、改个 bug，几分钟就搞定，这叫短任务，大部分模型都能干。但让AI从零搭一个完整的项目呢？要规划架构、写代码、调试、做前端、联调接口，中间可能还要调用好几个外部工具，遇到报错还得自己排查。  这种跨很多步骤、需要长时间保持目标不跑偏的活儿，就叫 Long Horizon 长程任务  要求：把复杂目标拆解成可执行的步骤，记住前面做了什么，后面还要做什么，中途遇到意外需要随机应变 让GLM规划架构很特别的是：  它会生成自动选择和降级机制。如果首选的服务挂了，会有备选的服务（会做兜底）  大部分模型你不说它就不做，就那种很明显的需要动手的地方，他都不搞，总想提前收工，但是GLM-5.1 会主动...</div></div></div></a><a class="pagination-related" href="/AI-coding/Claude-Code%E6%BA%90%E7%A0%81/" title="Claude Code源码"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Claude Code源码</div></div><div class="info-2"><div class="info-item-1">https://github.com/instructkr/claw-code 核心文件：  main.tsx：803KB，应该是编译打包后的入口 AgentTool.tsx：233KB，Agent 工具的核心实现 insights.ts：115KB，洞察分析模块 QueryEngine.ts：46KB，查询引擎 Tool.ts：29KB，工具基类  其中tools里有40多种工具，有bash执行、文件操作、代码搜索、MCP集成、任务调度等。每个工具都是一个独立的能力单元。 skills目录里有17个内置skills，包括remember、stuck、loop、batch、debug等 tools&#x2F;AgentToll里面有6个内置agent &#x3D;&#x3D;&gt;  每个Agent都有自己的职责边界 &#x3D;&#x3D;&gt; 明确禁止使用某些工具  General Purpose Agent：一个通用agent，什么都会一点，处理大多数常规任务。复杂任务会被调度给其他agent Explore Agent：明确限制只读，专门用来搜索代码库，严格禁止任何...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">chuyun deng</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">67</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/uncategorized/GLM-5-1/" title="GLM-5.1">GLM-5.1</a><time datetime="2026-04-07T12:18:17.000Z" title="Created 2026-04-07 20:18:17">2026-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/AI-coding/Openclaw/" title="Openclaw">Openclaw</a><time datetime="2026-04-07T06:49:14.000Z" title="Created 2026-04-07 14:49:14">2026-04-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/AI-coding/Claude-Code%E6%BA%90%E7%A0%81/" title="Claude Code源码">Claude Code源码</a><time datetime="2026-04-01T08:13:57.000Z" title="Created 2026-04-01 16:13:57">2026-04-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%BC%80%E5%8F%91/%E4%BA%8B%E5%8A%A1%E7%9B%B8%E5%85%B3%E9%80%BB%E8%BE%91%E6%95%B4%E7%90%86/" title="事务相关逻辑整理">事务相关逻辑整理</a><time datetime="2026-04-01T07:41:44.000Z" title="Created 2026-04-01 15:41:44">2026-04-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/Agent/Agent-rag%E9%80%BB%E8%BE%91%E6%80%BB%E7%BB%93/" title="Agent-rag逻辑总结">Agent-rag逻辑总结</a><time datetime="2026-03-31T07:32:27.000Z" title="Created 2026-03-31 15:32:27">2026-03-31</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By chuyun deng</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3"></script><script src="/js/main.js?v=5.5.3"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
